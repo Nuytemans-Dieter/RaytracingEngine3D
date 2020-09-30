@@ -41,6 +41,17 @@ public class DrawLib {
         pointPanel.drawPoint(y, x, r, g, b);
     }
 
+
+    public void drawOval(int centerY, int centerX, int radiusY, int radiusX)
+    {
+        for (float theta = 0; theta < 6.28; theta += 0.01)
+        {
+            int x = centerX + (int) (radiusX*Math.cos(theta));
+            int y = centerY + (int) (radiusY*Math.sin(theta));
+
+            pointPanel.drawPoint(y, x, 1.0f, 1.0f, 1.0f);
+        }
+    }
 }
 
 class PointPanel extends JPanel {
