@@ -28,4 +28,17 @@ public interface IMatrix {
      */
     IMatrix add(IMatrix matrix);
 
+    /**
+     * Get a row(array of doubles)
+     * @param x the number of the row, with the top row being 0. [0, 3]
+     * @return the row at the requested location
+     */
+    double[] getRow(int x);
+
+    /**
+     * Get a column (array of doubles)
+     * @param y the number of the column, with the leftmost column being 0. [0, 3]
+     * @return the column at the requested location
+     */
+    double[] getColumn(int y);
 }

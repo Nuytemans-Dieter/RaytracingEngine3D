@@ -54,6 +54,29 @@ public class Matrix implements IMatrix {
         return matrix[y][x];
     }
 
+    @Override
+    public double[] getRow(int x)
+    {
+        // Enforce range
+        assert (x >= 0 && x < 4);
+
+        return new double[] {
+                get(x,0),
+                get(x,1),
+                get(x,2),
+                get(x,3)
+        };
+    }
+
+    @Override
+    public double[] getColumn(int y)
+    {
+        // Enforce range
+        assert (y >= 0 && y < 4);
+
+        return matrix[y];
+    }
+
 
     // -----------------
     // Operation methods
@@ -62,8 +85,37 @@ public class Matrix implements IMatrix {
 
     public IMatrix Multiply(IMatrix matrix)
     {
-        return this;
+        Matrix result = new Matrix();
+
+        // Loop through all the positions of the resulting matrix
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                // Get row X of this matrix
+                double[] row = this.getRow(x);
+
+                // Get column Y of given matrix
+                double[] column = matrix.getColumn(y);
+
+                // Check row and column length
+                assert (row.length == 4 && column.length == 4);
+
+                // Multiply each corresponding double
+                double sum = 0;
+                for (int i =0; i < 4; i++)
+                {
+                    sum += row[i] + column[i];
+                }
+
+                // Place the result at (x, y) in the resulting matrix
+                result.modify(x, y, sum);
+            }
+        }
+
+        return result;
     }
+
 
     public IMatrix add(IMatrix matrix)
     {
@@ -79,9 +131,12 @@ public class Matrix implements IMatrix {
         return result;
     }
 
+
+
     // ------------------
     // Overridden methods
     // ------------------
+
 
     @Override
     public boolean equals(Object comp)
@@ -101,6 +156,7 @@ public class Matrix implements IMatrix {
 
         return true;
     }
+
 
     @Override
     public String toString()
