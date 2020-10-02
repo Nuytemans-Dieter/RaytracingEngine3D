@@ -1,5 +1,7 @@
 import interfaces.IMatrix;
+import interfaces.IVector;
 import maths.Matrix;
+import maths.Vector;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -82,6 +84,12 @@ public class TestMatrix {
         ));
     }
 
+    @Test(expected = AssertionError.class)
+    public void testFaultyParameter()
+    {
+        new Matrix(new double[][]{});
+    }
+
     @Test
     public void testAdd()
     {
@@ -114,7 +122,38 @@ public class TestMatrix {
     }
 
     @Test
-    public void testMultiplication()
+    public void testVectorMultiplication()
+    {
+        IMatrix mat = new Matrix(
+            new double[][]{
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12},
+                {13, 14, 15, 16}
+            }
+        );
+        IVector vector = new Vector(
+            new double []{
+                1,
+                2,
+                3,
+                4
+            }
+        );
+        IVector expected = new Vector(
+            new double[]{
+                30,
+                70,
+                110,
+                150
+            }
+        );
+
+        assert( expected.equals( mat.multiply(vector) ) );
+    }
+
+    @Test
+    public void testMatrixMultiplication()
     {
         Matrix mat = new Matrix()
                 .modify(0, 0, 2)

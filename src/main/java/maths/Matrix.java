@@ -1,6 +1,9 @@
 package maths;
 
 import interfaces.IMatrix;
+import interfaces.IVector;
+
+import javax.swing.text.LabelView;
 
 public class Matrix implements IMatrix {
 
@@ -117,6 +120,27 @@ public class Matrix implements IMatrix {
     // -----------------
 
 
+    @Override
+    public IVector multiply(IVector vector)
+    {
+        IVector result = new Vector(0, 0, 0, 0);
+
+        for (int i = 0; i < 4; i++)
+        {
+            double sum = 0;
+            for (int j = 0; j < 4; j++)
+            {
+                sum += this.get(j, i) * vector.get(j);
+            }
+
+            result.modify(i, sum);
+        }
+
+        return result;
+    }
+
+
+    @Override
     public IMatrix multiply(IMatrix matrix)
     {
         Matrix result = new Matrix();
@@ -151,6 +175,7 @@ public class Matrix implements IMatrix {
     }
 
 
+    @Override
     public IMatrix add(IMatrix matrix)
     {
         Matrix result = new Matrix();
@@ -164,7 +189,6 @@ public class Matrix implements IMatrix {
         }
         return result;
     }
-
 
 
     // ------------------

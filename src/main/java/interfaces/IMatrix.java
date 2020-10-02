@@ -16,9 +16,17 @@ public interface IMatrix {
      * Multiplies this matrix with another matrix and returns the result
      * Does not modify this object
      * @param matrix the matrix this one should be multiplied with
-     * @return the result maths.Matrix of the multiplication
+     * @return the result of the multiplication
      */
     IMatrix multiply(IMatrix matrix);
+
+    /**
+     * Multiplies this matrix with a vector and returns the result
+     * Does not modify this object
+     * @param vector the vector this matrix should be multiplied with
+     * @return the result of the multiplication
+     */
+    IVector multiply(IVector vector);
 
     /**
      * Adds another matrix to this matrix and returns the result
