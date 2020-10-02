@@ -14,6 +14,12 @@ public class RaytracingEngine3D {
                 .modify(3, 3, 5);
 
         System.out.println( mat );
+
+        Matrix mat2 = new Matrix();
+        System.out.println( mat.multiply(mat2) );
+
+        // TODO write unit test for multiplication
+        // TODO write unit test for matrix equals
     }
 
 }

@@ -18,7 +18,7 @@ public interface IMatrix {
      * @param matrix the matrix this one should be multiplied with
      * @return the result maths.Matrix of the multiplication
      */
-    IMatrix Multiply(IMatrix matrix);
+    IMatrix multiply(IMatrix matrix);
 
     /**
      * Adds another matrix to this matrix and returns the result

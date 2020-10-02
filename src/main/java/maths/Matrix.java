@@ -83,7 +83,7 @@ public class Matrix implements IMatrix {
     // -----------------
 
 
-    public IMatrix Multiply(IMatrix matrix)
+    public IMatrix multiply(IMatrix matrix)
     {
         Matrix result = new Matrix();
 
@@ -105,7 +105,7 @@ public class Matrix implements IMatrix {
                 double sum = 0;
                 for (int i =0; i < 4; i++)
                 {
-                    sum += row[i] + column[i];
+                    sum += row[i] * column[i];
                 }
 
                 // Place the result at (x, y) in the resulting matrix
