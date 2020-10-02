@@ -8,6 +8,11 @@ public class Matrix implements IMatrix {
 
     /**
      * Creates a basic initialised 4x4 Matrix
+     * Will contain all zeroes, except for where y=x (row index equals column index)
+     *     [1 0 0 0;
+     *      0 1 0 0;
+     *      0 0 1 0;
+     *      0 0 0 1]
      */
     public Matrix()
     {
@@ -21,6 +26,19 @@ public class Matrix implements IMatrix {
 
     /**
      * Create a specific matrix
+     * Keep in mind that the first dimension specifies the row and the second specifies the column
+     * Eg. providing:
+     *     new double[][] {
+     *         {1, 2, 3, 4},
+     *         {5, 6, 7, 8},
+     *         {9, 10, 11, 12},
+     *         {13, 14, 15, 16}
+     *     }
+     *     Will result in the matrix
+     *     [1  2  3  4;
+     *      5  6  7  8;
+     *      9  10 11 12;
+     *      13 14 15 16]
      */
     public Matrix( double[][] matrix )
     {
@@ -60,6 +78,7 @@ public class Matrix implements IMatrix {
     // Getters
     // -------
 
+
     public double get(int x, int y) {
         // Check bounds
         assert (x >= 0 && x < 4 && y >= 0 && y < 4);
@@ -67,8 +86,19 @@ public class Matrix implements IMatrix {
         return matrix[y][x];
     }
 
+
     @Override
-    public double[] getRow(int x)
+    public double[] getRow(int y)
+    {
+        // Enforce range
+        assert (y >= 0 && y < 4);
+
+        return matrix[y];
+    }
+
+
+    @Override
+    public double[] getColumn(int x)
     {
         // Enforce range
         assert (x >= 0 && x < 4);
@@ -79,15 +109,6 @@ public class Matrix implements IMatrix {
                 get(x,2),
                 get(x,3)
         };
-    }
-
-    @Override
-    public double[] getColumn(int y)
-    {
-        // Enforce range
-        assert (y >= 0 && y < 4);
-
-        return matrix[y];
     }
 
 
@@ -106,17 +127,17 @@ public class Matrix implements IMatrix {
             for (int y = 0; y < 4; y++)
             {
                 // Get row X of this matrix
-                double[] row = this.getRow(x);
+                double[] row = this.getRow(y);
 
-                // Get column Y of given matrix
-                double[] column = matrix.getColumn(y);
+                // Get column Y of the given matrix
+                double[] column = matrix.getColumn(x);
 
                 // Check row and column length
                 assert (row.length == 4 && column.length == 4);
 
                 // Multiply each corresponding double
                 double sum = 0;
-                for (int i =0; i < 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     sum += row[i] * column[i];
                 }
@@ -158,9 +179,9 @@ public class Matrix implements IMatrix {
             return false;
 
         IMatrix mat = (IMatrix) comp;
-        for (int x = 0; x < 4; x++)
+        for (int y = 0; y < 4; y++)
         {
-            for (int y = 0; y < 4; y++)
+            for (int x = 0; x < 4; x++)
             {
                 if (mat.get(x, y) != this.get(x, y))
                     return false;
@@ -175,12 +196,12 @@ public class Matrix implements IMatrix {
     public String toString()
     {
         StringBuilder builder = new StringBuilder();
-        for (int x = 0; x < 4; x++)
+        for (int y = 0; y < 4; y++)
         {
             builder.append(" | ");
-            for (int y = 0; y < 4; y++)
+            for (int x = 0; x < 4; x++)
             {
-                builder.append(matrix[y][x]).append(" | ");
+                builder.append( this.get(x, y) ).append(" | ");
             }
             builder.append("\n");
         }
