@@ -19,6 +19,19 @@ public class Matrix implements IMatrix {
         };
     }
 
+    /**
+     * Create a specific matrix
+     */
+    public Matrix( double[][] matrix )
+    {
+        // Verify given matrix dimensions
+        assert ( matrix.length == 4 );
+        for (int i=0; i < 4; i++)
+            assert (matrix[i].length == 4);
+
+        this.matrix = matrix;
+    }
+
 
     // ----------------------
     // Builder pattern method
