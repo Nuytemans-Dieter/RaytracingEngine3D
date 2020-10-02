@@ -38,7 +38,7 @@ public class Matrix implements IMatrix {
         assert (x >= 0 && x < 4 && y >= 0 && y < 4);
 
         // Update matrix and return result
-        matrix[x][y] = value;
+        matrix[y][x] = value;
         return this;
     }
 
@@ -58,4 +58,24 @@ public class Matrix implements IMatrix {
         return this;
     }
 
+    // ------------------
+    // Overridden methods
+    // ------------------
+
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        for (int x = 0; x < 4; x++)
+        {
+            builder.append(" | ");
+            for (int y = 0; y < 4; y++)
+            {
+                builder.append(matrix[y][x]).append(" | ");
+            }
+            builder.append("\n");
+        }
+
+        return builder.toString();
+    }
 }
