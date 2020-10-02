@@ -32,7 +32,7 @@ public class Matrix implements IMatrix {
      * @param value the new value of this position
      * @return the resulting matrix
      */
-    public Matrix setPosition(int x, int y, double value)
+    public Matrix modify(int x, int y, double value)
     {
         // Check bounds
         assert (x >= 0 && x < 4 && y >= 0 && y < 4);
@@ -43,24 +43,64 @@ public class Matrix implements IMatrix {
     }
 
 
+    // -------
+    // Getters
+    // -------
+
+    public double get(int x, int y) {
+        // Check bounds
+        assert (x >= 0 && x < 4 && y >= 0 && y < 4);
+
+        return matrix[y][x];
+    }
+
+
     // -----------------
     // Operation methods
     // -----------------
 
 
-    public Matrix Multiply(Matrix matrix)
+    public IMatrix Multiply(IMatrix matrix)
     {
         return this;
     }
 
-    public Matrix add(Matrix matrix)
+    public IMatrix add(IMatrix matrix)
     {
-        return this;
+        Matrix result = new Matrix();
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                double sum = this.get(x, y) + matrix.get(x, y);
+                result = result.modify(x, y, sum);
+            }
+        }
+        return result;
     }
 
     // ------------------
     // Overridden methods
     // ------------------
+
+    @Override
+    public boolean equals(Object comp)
+    {
+        if ( ! (comp instanceof IMatrix) )
+            return false;
+
+        IMatrix mat = (IMatrix) comp;
+        for (int x = 0; x < 4; x++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                if (mat.get(x, y) != this.get(x, y))
+                    return false;
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public String toString()

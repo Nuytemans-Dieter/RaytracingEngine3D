@@ -8,18 +8,18 @@ public class TransMatFactory implements ITransMatFactory {
     public IMatrix getTranslation(int x, int y, int z)
     {
         return new Matrix()
-                .setPosition(3, 0, x)
-                .setPosition(3, 1, y)
-                .setPosition(3, 2, z);
+                .modify(3, 0, x)
+                .modify(3, 1, y)
+                .modify(3, 2, z);
     }
 
     @Override
     public IMatrix getScaling(int x, int y, int z)
     {
         return new Matrix()
-                .setPosition(0, 0, x)
-                .setPosition(1, 1, y)
-                .setPosition(2, 2, z);
+                .modify(0, 0, x)
+                .modify(1, 1, y)
+                .modify(2, 2, z);
     }
 
     @Override
