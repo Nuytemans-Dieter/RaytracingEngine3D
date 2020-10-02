@@ -59,13 +59,7 @@ public class Matrix implements IMatrix {
     // ----------------------
 
 
-    /**
-     * Sets a position within this matrix to the specified value and returns the resulting Matrix
-     * @param x represents the column, with the leftmost column being 0 [0, 3]
-     * @param y represents the row, with the top row being 0 [0, 3]
-     * @param value the new value of this position
-     * @return the resulting matrix
-     */
+    @Override
     public Matrix modify(int x, int y, double value)
     {
         // Check bounds

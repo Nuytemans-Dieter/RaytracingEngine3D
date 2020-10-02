@@ -32,6 +32,6 @@ public interface ITransMatFactory {
      * @param theta the angle of this rotation
      * @return the resulting rotation matrix
      */
-    IMatrix getRotation(RotationAxis axis, int theta);
+    IMatrix getRotation(RotationAxis axis, double theta);
 
 }

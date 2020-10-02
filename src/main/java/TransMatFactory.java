@@ -23,8 +23,41 @@ public class TransMatFactory implements ITransMatFactory {
     }
 
     @Override
-    public IMatrix getRotation(RotationAxis axis, int theta)
+    public IMatrix getRotation(RotationAxis axis, double theta)
     {
-        return null;
+        IMatrix matrix;
+
+        double cos = Math.cos(theta);
+        double sin = Math.sin(theta);
+
+        switch (axis)
+        {
+            case X:
+                matrix = new Matrix()
+                        .modify(1, 1, cos)
+                        .modify(2, 1, -sin)
+                        .modify(1, 2, sin)
+                        .modify(2, 2, cos);
+                break;
+            case Y:
+                matrix = new Matrix()
+                        .modify(0, 0, cos)
+                        .modify(2, 0, sin)
+                        .modify(0, 2, -sin)
+                        .modify(2, 2, cos);
+                break;
+            case Z:
+                matrix = new Matrix()
+                        .modify(0, 0, cos)
+                        .modify(1, 0, -sin)
+                        .modify(0, 1, sin)
+                        .modify(1, 1, cos);
+                break;
+            default:
+                matrix = new Matrix();
+                break;
+        }
+
+        return matrix;
     }
 }

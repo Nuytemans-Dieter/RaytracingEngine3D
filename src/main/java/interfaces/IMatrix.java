@@ -13,6 +13,15 @@ public interface IMatrix {
     double get(int x, int y);
 
     /**
+     * Sets a position within this matrix to the specified value and returns the resulting Matrix
+     * @param x represents the column, with the leftmost column being 0 [0, 3]
+     * @param y represents the row, with the top row being 0 [0, 3]
+     * @param value the new value of this position
+     * @return the resulting matrix
+     */
+    Matrix modify(int x, int y, double value);
+
+    /**
      * Multiplies this matrix with another matrix and returns the result
      * Does not modify this object
      * @param matrix the matrix this one should be multiplied with
