@@ -66,6 +66,54 @@ public class TestMatrix {
     }
 
     @Test
+    public void testToString()
+    {
+        Matrix mat = new Matrix(
+            new double[][] {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12},
+                {13, 14, 15, 16}
+            }
+        );
+
+        assert (mat.toString().replace('\n', '-').equals(
+        " | 1.0 | 2.0 | 3.0 | 4.0 | - | 5.0 | 6.0 | 7.0 | 8.0 | - | 9.0 | 10.0 | 11.0 | 12.0 | - | 13.0 | 14.0 | 15.0 | 16.0 | -"
+        ));
+    }
+
+    @Test
+    public void testAdd()
+    {
+        IMatrix mat = new Matrix(
+            new double[][]{
+                {1, 2, 3, 4},
+                {1, 2, 3, 4},
+                {1, 2, 3, 4},
+                {1, 2, 3, 4},
+            }
+        );
+        IMatrix mat2 = new Matrix(
+            new double[][]{
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12},
+                {13, 14, 15, 16}
+            }
+        );
+        IMatrix expected = new Matrix(
+            new double[][]{
+                {2, 4, 6, 8},
+                {6, 8, 10, 12},
+                {10, 12, 14, 16},
+                {14, 16, 18, 20},
+            }
+        );
+
+        assert( expected.equals( mat.add(mat2) ) );
+    }
+
+    @Test
     public void testMultiplication()
     {
         Matrix mat = new Matrix()
