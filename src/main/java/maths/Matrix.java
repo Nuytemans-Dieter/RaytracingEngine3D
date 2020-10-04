@@ -70,6 +70,11 @@ public class Matrix implements IMatrix {
         return this;
     }
 
+    public void unsafeModify(int x, int y, double value)
+    {
+        matrix[y][x] = value;
+    }
+
 
     // -------
     // Getters
@@ -152,7 +157,7 @@ public class Matrix implements IMatrix {
                 }
 
                 // Place the result at (x, y) in the resulting matrix
-                result.modify(x, y, sum);
+                result.unsafeModify(x, y, sum);
             }
         }
 
