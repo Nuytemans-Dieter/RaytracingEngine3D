@@ -70,6 +70,10 @@ public class Matrix implements IMatrix {
         return this;
     }
 
+    /**
+     * Gets the element at the specified location
+     * Bounds are not checked (!) and nothing is returned This improves performance
+     */
     public void unsafeModify(int x, int y, double value)
     {
         matrix[y][x] = value;
@@ -85,6 +89,16 @@ public class Matrix implements IMatrix {
         // Check bounds
         assert (x >= 0 && x < 4 && y >= 0 && y < 4);
 
+        return matrix[y][x];
+    }
+
+
+    /**
+     * Gets the element at the specified location
+     * Bounds are not checked! This improves performance
+     */
+    public double unsafeGet(int x, int y)
+    {
         return matrix[y][x];
     }
 
@@ -140,7 +154,7 @@ public class Matrix implements IMatrix {
 
 
     @Override
-    public IMatrix multiply(IMatrix matrix)
+    public IMatrix multiply(Matrix matrix)
     {
         Matrix result = new Matrix();
 
@@ -153,7 +167,7 @@ public class Matrix implements IMatrix {
                 double sum = 0;
                 for (int i = 0; i < 4; i++)
                 {
-                    sum += this.get(x, i) * matrix.get(i, y);
+                    sum += this.unsafeGet(x, i) * matrix.unsafeGet(i, y);
                 }
 
                 // Place the result at (x, y) in the resulting matrix

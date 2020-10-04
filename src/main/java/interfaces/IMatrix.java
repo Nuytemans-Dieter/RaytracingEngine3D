@@ -33,7 +33,7 @@ public interface IMatrix {
      * @param matrix the matrix this one should be multiplied with
      * @return the result of the multiplication
      */
-    IMatrix multiply(IMatrix matrix);
+    IMatrix multiply(Matrix matrix);
 
     /**
      * Multiplies this matrix with a vector and returns the result
