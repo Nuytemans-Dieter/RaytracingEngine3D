@@ -3,6 +3,9 @@ import interfaces.ITransMatFactory;
 import maths.Matrix;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestFactory {
 
     @Test
@@ -42,46 +45,54 @@ public class TestFactory {
     @Test
     public void testRotation()
     {
-        double angle = Math.PI / 3;
-        double sin = Math.sin(angle);
-        double cos = Math.cos(angle);
+        List<Double> angles = new ArrayList<Double>(){{
+            add(Math.PI / 3);
+            add(0d);
+            add(1d);
+        }};
 
-        ITransMatFactory fact = new TransMatFactory();
-        IMatrix mat = fact.getRotation(ITransMatFactory.RotationAxis.X, angle);
-        IMatrix expected = new Matrix(
-            new double[][]
-                {
-                    {1, 0, 0, 0},
-                    {0, cos, -sin, 0},
-                    {0, sin, cos, 0},
-                    {0, 0, 0, 1}
-                }
-        );
-        assert (mat.equals(expected));
+        for (double angle : angles)
+        {
+            double sin = Math.sin(angle);
+            double cos = Math.cos(angle);
 
-        mat = fact.getRotation(ITransMatFactory.RotationAxis.Y, angle);
-        expected = new Matrix(
-            new double[][]
-                {
-                    {cos, 0, sin, 0},
-                    {0, 1, 0, 0},
-                    {-sin, 0, cos, 0},
-                    {0, 0, 0, 1}
-                }
-        );
-        assert (mat.equals(expected));
+            ITransMatFactory fact = new TransMatFactory();
+            IMatrix mat = fact.getRotation(ITransMatFactory.RotationAxis.X, angle);
+            IMatrix expected = new Matrix(
+                    new double[][]
+                            {
+                                    {1, 0, 0, 0},
+                                    {0, cos, -sin, 0},
+                                    {0, sin, cos, 0},
+                                    {0, 0, 0, 1}
+                            }
+            );
+            assert (mat.equals(expected));
 
-        mat = fact.getRotation(ITransMatFactory.RotationAxis.Z, angle);
-        expected = new Matrix(
-            new double[][]
-                {
-                    {cos, -sin, 0, 0},
-                    {sin, cos, 0, 0},
-                    {0, 0, 1, 0},
-                    {0, 0, 0, 1}
-                }
-        );
-        assert (mat.equals(expected));
+            mat = fact.getRotation(ITransMatFactory.RotationAxis.Y, angle);
+            expected = new Matrix(
+                    new double[][]
+                            {
+                                    {cos, 0, sin, 0},
+                                    {0, 1, 0, 0},
+                                    {-sin, 0, cos, 0},
+                                    {0, 0, 0, 1}
+                            }
+            );
+            assert (mat.equals(expected));
+
+            mat = fact.getRotation(ITransMatFactory.RotationAxis.Z, angle);
+            expected = new Matrix(
+                    new double[][]
+                            {
+                                    {cos, -sin, 0, 0},
+                                    {sin, cos, 0, 0},
+                                    {0, 0, 1, 0},
+                                    {0, 0, 0, 1}
+                            }
+            );
+            assert (mat.equals(expected));
+        }
     }
 
 }
