@@ -59,37 +59,37 @@ public class TestFactory {
             ITransMatFactory fact = new TransMatFactory();
             IMatrix mat = fact.getRotation(ITransMatFactory.RotationAxis.X, angle);
             IMatrix expected = new Matrix(
-                    new double[][]
-                            {
-                                    {1, 0, 0, 0},
-                                    {0, cos, -sin, 0},
-                                    {0, sin, cos, 0},
-                                    {0, 0, 0, 1}
-                            }
+                new double[][]
+                    {
+                        {1, 0, 0, 0},
+                        {0, cos, -sin, 0},
+                        {0, sin, cos, 0},
+                        {0, 0, 0, 1}
+                    }
             );
             assert (mat.equals(expected));
 
             mat = fact.getRotation(ITransMatFactory.RotationAxis.Y, angle);
             expected = new Matrix(
-                    new double[][]
-                            {
-                                    {cos, 0, sin, 0},
-                                    {0, 1, 0, 0},
-                                    {-sin, 0, cos, 0},
-                                    {0, 0, 0, 1}
-                            }
+                new double[][]
+                    {
+                        {cos, 0, sin, 0},
+                        {0, 1, 0, 0},
+                        {-sin, 0, cos, 0},
+                        {0, 0, 0, 1}
+                    }
             );
             assert (mat.equals(expected));
 
             mat = fact.getRotation(ITransMatFactory.RotationAxis.Z, angle);
             expected = new Matrix(
-                    new double[][]
-                            {
-                                    {cos, -sin, 0, 0},
-                                    {sin, cos, 0, 0},
-                                    {0, 0, 1, 0},
-                                    {0, 0, 0, 1}
-                            }
+                new double[][]
+                    {
+                        {cos, -sin, 0, 0},
+                        {sin, cos, 0, 0},
+                        {0, 0, 1, 0},
+                        {0, 0, 0, 1}
+                    }
             );
             assert (mat.equals(expected));
         }
