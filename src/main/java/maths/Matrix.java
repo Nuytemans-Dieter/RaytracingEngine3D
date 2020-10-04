@@ -144,20 +144,11 @@ public class Matrix implements IMatrix {
         {
             for (int y = 0; y < 4; y++)
             {
-                // Get row X of this matrix
-                double[] row = this.getRow(y);
-
-                // Get column Y of the given matrix
-                double[] column = matrix.getColumn(x);
-
-                // Check row and column length
-                assert (row.length == 4 && column.length == 4);
-
                 // Multiply each corresponding double
                 double sum = 0;
                 for (int i = 0; i < 4; i++)
                 {
-                    sum += row[i] * column[i];
+                    sum += this.get(x, i) * matrix.get(i, y);
                 }
 
                 // Place the result at (x, y) in the resulting matrix
