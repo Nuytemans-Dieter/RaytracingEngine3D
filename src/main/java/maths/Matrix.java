@@ -167,7 +167,7 @@ public class Matrix implements IMatrix {
                 double sum = 0;
                 for (int i = 0; i < 4; i++)
                 {
-                    sum += this.unsafeGet(x, i) * matrix.unsafeGet(i, y);
+                    sum += this.unsafeGet(i, y) * matrix.unsafeGet(x, i);
                 }
 
                 // Place the result at (x, y) in the resulting matrix
