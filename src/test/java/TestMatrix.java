@@ -239,6 +239,32 @@ public class TestMatrix {
             }
         );
         assert( expected.equals( mat.multiply(mat2) ) );
+
+        mat = new Matrix(
+            new double[][] {
+                {6, 2, 0, 2},
+                {3, 7, 8, 3},
+                {4, 6, 8, 1},
+                {9, 4, 7, 3}
+            }
+        );
+        mat2 = new Matrix(
+            new double[][] {
+                {12, 4, 26, 5},
+                {7, 3, 5, 4},
+                {3, 4, 45, 5},
+                {7, 5, 3, 3}
+            }
+        );
+        expected = new Matrix(
+            new double[][]{
+                {100, 40, 172, 44},
+                {130, 80, 482, 92},
+                {121, 71, 497, 87},
+                {178, 91, 578, 105}
+            }
+        );
+        assert( expected.equals( mat.multiply(mat2) ) );
     }
 
 }
