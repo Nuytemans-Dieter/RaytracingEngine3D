@@ -6,13 +6,14 @@ import java.awt.image.BufferedImage;
 
 public class DrawLib {
 
+    private final JFrame frame;
     private final PointPanel pointPanel;
 
     public DrawLib(int width, int heigth)
     {
         pointPanel = new PointPanel(width, heigth);
 
-        JFrame frame = new JFrame("Ray tracing");
+        frame = new JFrame("Ray tracing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(pointPanel);
         frame.pack();
@@ -43,6 +44,11 @@ public class DrawLib {
         pointPanel.drawPoint(y, x, r, g, b);
     }
 
+
+    public void forceUpdate()
+    {
+        pointPanel.paintComponent(frame.getGraphics());
+    }
 
     public void drawOval(int centerY, int centerX, int radiusY, int radiusX)
     {
