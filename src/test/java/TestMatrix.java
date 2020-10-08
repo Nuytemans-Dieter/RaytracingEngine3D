@@ -19,6 +19,7 @@ public class TestMatrix {
         assert (newMatrix.equals(anotherMatrix));
         assert (!matrix.equals(anotherMatrix));
         assert (!matrix.equals( 5 ));
+        assert (!matrix.equals( new Vector(matrix.getColumn(0)) ));
 
         Matrix given = new Matrix(
             new double[][]{

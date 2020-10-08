@@ -6,11 +6,32 @@ public class Vector implements IVector {
 
     private final double[] vector;
 
+    /**
+     * Initialise a vector [0, 0, 0, 0]T
+     */
+    public Vector()
+    {
+        vector = new double[]{0, 0, 0, 0};
+    }
+
+    /**
+     * Initialise a vector [x, y, z, k]T
+     *
+     * @param x x-value
+     * @param y y-value
+     * @param z z-value
+     * @param k constant value
+     */
     public Vector(double x, double y, double z, double k)
     {
         vector = new double[]{x, y, z, k};
     }
 
+    /**
+     * Initialise an internal vector (double[] of length 4) equal to the given one
+     *
+     * @param vector the vector for internal use. Must be of length 4
+     */
     public Vector(double[] vector)
     {
         assert (vector.length == 4);
