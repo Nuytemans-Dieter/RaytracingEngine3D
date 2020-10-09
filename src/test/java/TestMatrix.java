@@ -92,6 +92,66 @@ public class TestMatrix {
     }
 
     @Test
+    public void testAsserts()
+    {
+        boolean isSuccess = false;
+        try {
+            new Matrix(new double[][]{{}, {}, {}});
+            isSuccess = true;
+        } catch (AssertionError ignored) {}
+        assert !isSuccess;
+
+        isSuccess = false;
+        try {
+            new Matrix(
+                new double[][]{
+                    {1, 5, 6, 4},
+                    {4, 7, 6, 4},
+                    {1, 4, 7},
+                    {1, 6, 7, 4}
+                }
+            );
+            isSuccess = true;
+        } catch (AssertionError ignored) {}
+        assert !isSuccess;
+
+        isSuccess = false;
+        try {
+            new Matrix().modify(-1, 0, 1);
+            isSuccess = true;
+        } catch (AssertionError ignored) {}
+        assert !isSuccess;
+
+        isSuccess = false;
+        try {
+            new Matrix().modify(4, 0, 1);
+            isSuccess = true;
+        } catch (AssertionError ignored) {}
+        assert !isSuccess;
+
+        isSuccess = false;
+        try {
+            new Matrix().modify(0, -1, 1);
+            isSuccess = true;
+        } catch (AssertionError ignored) {}
+        assert !isSuccess;
+
+        isSuccess = false;
+        try {
+            new Matrix().modify(0, 4, 1);
+            isSuccess = true;
+        } catch (AssertionError ignored) {}
+        assert !isSuccess;
+
+        isSuccess = false;
+        try {
+            new Matrix().modify(4, 4, 1);
+            isSuccess = true;
+        } catch (AssertionError ignored) {}
+        assert !isSuccess;
+    }
+
+    @Test
     public void testAdd()
     {
         IMatrix mat = new Matrix(
