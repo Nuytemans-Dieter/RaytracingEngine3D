@@ -47,6 +47,21 @@ public class Vector implements IVector {
         return vector[i];
     }
 
+    public double getX()
+    {
+        return vector[0];
+    }
+
+    public double getY()
+    {
+        return vector[1];
+    }
+
+    public double getZ()
+    {
+        return vector[2];
+    }
+
     @Override
     public IVector modify(int i, double value)
     {
