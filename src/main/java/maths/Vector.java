@@ -39,6 +39,18 @@ public class Vector implements IVector {
         this.vector = vector;
     }
 
+    public IVector add(IVector vector)
+    {
+        return new Vector(
+            new double[]{
+                this.getX() + vector.get(0),
+                this.getY() + vector.get(1),
+                this.getZ() + vector.get(2),
+                Math.max( this.get(3), vector.get(3) )
+            }
+        );
+    }
+
     @Override
     public double get(int i)
     {
