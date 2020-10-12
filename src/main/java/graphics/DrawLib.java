@@ -9,9 +9,9 @@ public class DrawLib {
     private final JFrame frame;
     private final PointPanel pointPanel;
 
-    public DrawLib(int width, int heigth)
+    public DrawLib(int width, int height)
     {
-        pointPanel = new PointPanel(width, heigth);
+        pointPanel = new PointPanel(width, height);
 
         frame = new JFrame("Ray tracing");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,9 +66,10 @@ class PointPanel extends JPanel {
 
     private final BufferedImage frame;
 
-    PointPanel(int width, int heigth) {
+    PointPanel(int width, int height) {
         super(true);
-        frame = new BufferedImage(width, heigth, BufferedImage.TYPE_INT_RGB);
+        frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        frame.setAccelerationPriority(0);
         this.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
     }
 
@@ -88,6 +89,7 @@ class PointPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        g.drawImage(frame, 0, 0, this.getWidth(), this.getHeight(), null);
+        super.paintComponent(g);
+        g.drawImage(frame, 0, 0, this.getWidth(), this.getHeight(), this);
     }
 }

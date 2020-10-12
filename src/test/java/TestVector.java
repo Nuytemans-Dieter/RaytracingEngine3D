@@ -6,6 +6,30 @@ import org.junit.Test;
 public class TestVector {
 
     @Test
+    public void testAddVector()
+    {
+        IVector v1 = new Vector();
+        IVector v2 = new Vector();
+        IVector result = new Vector(
+            new double[] {
+                v1.get(0) + v2.get(0),
+                v1.get(1) + v2.get(1),
+                v1.get(2) + v2.get(2),
+                Math.max(v1.get(3), v2.get(3))
+            }
+        );
+
+        assert (v1.add(v2).equals(result));
+
+        v1 = new Vector(1, -1, 0, 1);
+        v2 = new Vector(6, 2.2, 17, 0);
+        result = new Vector(7, 1.2000000000000002, 17, 1);
+        System.out.println(result);
+        System.out.println(v1.add(v2));
+        assert (v1.add(v2).equals(result));
+    }
+
+    @Test
     public void testEquals()
     {
         IVector vec1 = new Vector(
