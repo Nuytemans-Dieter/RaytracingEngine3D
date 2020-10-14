@@ -23,8 +23,10 @@ public class DrawLib {
 
     /**
      * Draws a white dot at the specified location
-     * @param x x-coördinate of the dot (width)
-     * @param y y-coördinate of the dot (heigth)
+     * The bottom left pixel is located at (0, 0) and the top right at (width, height)
+     *
+     * @param y y-coordinate of the dot (height)
+     * @param x x-coordinate of the dot (width)
      */
     public void drawPoint(int x, int y)
     {
@@ -33,8 +35,10 @@ public class DrawLib {
 
     /**
      * Draws a coloured dot at the specified location
-     * @param y y-coördinate of the dot (heigth)
-     * @param x x-coördinate of the dot (width)
+     * The bottom left pixel is located at (0, 0) and the top right at (width, height)
+     *
+     * @param y y-coordinate of the dot (height)
+     * @param x x-coordinate of the dot (width)
      * @param r red color component [0.0, 1.0]
      * @param g green color component [0.0, 1.0]
      * @param b blue color component [0.0, 1.0]
@@ -48,17 +52,6 @@ public class DrawLib {
     public void forceUpdate()
     {
         pointPanel.repaint();
-    }
-
-    public void drawOval(int centerY, int centerX, int radiusY, int radiusX)
-    {
-        for (float theta = 0; theta < 6.28; theta += 0.01)
-        {
-            int x = centerX + (int) (radiusX*Math.cos(theta));
-            int y = centerY + (int) (radiusY*Math.sin(theta));
-
-            pointPanel.drawPoint(y, x, 1.0f, 1.0f, 1.0f);
-        }
     }
 }
 
@@ -76,8 +69,10 @@ class PointPanel extends JPanel {
 
     /**
      * Draws a coloured dot at the specified location
-     * @param y y-coördinate of the dot (heigth)
-     * @param x x-coördinate of the dot (width)
+     * The bottom left pixel is located at (0, 0) and the top right at (width, height)
+     *
+     * @param y y-coordinate of the dot (height)
+     * @param x x-coordinate of the dot (width)
      * @param r red color component [0.0, 1.0]
      * @param g green color component [0.0, 1.0]
      * @param b blue color component [0.0, 1.0]
