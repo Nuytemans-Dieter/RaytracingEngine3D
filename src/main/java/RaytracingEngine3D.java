@@ -28,22 +28,35 @@ public class RaytracingEngine3D {
         Point cameraLocation = new Point((double)width/2, (double)heigth/2, 5);
 
         List<Object3D> objects = new ArrayList<>();
-        objects.add( new Sphere() );
+        objects.add( new Sphere(100.0) );
 
-//        for (int x = 0; x < width; x++)
-//        {
-//            for (int y = 0; y < heigth; y++)
-//            {
-//                Ray ray = new Ray(cameraLocation, x, y);
-//                for (Object3D object : objects)
-//                    if ( object.isColliding( ray ) )
-//                    {
-//                        Rgb rgb = object.getcolor();
-//                        drawLib.drawPoint(y, x, rgb.r(), rgb.g(), rgb.b());
-//                        break;
-//                    }
-//            }
-//        }
+        int numCollisions = 0;
+
+        for (int x = 0; x < width; x++)
+        for (int y = 0; y < heigth; y++)
+        {
+            Ray ray = new Ray(cameraLocation, x, y, 0);
+            for (Object3D object : objects)
+                if ( object.isColliding( ray ) )
+                {
+                    numCollisions++;
+                    Rgb rgb = object.getcolor();
+                    drawLib.drawPoint(y, x, rgb.r(), rgb.g(), rgb.b());
+                    break;
+                }
+        }
+        System.out.println("Collisions: " + numCollisions);
+        drawLib.forceUpdate();
+
+        try
+        {
+            Thread.sleep(100);
+            drawLib.forceUpdate();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 }

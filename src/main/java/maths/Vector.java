@@ -1,8 +1,6 @@
 package maths;
 
-import interfaces.IVector;
-
-public class Vector implements IVector {
+public class Vector {
 
     private final double[] vector;
 
@@ -39,8 +37,16 @@ public class Vector implements IVector {
         this.vector = vector;
     }
 
-    @Override
-    public IVector add(IVector vector)
+    /**
+     * Get the result of adding another vector to this vector
+     * This vector is NOT modified
+     * The first three elements are simply added
+     * The last element will be equal to whatever vector's last element is highest
+     *
+     * @param vector the vector to be added to this
+     * @return the result of the addition
+     */
+    public Vector add(Vector vector)
     {
         return new Vector(
             new double[]{
@@ -52,7 +58,12 @@ public class Vector implements IVector {
         );
     }
 
-    @Override
+    /**
+     * Get the element at a specified location
+     *
+     * @param i the location [0, 3]
+     * @return the element (double) at this location
+     */
     public double get(int i)
     {
         assert (i >= 0 && i < 4);
@@ -75,8 +86,14 @@ public class Vector implements IVector {
         return vector[2];
     }
 
-    @Override
-    public IVector modify(int i, double value)
+    /**
+     * Modifies the value at a specified location and returns the resulting IVector
+     *
+     * @param i     the location [0, 3]
+     * @param value the new value
+     * @return the resulting IVector
+     */
+    public Vector modify(int i, double value)
     {
         assert (i >= 0 && i < 4);
 
@@ -87,10 +104,10 @@ public class Vector implements IVector {
     @Override
     public boolean equals(Object object)
     {
-        if (!(object instanceof IVector))
+        if (!(object instanceof Vector))
             return false;
 
-        IVector vector = (IVector) object;
+        Vector vector = (Vector) object;
         for (int i = 0; i < 4; i++)
             if (vector.get(i) != this.get(i))
                 return false;

@@ -1,11 +1,6 @@
 package maths;
 
-import interfaces.IMatrix;
-import interfaces.IVector;
-
-import javax.swing.text.LabelView;
-
-public class Matrix implements IMatrix {
+public class Matrix {
 
     private final double[][] matrix;
 
@@ -59,7 +54,14 @@ public class Matrix implements IMatrix {
     // ----------------------
 
 
-    @Override
+    /**
+     * Sets a position within this matrix to the specified value and returns the resulting Matrix
+     *
+     * @param x     represents the column, with the leftmost column being 0 [0, 3]
+     * @param y     represents the row, with the top row being 0 [0, 3]
+     * @param value the new value of this position
+     * @return the resulting matrix
+     */
     public Matrix modify(int x, int y, double value)
     {
         // Check bounds
@@ -84,7 +86,13 @@ public class Matrix implements IMatrix {
     // Getters
     // -------
 
-
+    /**
+     * Gets the value at a specified location
+     *
+     * @param x represents the column, with the leftmost column being 0 [0, 3]
+     * @param y represents the row, with the top row being 0 [0, 3]
+     * @return the value at this location
+     */
     public double get(int x, int y) {
         // Check bounds
         assert (x >= 0 && x < 4 && y >= 0 && y < 4);
@@ -103,7 +111,12 @@ public class Matrix implements IMatrix {
     }
 
 
-    @Override
+    /**
+     * Get a row(array of doubles)
+     *
+     * @param y the number of the row, with the top row being 0. [0, 3]
+     * @return the row at the requested location
+     */
     public double[] getRow(int y)
     {
         // Enforce range
@@ -113,7 +126,12 @@ public class Matrix implements IMatrix {
     }
 
 
-    @Override
+    /**
+     * Get a column (array of doubles)
+     *
+     * @param x the number of the column, with the leftmost column being 0. [0, 3]
+     * @return the column at the requested location
+     */
     public double[] getColumn(int x)
     {
         // Enforce range
@@ -133,10 +151,16 @@ public class Matrix implements IMatrix {
     // -----------------
 
 
-    @Override
-    public IVector multiply(IVector vector)
+    /**
+     * Multiplies this matrix with a vector and returns the result
+     * Does not modify this object
+     *
+     * @param vector the vector this matrix should be multiplied with
+     * @return the result of the multiplication
+     */
+    public Vector multiply(Vector vector)
     {
-        IVector result = new Vector(0, 0, 0, 0);
+        Vector result = new Vector(0, 0, 0, 0);
 
         for (int i = 0; i < 4; i++)
         {
@@ -153,8 +177,14 @@ public class Matrix implements IMatrix {
     }
 
 
-    @Override
-    public IMatrix multiply(Matrix matrix)
+    /**
+     * Multiplies this matrix with another matrix and returns the result
+     * Does not modify this object
+     *
+     * @param matrix the matrix this one should be multiplied with
+     * @return the result of the multiplication
+     */
+    public Matrix multiply(Matrix matrix)
     {
         Matrix result = new Matrix();
 
@@ -179,8 +209,14 @@ public class Matrix implements IMatrix {
     }
 
 
-    @Override
-    public IMatrix add(IMatrix matrix)
+    /**
+     * Adds another matrix to this matrix and returns the result
+     * Does not modify this object
+     *
+     * @param matrix the matrix that should be added to this one
+     * @return the result maths.Matrix of the addition
+     */
+    public Matrix add(Matrix matrix)
     {
         Matrix result = new Matrix();
         for (int x = 0; x < 4; x++)
@@ -203,10 +239,10 @@ public class Matrix implements IMatrix {
     @Override
     public boolean equals(Object comp)
     {
-        if ( ! (comp instanceof IMatrix) )
+        if ( ! (comp instanceof Matrix) )
             return false;
 
-        IMatrix mat = (IMatrix) comp;
+        Matrix mat = (Matrix) comp;
         for (int y = 0; y < 4; y++)
         {
             for (int x = 0; x < 4; x++)

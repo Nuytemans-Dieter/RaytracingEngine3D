@@ -1,5 +1,3 @@
-import interfaces.IMatrix;
-import interfaces.IVector;
 import maths.Matrix;
 import maths.Vector;
 import org.junit.Test;
@@ -154,7 +152,7 @@ public class TestMatrix {
     @Test
     public void testAdd()
     {
-        IMatrix mat = new Matrix(
+        Matrix mat = new Matrix(
             new double[][]{
                 {1, 2, 3, 4},
                 {1, 2, 3, 4},
@@ -162,7 +160,7 @@ public class TestMatrix {
                 {1, 2, 3, 4},
             }
         );
-        IMatrix mat2 = new Matrix(
+        Matrix mat2 = new Matrix(
             new double[][]{
                 {1, 2, 3, 4},
                 {5, 6, 7, 8},
@@ -170,7 +168,7 @@ public class TestMatrix {
                 {13, 14, 15, 16}
             }
         );
-        IMatrix expected = new Matrix(
+        Matrix expected = new Matrix(
             new double[][]{
                 {2, 4, 6, 8},
                 {6, 8, 10, 12},
@@ -185,7 +183,7 @@ public class TestMatrix {
     @Test
     public void testVectorMultiplication()
     {
-        IMatrix mat = new Matrix(
+        Matrix mat = new Matrix(
             new double[][]{
                 {1, 2, 3, 4},
                 {5, 6, 7, 8},
@@ -193,7 +191,7 @@ public class TestMatrix {
                 {13, 14, 15, 16}
             }
         );
-        IVector vector = new Vector(
+        Vector vector = new Vector(
             new double []{
                 1,
                 2,
@@ -201,7 +199,7 @@ public class TestMatrix {
                 4
             }
         );
-        IVector expected = new Vector(
+        Vector expected = new Vector(
             new double[]{
                 30,
                 70,

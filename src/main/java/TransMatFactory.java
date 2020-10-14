@@ -1,11 +1,10 @@
-import interfaces.IMatrix;
 import interfaces.ITransMatFactory;
 import maths.Matrix;
 
 public class TransMatFactory implements ITransMatFactory {
 
     @Override
-    public IMatrix getTranslation(int x, int y, int z)
+    public Matrix getTranslation(int x, int y, int z)
     {
         return new Matrix()
                 .modify(3, 0, x)
@@ -14,7 +13,7 @@ public class TransMatFactory implements ITransMatFactory {
     }
 
     @Override
-    public IMatrix getScaling(int x, int y, int z)
+    public Matrix getScaling(int x, int y, int z)
     {
         return new Matrix()
                 .modify(0, 0, x)
@@ -23,9 +22,9 @@ public class TransMatFactory implements ITransMatFactory {
     }
 
     @Override
-    public IMatrix getRotation(RotationAxis axis, double theta)
+    public Matrix getRotation(RotationAxis axis, double theta)
     {
-        IMatrix matrix;
+        Matrix matrix;
 
         double cos = Math.cos(theta);
         double sin = Math.sin(theta);

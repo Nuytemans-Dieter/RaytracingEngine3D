@@ -1,4 +1,3 @@
-import interfaces.IMatrix;
 import interfaces.ITransMatFactory;
 import maths.Matrix;
 import org.junit.Test;
@@ -12,8 +11,8 @@ public class TestFactory {
     public void testTranslation()
     {
         ITransMatFactory fact = new TransMatFactory();
-        IMatrix mat = fact.getTranslation(20, 45, -4);
-        IMatrix expected = new Matrix(
+        Matrix mat = fact.getTranslation(20, 45, -4);
+        Matrix expected = new Matrix(
             new double[][]
                 {
                     {1, 0, 0, 20},
@@ -29,8 +28,8 @@ public class TestFactory {
     public void testScaling()
     {
         ITransMatFactory fact = new TransMatFactory();
-        IMatrix mat = fact.getScaling(12, -5, 6);
-        IMatrix expected = new Matrix(
+        Matrix mat = fact.getScaling(12, -5, 6);
+        Matrix expected = new Matrix(
             new double[][]
                 {
                     {12, 0, 0, 0},
@@ -57,8 +56,8 @@ public class TestFactory {
             double cos = Math.cos(angle);
 
             ITransMatFactory fact = new TransMatFactory();
-            IMatrix mat = fact.getRotation(ITransMatFactory.RotationAxis.X, angle);
-            IMatrix expected = new Matrix(
+            Matrix mat = fact.getRotation(ITransMatFactory.RotationAxis.X, angle);
+            Matrix expected = new Matrix(
                 new double[][]
                     {
                         {1, 0, 0, 0},

@@ -11,10 +11,4 @@ public class Cilinder extends Object3D {
 
         return false;
     }
-
-    @Override
-    public Rgb getcolor()
-    {
-        return null;
-    }
 }
