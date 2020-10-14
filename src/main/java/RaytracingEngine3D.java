@@ -8,7 +8,9 @@ import objects.object3d.Sphere;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Raytracing engine 3 d.
@@ -34,30 +36,60 @@ public class RaytracingEngine3D {
         final double viewAngle = Math.PI / 3;
         final double W = 2 * camDistance * Math.tan( viewAngle / 2 );
         final double H = W / aspect;
+        final Point eyeLocation = new Point(0, 0, camDistance);
 
+        // Precompute half-screen sizes
+        final double W_half = W/2;
+        final double H_half = H/2;
+
+        // Initialise screen
         final DrawLib drawLib = new DrawLib(screenSize.width, screenSize.height);
-        final Point cameraLocation = new Point(0, 0, 5);
 
+        // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
         objects.add( new Sphere(100.0) );
-
-        int numCollisions = 0;
 
         for (int u = 0; u < screenSize.width; u++)
         for (int v = 0; v < screenSize.height; v++)
         {
-            drawLib.drawPoint(u, v);
-//            Ray ray = new Ray(cameraLocation, u, v, 0);
-//            for (Object3D object : objects)
-//                if ( object.isColliding( ray ) )
-//                {
-//                    numCollisions++;
-//                    Rgb rgb = object.getcolor();
-//                    drawLib.drawPoint(v, u, rgb.r(), rgb.g(), rgb.b());
-//                    break;
-//                }
+            final double ux = -W_half + (W * u) / screenSize.width;
+            final double uy = -H_half + (H * v) / screenSize.height;
+
+            // Build the ray through this pixel and the camera
+            final Ray ray = new Ray(eyeLocation, -ux, -uy, -camDistance);
+
+            Map<Double, Object3D> intersections = new HashMap<>();
+            // Find all intersections
+            for (Object3D object : objects)
+            {
+                double t = object.getCollidingT( ray );
+                if (t >= 0)  intersections.put( t, object );
+            }
+
+            double closestT = -1;
+            Object3D closestObject = null;
+            // Find the closest intersection that is in front of the eye
+            for (Map.Entry<Double, Object3D> entry : intersections.entrySet())
+            {
+                if (closestT == -1 || entry.getKey() < closestT)
+                {
+                    closestT = entry.getKey();
+                    closestObject = entry.getValue();
+                }
+            }
+
+            if (closestObject == null) continue;
+            System.out.println("YYES, HIT");
+            // Compute the hit point and the normal vector in this point
+            Point hitPoint = ray.getPoint( closestT );
+
+            // Find the colour of this point returning to the eye from the point of intersection
+            Rgb color = closestObject.getcolor();
+
+            // Update the color in this pixel
+            drawLib.drawPoint(u, v, color);
         }
-        System.out.println("Collisions: " + numCollisions);
+
         drawLib.forceUpdate();
 
         try

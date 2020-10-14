@@ -6,8 +6,8 @@ import maths.vector.Point;
 
 public class Ray {
 
-    private Vector location;
-    private Vector direction;
+    private Point origin;
+    private Direction direction;
 
     /**
      * Create a new Ray from a certain Location, through a given x, y and z point
@@ -17,16 +17,16 @@ public class Ray {
      * @param y the y-location through which this ray should pass
      * @param z the z-location through which this ray should pass
      */
-    public Ray(Point camLoc, int x, int y, int z)
+    public Ray(Point camLoc, double x, double y, double z)
     {
-        this.location = new Point(camLoc.getX(), camLoc.getY(), camLoc.getZ());
-        direction = new Direction(camLoc.getX() - x, camLoc.getY() - y, camLoc.getZ() - z);
+        this.origin = new Point(camLoc.getX(), camLoc.getY(), camLoc.getZ());
+        this.direction = new Direction(camLoc.getX() - x, camLoc.getY() - y, camLoc.getZ() - z);
     }
 
 
-    public Vector getLocation()
+    public Vector getOrigin()
     {
-        return location;
+        return origin;
     }
 
     public Vector getDirection()
@@ -34,12 +34,18 @@ public class Ray {
         return direction;
     }
 
+    /**
+     * Get the point on this ray for a specific t
+     *
+     * @param t the t for which the location should be retrieved
+     * @return the location where this ray satisfies the applied restriction
+     */
     public Point getPoint(double t)
     {
         return new Point(
-                location.getX() + direction.getX() * t,
-                location.getY() + direction.getY() * t,
-                location.getZ() + direction.getZ() * t
+                origin.getX() + direction.getX() * t,
+                origin.getY() + direction.getY() * t,
+                origin.getZ() + direction.getZ() * t
         );
     }
 

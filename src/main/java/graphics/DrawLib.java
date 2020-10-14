@@ -49,6 +49,20 @@ public class DrawLib {
     }
 
 
+    /**
+     * Draws a coloured dot at the specified location
+     * The bottom left pixel is located at (0, 0) and the top right at (width, height)
+     *
+     * @param y y-coordinate of the dot (height)
+     * @param x x-coordinate of the dot (width)
+     * @param color the color of the future pixel
+     */
+    public void drawPoint(int x, int y, Rgb color)
+    {
+        pointPanel.drawPoint(x, y, color.r(), color.g(), color.b());
+    }
+
+
     public void forceUpdate()
     {
         pointPanel.repaint();
