@@ -6,6 +6,7 @@ import objects.Object3D;
 import objects.Ray;
 import objects.object3d.Sphere;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,27 +22,31 @@ public class RaytracingEngine3D {
      */
     public static void main (String[] args) {
 
-        int width = 400;
-        int heigth = 200;
+        // Due to using a 4k monitor, I manually specify the dimensions (for obvious performance reasons)
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        final Dimension screenSize = new Dimension(600, 400);
+        final float viewAngle;
+        final float cameraDistance;
 
-        DrawLib drawLib = new DrawLib(width, heigth);
-        Point cameraLocation = new Point((double)width/2, (double)heigth/2, 5);
+        final DrawLib drawLib = new DrawLib(screenSize.width, screenSize.height);
+//        final Point cameraLocation = new Point(0, 0, 5);
+        Point cameraLocation = new Point((double)screenSize.width/2, (double) screenSize.height/2, 5);
 
-        List<Object3D> objects = new ArrayList<>();
+        final List<Object3D> objects = new ArrayList<>();
         objects.add( new Sphere(100.0) );
 
         int numCollisions = 0;
 
-        for (int x = 0; x < width; x++)
-        for (int y = 0; y < heigth; y++)
+        for (int u = 0; u < screenSize.width; u++)
+        for (int v = 0; v < screenSize.height; v++)
         {
-            Ray ray = new Ray(cameraLocation, x, y, 0);
+            Ray ray = new Ray(cameraLocation, u, v, 0);
             for (Object3D object : objects)
                 if ( object.isColliding( ray ) )
                 {
                     numCollisions++;
                     Rgb rgb = object.getcolor();
-                    drawLib.drawPoint(y, x, rgb.r(), rgb.g(), rgb.b());
+                    drawLib.drawPoint(v, u, rgb.r(), rgb.g(), rgb.b());
                     break;
                 }
         }

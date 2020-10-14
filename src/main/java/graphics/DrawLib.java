@@ -23,12 +23,12 @@ public class DrawLib {
 
     /**
      * Draws a white dot at the specified location
-     * @param y y-coördinate of the dot (heigth)
      * @param x x-coördinate of the dot (width)
+     * @param y y-coördinate of the dot (heigth)
      */
-    public void drawPoint(int y, int x)
+    public void drawPoint(int x, int y)
     {
-        pointPanel.drawPoint(y, x, 1.0f, 1.0f, 1.0f);
+        pointPanel.drawPoint(x, y, 1.0f, 1.0f, 1.0f);
     }
 
     /**
@@ -39,9 +39,9 @@ public class DrawLib {
      * @param g green color component [0.0, 1.0]
      * @param b blue color component [0.0, 1.0]
      */
-    public void drawPoint(int y, int x, float r, float g, float b)
+    public void drawPoint(int x, int y, float r, float g, float b)
     {
-        pointPanel.drawPoint(y, x, r, g, b);
+        pointPanel.drawPoint(x, y, r, g, b);
     }
 
 
@@ -82,7 +82,7 @@ class PointPanel extends JPanel {
      * @param g green color component [0.0, 1.0]
      * @param b blue color component [0.0, 1.0]
      */
-    public void drawPoint(int y, int x, float r, float g, float b)
+    public void drawPoint(int x, int y, float r, float g, float b)
     {
         frame.setRGB(x, y, new Color(r, g, b).getRGB());
     }
