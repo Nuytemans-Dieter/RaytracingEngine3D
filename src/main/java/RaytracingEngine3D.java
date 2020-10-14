@@ -24,13 +24,19 @@ public class RaytracingEngine3D {
 
         // Due to using a 4k monitor, I manually specify the dimensions (for obvious performance reasons)
 //        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Get the screen dimensions
         final Dimension screenSize = new Dimension(600, 400);
-        final float viewAngle;
-        final float cameraDistance;
+        final double aspect = (double)screenSize.width / (double)screenSize.height;
+
+        // Camera and internal screen settings
+        final double camDistance = 5;
+        final double viewAngle = Math.PI / 3;
+        final double W = 2 * camDistance * Math.tan( viewAngle / 2 );
+        final double H = W / aspect;
 
         final DrawLib drawLib = new DrawLib(screenSize.width, screenSize.height);
-//        final Point cameraLocation = new Point(0, 0, 5);
-        Point cameraLocation = new Point((double)screenSize.width/2, (double) screenSize.height/2, 5);
+        final Point cameraLocation = new Point(0, 0, 5);
 
         final List<Object3D> objects = new ArrayList<>();
         objects.add( new Sphere(100.0) );
@@ -40,15 +46,16 @@ public class RaytracingEngine3D {
         for (int u = 0; u < screenSize.width; u++)
         for (int v = 0; v < screenSize.height; v++)
         {
-            Ray ray = new Ray(cameraLocation, u, v, 0);
-            for (Object3D object : objects)
-                if ( object.isColliding( ray ) )
-                {
-                    numCollisions++;
-                    Rgb rgb = object.getcolor();
-                    drawLib.drawPoint(v, u, rgb.r(), rgb.g(), rgb.b());
-                    break;
-                }
+            drawLib.drawPoint(u, v);
+//            Ray ray = new Ray(cameraLocation, u, v, 0);
+//            for (Object3D object : objects)
+//                if ( object.isColliding( ray ) )
+//                {
+//                    numCollisions++;
+//                    Rgb rgb = object.getcolor();
+//                    drawLib.drawPoint(v, u, rgb.r(), rgb.g(), rgb.b());
+//                    break;
+//                }
         }
         System.out.println("Collisions: " + numCollisions);
         drawLib.forceUpdate();
