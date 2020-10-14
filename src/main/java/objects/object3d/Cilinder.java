@@ -5,10 +5,10 @@ import objects.Object3D;
 import objects.Ray;
 
 public class Cilinder extends Object3D {
-    @Override
-    public boolean isColliding(Ray ray)
-    {
 
-        return false;
+    @Override
+    public Double getCollidingT(Ray ray)
+    {
+        return 0d;
     }
 }

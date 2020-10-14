@@ -1,8 +1,6 @@
 package objects.object3d;
 
-import graphics.Rgb;
 import maths.Vector;
-import maths.vector.Point;
 import objects.Ray;
 import objects.Object3D;
 
@@ -15,36 +13,31 @@ public class Sphere extends Object3D {
         this.radius = radius;
     }
 
-
     @Override
-    public boolean isColliding(Ray ray)
+    public Double getCollidingT(Ray ray)
     {
-        // Direction and Location
-        Vector d = ray.getDirection();
-        Vector l = ray.getLocation();
+        Vector origin = ray.getOrigin();
+//        origin = origin.subtract( this.location );
 
-        double first = - ( (d.get(0) * l.get(0)) + (d.get(1) * l.get(1)) + (d.get(2) * l.get(2)) );
-        double underSqrt1 = Math.pow((d.get(0) * l.get(0)) + (d.get(1) * l.get(1)) + (d.get(2) * l.get(2)), 2);
-        double underSqrt2 = (d.get(0) * d.get(0)) + (d.get(1) * d.get(1)) + (d.get(2) * d.get(2));
-        double underSqrt3 = (l.get(0) * l.get(0)) + (l.get(1) * l.get(1)) + (l.get(2) * l.get(2)) - radius;
+        double a = ray.getDirection().dotProduct(ray.getDirection()); // 1?
+        double b = 2 * ray.getDirection().dotProduct(origin);
+        double c = Math.pow(origin.getNorm(), 2) - Math.pow(radius, 2);
 
-        double underSqrt = 4 * (underSqrt1 - (underSqrt2 * underSqrt3));
-
-        if (underSqrt < 0)
-        {
-            System.out.println("< 0, no intersection");
-            return false;
-        } else if (underSqrt==0)
-        {
-            System.out.println("One intersection");
-        } else
-        {
-            System.out.println("No intersections");
+        double discriminant = Math.pow(b, 2) - (4 * a * c);
+        if (discriminant < 0) {
+            return null;
         }
 
-//        double result1 = (first + Math.sqrt(underSqrt)) / Math.pow(underSqrt2, 2);
-//        double result2 = (first - Math.sqrt(underSqrt)) / Math.pow(underSqrt2, 2);
+        double t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+        double t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
 
-        return true;
+        if (t1 < 0 && t2 < 0)
+            return null;
+        else if (t1 < 0)
+            return t2;
+        else if (t2 < 0)
+            return t1;
+        else
+            return Math.min(t1, t2);
     }
 }

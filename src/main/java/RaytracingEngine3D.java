@@ -47,7 +47,7 @@ public class RaytracingEngine3D {
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-        objects.add( new Sphere(100.0) );
+        objects.add( new Sphere(5) );
 
         for (int u = 0; u < screenSize.width; u++)
         for (int v = 0; v < screenSize.height; v++)
@@ -62,8 +62,8 @@ public class RaytracingEngine3D {
             // Find all intersections
             for (Object3D object : objects)
             {
-                double t = object.getCollidingT( ray );
-                if (t >= 0)  intersections.put( t, object );
+                Double t = object.getCollidingT( ray );
+                if (t != null && t >= 0)  intersections.put( t, object );
             }
 
             double closestT = -1;
@@ -91,6 +91,7 @@ public class RaytracingEngine3D {
         }
 
         drawLib.forceUpdate();
+        System.out.println("Done");
 
         try
         {

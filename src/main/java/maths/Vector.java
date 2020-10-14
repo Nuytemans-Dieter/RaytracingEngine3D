@@ -59,6 +59,42 @@ public class Vector {
     }
 
     /**
+     * Get the result of subtracting another vector to this vector
+     * This vector is NOT modified
+     * The first three elements are simply subtracted
+     * The last element will be equal to whatever vector's last element is highest
+     *
+     * @param vector the vector to be subtracted from this
+     * @return the result of the addition
+     */
+    public Vector subtract(Vector vector)
+    {
+        return new Vector(
+            new double[]{
+                this.getX() - vector.get(0),
+                this.getY() - vector.get(1),
+                this.getZ() - vector.get(2),
+                Math.max( this.get(3), vector.get(3) )
+            }
+        );
+    }
+
+
+    public double dotProduct(Vector vector)
+    {
+        return  this.getX() * vector.getX() +
+                this.getY() * vector.getY() +
+                this.getZ() * vector.getZ();
+    }
+
+
+    public double getNorm()
+    {
+        return Math.sqrt(Math.pow(this.getX(), 2.0) + Math.pow(this.getY(), 2.0) + Math.pow(this.getZ(), 2.0));
+    }
+
+
+    /**
      * Get the element at a specified location
      *
      * @param i the location [0, 3]
