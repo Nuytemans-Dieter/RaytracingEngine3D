@@ -47,7 +47,7 @@ public class DrawLib {
 
     public void forceUpdate()
     {
-        pointPanel.paintComponent(frame.getGraphics());
+        pointPanel.repaint();
     }
 
     public void drawOval(int centerY, int centerX, int radiusY, int radiusX)
