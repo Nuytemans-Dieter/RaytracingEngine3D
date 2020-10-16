@@ -48,7 +48,7 @@ public class RaytracingEngine3D {
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-        objects.add( new Sphere(5) );
+        objects.add( new Sphere(1) );
 
         for (int u = 0; u < screenSize.width; u++)
         for (int v = 0; v < screenSize.height; v++)
