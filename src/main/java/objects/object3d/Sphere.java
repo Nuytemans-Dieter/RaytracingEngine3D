@@ -17,19 +17,20 @@ public class Sphere extends Object3D {
     public Double getCollidingT(Ray ray)
     {
         Vector origin = ray.getOrigin();
-//        origin = origin.subtract( this.location );
+        origin = origin.subtract( this.location );
 
         double a = ray.getDirection().dotProduct(ray.getDirection()); // 1?
-        double b = 2 * ray.getDirection().dotProduct(origin);
+        double b = ray.getDirection().dotProduct(origin);
         double c = Math.pow(origin.getNorm(), 2) - Math.pow(radius, 2);
 
-        double discriminant = Math.pow(b, 2) - (4 * a * c);
-        if (discriminant < 0) {
+        double D = Math.pow(b, 2) - (a * c);
+        if (D < 0) {
             return null;
         }
 
-        double t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
-        double t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+        D = Math.sqrt(D);
+        double t1 = (-b + D) / a;
+        double t2 = (-b - D) / a;
 
         if (t1 < 0 && t2 < 0)
             return null;

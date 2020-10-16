@@ -1,6 +1,7 @@
 import graphics.DrawLib;
 import graphics.Rgb;
 import maths.Matrix;
+import maths.vector.Direction;
 import maths.vector.Point;
 import objects.Object3D;
 import objects.Ray;
@@ -56,7 +57,7 @@ public class RaytracingEngine3D {
             final double uy = -H_half + (H * v) / screenSize.height;
 
             // Build the ray through this pixel and the camera
-            final Ray ray = new Ray(eyeLocation, -ux, -uy, -camDistance);
+            final Ray ray = new Ray(eyeLocation, new Direction(-ux, -uy, -camDistance));
 
             Map<Double, Object3D> intersections = new HashMap<>();
             // Find all intersections

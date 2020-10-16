@@ -13,14 +13,19 @@ public class Ray {
      * Create a new Ray from a certain Location, through a given x, y and z point
      *
      * @param camLoc a Point (Vector) indicating the location of the point camera
-     * @param x the x-location through which this ray should pass
-     * @param y the y-location through which this ray should pass
-     * @param z the z-location through which this ray should pass
+     * @param direction the direction of this ray
      */
-    public Ray(Point camLoc, double x, double y, double z)
+    public Ray(Point camLoc, Direction direction)
     {
         this.origin = new Point(camLoc.getX(), camLoc.getY(), camLoc.getZ());
-        this.direction = new Direction(camLoc.getX() - x, camLoc.getY() - y, camLoc.getZ() - z);
+        this.direction = direction;
+    }
+
+
+    public Ray(double x, double y, double z, double xt, double yt, double zt)
+    {
+        this.origin = new Point(x, y, z);
+        this.direction = new Direction(xt, yt, zt);
     }
 
 

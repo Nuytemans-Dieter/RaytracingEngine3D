@@ -1,5 +1,6 @@
 import maths.Matrix;
 import maths.Vector;
+import maths.vector.Direction;
 import maths.vector.Point;
 import org.junit.Test;
 
@@ -104,6 +105,25 @@ public class TestVector {
 
         Vector vector2 = new Vector(new double[] {16, 4, 3, 28});
         assert vector2.toString().replace("\n", "-").equals("| 16.0 |-| 4.0 |-| 3.0 |-| 28.0 |-");
+    }
+
+
+    @Test
+    public void testDotProduct()
+    {
+        Vector pt = new Vector(-5, -5, -5, 1);
+        Vector dir = new Vector(4.5, 5, 5,0);
+
+        assert (dir.dotProduct(dir) == 70.25);
+        assert (pt.dotProduct(dir) == -72.5);
+        assert (pt.dotProduct(pt) == 75);
+
+        pt = new Point(2, 0, 2);
+        dir = new Direction(-2, 0, -2);
+
+        assert (dir.dotProduct(dir) == 8);
+        assert (pt.dotProduct(dir) == -8);
+        assert (pt.dotProduct(pt) == 8);
     }
 
     @Test
