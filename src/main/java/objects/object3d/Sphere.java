@@ -30,18 +30,18 @@ public class Sphere extends Object3D {
         Vector origin = ray.getOrigin();
         origin = origin.subtract( this.location );
 
-        double a = ray.getDirection().dotProduct(ray.getDirection()); // 1?
-        double b = ray.getDirection().dotProduct(origin);
-        double c = Math.pow(origin.getNorm(), 2) - Math.pow(radius, 2);
+        double A = ray.getDirection().dotProduct(ray.getDirection());
+        double B = ray.getDirection().dotProduct(origin);
+        double C = Math.pow(origin.getNorm(), 2) - Math.pow(radius, 2);
 
-        double D = Math.pow(b, 2) - (a * c);
+        double D = Math.pow(B, 2) - (A * C);
         if (D < 0) {
             return null;
         }
 
         D = Math.sqrt(D);
-        double t1 = (-b + D) / a;
-        double t2 = (-b - D) / a;
+        double t1 = (-B + D) / A;
+        double t2 = (-B - D) / A;
 
         if (t1 < 0 && t2 < 0)
             return null;
