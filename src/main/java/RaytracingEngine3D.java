@@ -50,43 +50,67 @@ public class RaytracingEngine3D {
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-        objects.add( new Sphere(1.0) );
+        Sphere s = new Sphere(1.0);
+        s.setTransformation( matrixFactory.getScaling(3, 1, 1) );
+        objects.add( s );
 
-        for (int u = 0; u < screenSize.width; u++)
-        for (int v = 0; v < screenSize.height; v++)
+        for (int i = 0; i < 100; i++)
         {
-            final double ux = -W_half + (W * u) / screenSize.width;
-            final double uy = -H_half + (H * v) / screenSize.height;
-
-            // Build the ray through this pixel and the camera
-            Point transposedLoc = new Point(matrixFactory.getTranslation(3, 1, 1).inverse().multiply( eyeLocation ));
-            final Ray ray = new Ray(transposedLoc, new Direction(-ux, -uy, -camDistance));
-
-            Double closestT = null;
-            Object3D closestObject = null;
-            // Find all intersections
-            for (Object3D object : objects)
+            for (int u = 0; u < screenSize.width; u++)
+            for (int v = 0; v < screenSize.height; v++)
             {
-                Double t = object.getCollidingT(ray);
-                if ((t != null && t >= 0) && (closestT == null || t <= closestT) ) {
-                    closestT = t;
-                    closestObject = object;
-                };
+                final double ux = -W_half + (W * u) / screenSize.width;
+                final double uy = -H_half + (H * v) / screenSize.height;
+
+                // Build the ray through this pixel and the camera
+                Direction defaultDirection = new Direction(-ux, -uy, -camDistance);
+
+                Double closestT = null;
+                Object3D closestObject = null;
+                // Find all intersections
+                for (Object3D object : objects)
+                {
+                    Point loc = object.getLocation();
+                    object.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI / 10) );
+
+                    // Calculate specific ray for this object
+                    Matrix inverseTransform = object.getTransformation().inverse();
+                    final Ray ray = new Ray(
+                            new Point( inverseTransform.multiply(eyeLocation) ),
+                            new Direction( inverseTransform.multiply(defaultDirection) )
+                    );
+
+                    // Calculate collisions
+                    Double t = object.getCollidingT(ray);
+                    if ((t != null && t >= 0) && (closestT == null || t <= closestT))
+                    {
+                        closestT = t;
+                        closestObject = object;
+                    }
+                    ;
+                }
+
+
+                // Find the colour of this point returning to the eye from the point of intersection
+                Rgb color = (closestObject != null) ? closestObject.getcolor() : new Rgb(0, 0, 0);
+
+
+                // Compute the hit point and the normal vector in this point
+//            Point hitPoint = ray.getPoint(closestT);
+
+                // Update the color in this pixel
+                drawLib.drawPoint(u, v, color);
             }
 
-            if (closestObject == null) continue;
-            // Compute the hit point and the normal vector in this point
-            Point hitPoint = ray.getPoint(closestT);
-
-            // Find the colour of this point returning to the eye from the point of intersection
-            Rgb color = closestObject.getcolor();
-
-            // Update the color in this pixel
-            drawLib.drawPoint(u, v, color);
+            drawLib.forceUpdate();
+            try
+            {
+                Thread.sleep(17);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
-
-        drawLib.forceUpdate();
-
     }
 
 }

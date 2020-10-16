@@ -17,7 +17,7 @@ public interface ITransMatFactory {
      * @param z translation on the z-axis
      * @return the resulting translation matrix
      */
-    Matrix getTranslation(int x, int y, int z);
+    Matrix getTranslation(double x, double y, double z);
 
     /**
      * Creates a 4x4 scaling matrix
@@ -26,7 +26,7 @@ public interface ITransMatFactory {
      * @param z scaling with respect to the z-axis
      * @return the resulting scaling matrix
      */
-    Matrix getScaling(int x, int y, int z);
+    Matrix getScaling(double x, double y, double z);
 
     /**
      * Creates a 4x4 rotation matrix

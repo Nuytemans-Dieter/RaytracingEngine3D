@@ -4,7 +4,7 @@ import maths.Matrix;
 public class TransMatFactory implements ITransMatFactory {
 
     @Override
-    public Matrix getTranslation(int x, int y, int z)
+    public Matrix getTranslation(double x, double y, double z)
     {
         return new Matrix()
                 .modify(3, 0, x)
@@ -13,7 +13,7 @@ public class TransMatFactory implements ITransMatFactory {
     }
 
     @Override
-    public Matrix getScaling(int x, int y, int z)
+    public Matrix getScaling(double x, double y, double z)
     {
         return new Matrix()
                 .modify(0, 0, x)
