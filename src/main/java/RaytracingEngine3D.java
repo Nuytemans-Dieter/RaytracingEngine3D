@@ -49,6 +49,7 @@ public class RaytracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
         objects.add( new Sphere(1) );
+        objects.add( new Sphere(1) );
 
         for (int u = 0; u < screenSize.width; u++)
         for (int v = 0; v < screenSize.height; v++)
@@ -59,24 +60,16 @@ public class RaytracingEngine3D {
             // Build the ray through this pixel and the camera
             final Ray ray = new Ray(eyeLocation, new Direction(-ux, -uy, -camDistance));
 
-            Map<Double, Object3D> intersections = new HashMap<>();
+            Double closestT = null;
+            Object3D closestObject = null;
             // Find all intersections
             for (Object3D object : objects)
             {
                 Double t = object.getCollidingT(ray);
-                if (t != null && t >= 0) intersections.put(t, object);
-            }
-
-            double closestT = -1;
-            Object3D closestObject = null;
-            // Find the closest intersection that is in front of the eye
-            for (Map.Entry<Double, Object3D> entry : intersections.entrySet())
-            {
-                if (closestT == -1 || entry.getKey() < closestT)
-                {
-                    closestT = entry.getKey();
-                    closestObject = entry.getValue();
-                }
+                if ((t != null && t >= 0) && (closestT == null || t <= closestT) ) {
+                    closestT = t;
+                    closestObject = object;
+                };
             }
 
             if (closestObject == null) continue;
