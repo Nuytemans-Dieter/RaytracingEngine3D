@@ -1,5 +1,6 @@
 import graphics.DrawLib;
 import graphics.Rgb;
+import interfaces.ITransMatFactory;
 import maths.Matrix;
 import maths.vector.Direction;
 import maths.vector.Point;
@@ -43,13 +44,13 @@ public class RaytracingEngine3D {
         final double W_half = W/2;
         final double H_half = H/2;
 
-        // Initialise screen
+        // Initialisations
         final DrawLib drawLib = new DrawLib(screenSize.width, screenSize.height);
+        final ITransMatFactory matrixFactory = new TransMatFactory();
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-        objects.add( new Sphere(1) );
-        objects.add( new Sphere(1) );
+        objects.add( new Sphere(1.0) );
 
         for (int u = 0; u < screenSize.width; u++)
         for (int v = 0; v < screenSize.height; v++)
@@ -58,7 +59,8 @@ public class RaytracingEngine3D {
             final double uy = -H_half + (H * v) / screenSize.height;
 
             // Build the ray through this pixel and the camera
-            final Ray ray = new Ray(eyeLocation, new Direction(-ux, -uy, -camDistance));
+            Point transposedLoc = new Point(matrixFactory.getTranslation(3, 1, 1).inverse().multiply( eyeLocation ));
+            final Ray ray = new Ray(transposedLoc, new Direction(-ux, -uy, -camDistance));
 
             Double closestT = null;
             Object3D closestObject = null;

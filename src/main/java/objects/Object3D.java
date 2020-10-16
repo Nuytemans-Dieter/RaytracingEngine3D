@@ -1,9 +1,9 @@
 package objects;
 
 import graphics.Rgb;
-import maths.Vector;
 import maths.vector.Direction;
 import maths.vector.Point;
+
 
 public abstract class Object3D {
 
