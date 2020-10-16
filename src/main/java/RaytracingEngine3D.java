@@ -25,10 +25,10 @@ public class RaytracingEngine3D {
      */
     public static void main (String[] args) {
 
-        // Due to using a 4k monitor, I manually specify the dimensions (for obvious performance reasons)
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         // Get the screen dimensions
+        // Due to using a 4k monitor, I manually specify the dimensions (for obvious performance reasons)
+//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final Dimension screenSize = new Dimension(600, 400);
         final double aspect = (double)screenSize.width / (double)screenSize.height;
 
@@ -80,7 +80,6 @@ public class RaytracingEngine3D {
             }
 
             if (closestObject == null) continue;
-            System.out.println("YYES, HIT");
             // Compute the hit point and the normal vector in this point
             Point hitPoint = ray.getPoint( closestT );
 

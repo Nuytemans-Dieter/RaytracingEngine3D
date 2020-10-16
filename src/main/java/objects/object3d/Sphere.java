@@ -8,6 +8,16 @@ public class Sphere extends Object3D {
 
     private final double radius;
 
+
+    /**
+     * Creates a Sphere at (0, 0, 0) with radius 1
+     */
+    public Sphere()
+    {
+        radius = 1.0;
+    }
+
+
     public Sphere(double radius)
     {
         this.radius = radius;

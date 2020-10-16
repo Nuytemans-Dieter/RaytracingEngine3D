@@ -151,6 +151,14 @@ public class Matrix {
     // -----------------
 
 
+    public Matrix inverse()
+    {
+        Jama.Matrix helper = new Jama.Matrix( this.matrix );
+        helper = helper.inverse();
+        return new Matrix( helper.getArray() );
+    }
+
+
     /**
      * Multiplies this matrix with a vector and returns the result
      * Does not modify this object
