@@ -63,8 +63,8 @@ public class RaytracingEngine3D {
             // Find all intersections
             for (Object3D object : objects)
             {
-                Double t = object.getCollidingT( ray );
-                if (t != null && t >= 0)  intersections.put( t, object );
+                Double t = object.getCollidingT(ray);
+                if (t != null && t >= 0) intersections.put(t, object);
             }
 
             double closestT = -1;
@@ -81,7 +81,7 @@ public class RaytracingEngine3D {
 
             if (closestObject == null) continue;
             // Compute the hit point and the normal vector in this point
-            Point hitPoint = ray.getPoint( closestT );
+            Point hitPoint = ray.getPoint(closestT);
 
             // Find the colour of this point returning to the eye from the point of intersection
             Rgb color = closestObject.getcolor();
@@ -91,16 +91,6 @@ public class RaytracingEngine3D {
         }
 
         drawLib.forceUpdate();
-        System.out.println("Done");
-
-        try
-        {
-            Thread.sleep(100);
-            drawLib.forceUpdate();
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
 
     }
 

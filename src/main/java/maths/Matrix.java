@@ -151,6 +151,12 @@ public class Matrix {
     // -----------------
 
 
+    /**
+     * Get the inverse of this matrix
+     * Does not alter this object!
+     *
+     * @return the result of the inverse calculation
+     */
     public Matrix inverse()
     {
         Jama.Matrix helper = new Jama.Matrix( this.matrix );

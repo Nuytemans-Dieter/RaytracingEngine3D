@@ -1,6 +1,8 @@
 package objects;
 
 import graphics.Rgb;
+import maths.Vector;
+import maths.vector.Direction;
 import maths.vector.Point;
 
 public abstract class Object3D {
@@ -19,6 +21,20 @@ public abstract class Object3D {
     public Rgb getcolor()
     {
         return color;
+    }
+
+    public Point getLocation()
+    {
+        return location;
+    }
+
+    /**
+     * Move this object by applying a certain direction
+     *
+     * @param direction the direction (vector) of movement
+     */
+    public void move(Direction direction) {
+        this.location = new Point(location.add( direction ));
     }
 
 }

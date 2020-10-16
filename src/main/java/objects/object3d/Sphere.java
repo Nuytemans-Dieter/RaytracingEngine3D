@@ -1,6 +1,7 @@
 package objects.object3d;
 
 import maths.Vector;
+import maths.vector.Point;
 import objects.Ray;
 import objects.Object3D;
 
