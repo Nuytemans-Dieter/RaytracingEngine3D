@@ -1,4 +1,5 @@
 import maths.Matrix;
+import maths.TransMatFactory;
 import objects.Object3D;
 import objects.object3d.Sphere;
 import org.junit.Test;

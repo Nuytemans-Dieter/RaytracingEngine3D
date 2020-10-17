@@ -1,5 +1,6 @@
 import interfaces.ITransMatFactory;
 import maths.Matrix;
+import maths.TransMatFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;

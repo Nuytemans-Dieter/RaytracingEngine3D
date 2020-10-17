@@ -1,7 +1,10 @@
 import graphics.DrawLib;
 import graphics.Rgb;
+import input.KeyboardInput;
 import interfaces.ITransMatFactory;
+import interfaces.Input;
 import maths.Matrix;
+import maths.TransMatFactory;
 import maths.vector.Direction;
 import maths.vector.Point;
 import objects.Object3D;
@@ -10,7 +13,6 @@ import objects.object3d.Sphere;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,18 +36,19 @@ public class RaytracingEngine3D {
         final double aspect = (double)screenSize.width / (double)screenSize.height;
 
         // Camera and internal screen settings
-        final double camDistance = 5;
+        final double camDistance = 7;
         final double viewAngle = Math.PI / 3;
         final double W = 2 * camDistance * Math.tan( viewAngle / 2 );
         final double H = W / aspect;
-        final Point eyeLocation = new Point(0, 0, camDistance);
+        Point eyeLocation = new Point(0, 0, camDistance);
 
         // Precompute half-screen sizes
         final double W_half = W/2;
         final double H_half = H/2;
 
         // Initialisations
-        final DrawLib drawLib = new DrawLib(screenSize.width, screenSize.height);
+        final Input input = new KeyboardInput();
+        final DrawLib drawLib = new DrawLib(screenSize.width, screenSize.height, (KeyboardInput) input);
         final ITransMatFactory matrixFactory = new TransMatFactory();
 
         // Initialise objects
@@ -53,9 +56,41 @@ public class RaytracingEngine3D {
         Sphere s = new Sphere(1.0);
         s.setTransformation( matrixFactory.getScaling(3, 1, 1) );
         objects.add( s );
+        Sphere s2 = new Sphere(1.0);
+//        s2.addTransformations( matrixFactory.getTranslation(2.0, 2.0, 0) );
+        s2.move( new Direction(1.3, 1.3, 0) );
+        objects.add( s2 );
 
         for (int i = 0; i < 100; i++)
         {
+
+            long start = System.currentTimeMillis();
+
+            Map<Input.Action, Double> map = input.getCurrentInput();
+            Matrix transform = new Matrix();
+            for (Map.Entry<Input.Action, Double> entry : map.entrySet())
+            {
+                switch (entry.getKey())
+                {
+                    case MOVE_FORWARD:
+                        break;
+                    case MOVE_BACKWARD:
+                        break;
+                    case MOVE_LEFT:
+                        break;
+                    case MOVE_RIGHT:
+                        break;
+                    case ROTATE_UP:
+                        break;
+                    case ROTATE_DOWN:
+                        break;
+                    case ROTATE_LEFT:
+                        break;
+                    case ROTATE_RIGHT:
+                        break;
+                }
+            }
+
             for (int u = 0; u < screenSize.width; u++)
             for (int v = 0; v < screenSize.height; v++)
             {
@@ -64,19 +99,19 @@ public class RaytracingEngine3D {
 
                 // Build the ray through this pixel and the camera
                 Direction defaultDirection = new Direction(-ux, -uy, -camDistance);
+//                defaultDirection = new Direction( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/6).multiply( defaultDirection ) );
 
                 Double closestT = null;
                 Object3D closestObject = null;
                 // Find all intersections
                 for (Object3D object : objects)
                 {
-                    Point loc = object.getLocation();
-                    object.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI / 10) );
+//                    object.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI / 10) );
 
                     // Calculate specific ray for this object
                     Matrix inverseTransform = object.getTransformation().inverse();
                     final Ray ray = new Ray(
-                            new Point( inverseTransform.multiply(eyeLocation) ),
+                            new Point( inverseTransform.multiply( eyeLocation ) ),
                             new Direction( inverseTransform.multiply(defaultDirection) )
                     );
 
@@ -87,7 +122,6 @@ public class RaytracingEngine3D {
                         closestT = t;
                         closestObject = object;
                     }
-                    ;
                 }
 
 
@@ -103,9 +137,12 @@ public class RaytracingEngine3D {
             }
 
             drawLib.forceUpdate();
+            long end = System.currentTimeMillis();
+            long delta = end - start;
             try
             {
-                Thread.sleep(17);
+                if ( delta <= 200 )
+                    Thread.sleep(200 - delta);
             } catch (InterruptedException e)
             {
                 e.printStackTrace();

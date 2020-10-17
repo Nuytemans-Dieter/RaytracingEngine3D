@@ -1,5 +1,7 @@
 package graphics;
 
+import input.KeyboardInput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,6 +13,11 @@ public class DrawLib {
 
     public DrawLib(int width, int height)
     {
+        this(width, height, null);
+    }
+
+    public DrawLib(int width, int height, KeyboardInput input)
+    {
         pointPanel = new PointPanel(width, height);
 
         frame = new JFrame("Ray tracing");
@@ -18,6 +25,9 @@ public class DrawLib {
         frame.add(pointPanel);
         frame.pack();
         frame.setVisible(true);
+
+        if (input != null)
+            frame.addKeyListener( input );
     }
 
 

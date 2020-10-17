@@ -1,3 +1,5 @@
+package maths;
+
 import interfaces.ITransMatFactory;
 import maths.Matrix;
 
