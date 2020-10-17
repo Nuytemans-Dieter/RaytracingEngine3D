@@ -9,6 +9,7 @@ import maths.vector.Direction;
 import maths.vector.Point;
 import objects.Object3D;
 import objects.Ray;
+import objects.object3d.Cube;
 import objects.object3d.Sphere;
 
 import java.awt.*;
@@ -16,22 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * The type Raytracing engine 3 d.
- */
 public class RaytracingEngine3D {
 
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     */
     public static void main (String[] args) {
 
 
         // Get the screen dimensions
         // Due to using a 4k monitor, I manually specify the dimensions (for obvious performance reasons)
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final Dimension screenSize = new Dimension(600, 400);
         final double aspect = (double)screenSize.width / (double)screenSize.height;
 
@@ -53,13 +46,9 @@ public class RaytracingEngine3D {
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-        Sphere s = new Sphere(1.0);
-        s.setTransformation( matrixFactory.getScaling(3, 1, 1) );
-        objects.add( s );
-        Sphere s2 = new Sphere(1.0);
-//        s2.addTransformations( matrixFactory.getTranslation(2.0, 2.0, 0) );
-        s2.move( new Direction(1.3, 1.3, 0) );
-        objects.add( s2 );
+        Object3D c = new Cube();
+        c.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
+        objects.add( c );
 
         for (int i = 0; i < 100; i++)
         {
