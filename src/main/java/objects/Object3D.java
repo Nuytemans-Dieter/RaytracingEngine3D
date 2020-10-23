@@ -8,14 +8,14 @@ import maths.vector.Point;
 
 public abstract class Object3D extends Positionable {
 
-    protected Rgb color = new Rgb(1.0f, 1.0f, 1.0f);
+    protected Rgb color = new Rgb(0.5f, 0.5f, 0.5f);
 
     private Matrix transformation = new Matrix();
     private Matrix inverseTransformation = new Matrix();
 
     public Object3D()
     {
-        super();
+        super( new Point(0, 0, 0) );
     }
 
 
@@ -32,9 +32,14 @@ public abstract class Object3D extends Positionable {
      */
     public abstract Double getCollidingT(Ray ray);
 
+    /**
+     * Get a copy of the rgb of this object
+     *
+     * @return copy of the rgb object
+     */
     public Rgb getcolor()
     {
-        return color;
+        return new Rgb(color.r(), color.g(), color.b());
     }
 
     public Point getLocation()

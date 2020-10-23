@@ -7,10 +7,13 @@ import maths.Matrix;
 import maths.TransMatFactory;
 import maths.vector.Direction;
 import maths.vector.Point;
-import objects.LightSource;
+import objects.LightEmitter;
+import objects.lighting.GlobalIllumination;
+import objects.lighting.LightSource;
 import objects.Object3D;
 import objects.Ray;
 import objects.object3d.Cube;
+import objects.object3d.Sphere;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -49,40 +52,20 @@ public class RayTracingEngine3D {
         Object3D c = new Cube();
         c.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
         objects.add( c );
+        Object3D room = new Cube();
+        room.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
+        objects.add( room );
 
-        final List<LightSource> lights = new ArrayList<>();
-        lights.add( new LightSource( new Point(0, 7, 3) ) );
+        final List<LightEmitter> lights = new ArrayList<>();
+        lights.add( new GlobalIllumination(0.2) );
+        lights.add( new LightSource( new Point(3, 0.5, 0.5), 0.2 ) );
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 1; i++)
         {
 
             long start = System.currentTimeMillis();
 
-            Map<Input.Action, Double> map = input.getCurrentInput();
-            Matrix transform = new Matrix();
-            for (Map.Entry<Input.Action, Double> entry : map.entrySet())
-            {
-                switch (entry.getKey())
-                {
-                    case MOVE_FORWARD:
-                        break;
-                    case MOVE_BACKWARD:
-                        break;
-                    case MOVE_LEFT:
-                        break;
-                    case MOVE_RIGHT:
-                        break;
-                    case ROTATE_UP:
-                        break;
-                    case ROTATE_DOWN:
-                        break;
-                    case ROTATE_LEFT:
-                        break;
-                    case ROTATE_RIGHT:
-                        break;
-                }
-            }
-
+            // Update all inverse matrices per frame refresh
             objects.forEach(Object3D::updateInverse);
 
             for (int u = 0; u < screenSize.width; u++)
@@ -93,17 +76,15 @@ public class RayTracingEngine3D {
 
                 // Build the ray through this pixel and the camera
                 Direction defaultDirection = new Direction(-ux, -uy, -camDistance);
-//                defaultDirection = new Direction( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/6).multiply( defaultDirection ) );
 
+                Point hitLocation = null;
                 Double closestT = null;
                 Object3D closestObject = null;
                 // Find all intersections
                 for (Object3D object : objects)
                 {
-//                    object.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI / 10) );
 
                     // Calculate specific ray for this object
-//                    Matrix inverseTransform = object.getTransformation().inverse();
                     Matrix inverseTransform = object.getInverseCache();
                     final Ray ray = new Ray(
                             new Point( inverseTransform.multiply( eyeLocation ) ),
@@ -114,14 +95,47 @@ public class RayTracingEngine3D {
                     Double t = object.getCollidingT(ray);
                     if ((t != null && t >= 0) && (closestT == null || t <= closestT))
                     {
+                        hitLocation = ray.getPoint( t );
                         closestT = t;
                         closestObject = object;
                     }
                 }
 
+                double illumination = 0;
+                if (hitLocation != null)
+                for (LightEmitter light : lights)
+                {
+                    final Point lightLocation = light.getLocation();
+                    Direction dir = new Direction(
+                        lightLocation.getX() - hitLocation.getX(),
+                        lightLocation.getY() - hitLocation.getY(),
+                        lightLocation.getZ() - hitLocation.getZ()
+                    );
+
+                    Double lightClosestT = null;
+                    for (Object3D object : objects)
+                    {
+                        final Ray ray = new Ray(
+//                                new Point( object.getInverseCache().multiply( hitLocation ) ),
+//                                new Direction( object.getInverseCache().multiply( dir ) )
+                                hitLocation, dir
+                        );
+                        Double t = object.getCollidingT( ray );
+                        if (lightClosestT == null || t < lightClosestT)
+                            lightClosestT = t;
+                    }
+
+                    System.out.println(lightClosestT);
+                    if (lightClosestT == null || lightClosestT < 0.2 || lightClosestT > 1  )
+                        illumination += light.getIntensity();
+
+                }
+                else for (LightEmitter light : lights)
+                    if (light instanceof GlobalIllumination)
+                        illumination += light.getIntensity();
 
                 // Find the colour of this point returning to the eye from the point of intersection
-                Rgb color = (closestObject != null) ? closestObject.getcolor() : new Rgb(0, 0, 0);
+                Rgb color = (closestObject != null) ? closestObject.getcolor().applyIntensity( (float) illumination ) : new Rgb(0, 0, 0);
 
 
                 // Compute the hit point and the normal vector in this point
