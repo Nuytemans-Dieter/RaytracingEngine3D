@@ -6,12 +6,23 @@ import maths.vector.Direction;
 import maths.vector.Point;
 
 
-public abstract class Object3D {
+public abstract class Object3D extends Positionable {
 
-    protected Point location = new Point(0, 0, 0);
     protected Rgb color = new Rgb(1.0f, 1.0f, 1.0f);
 
     private Matrix transformation = new Matrix();
+    private Matrix inverseTransformation = new Matrix();
+
+    public Object3D()
+    {
+        super();
+    }
+
+
+    public Object3D(Point location)
+    {
+        super(location);
+    }
 
     /**
      * Get the t for which a Ray collides with this Object3D
@@ -28,7 +39,7 @@ public abstract class Object3D {
 
     public Point getLocation()
     {
-        return location;
+        return this.location;
     }
 
     /**
@@ -64,6 +75,27 @@ public abstract class Object3D {
      */
     public void move(Direction direction) {
         this.location = new Point(location.add( direction ));
+    }
+
+
+    /**
+     * Recalculate the inverse from the current transformation
+     */
+    public void updateInverse()
+    {
+        this.inverseTransformation = this.transformation.inverse();
+    }
+
+
+    /**
+     * Gets the latest inverse transformation
+     * In order the get the most up-to-date matrix: make a call to updateInverse() first
+     *
+     * @return the inverse Matrix
+     */
+    public Matrix getInverseCache()
+    {
+        return this.inverseTransformation;
     }
 
 }

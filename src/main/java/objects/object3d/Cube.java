@@ -13,6 +13,7 @@ public class Cube extends Object3D {
 
     public Cube ()
     {
+        super();
         size = 1;
     }
 

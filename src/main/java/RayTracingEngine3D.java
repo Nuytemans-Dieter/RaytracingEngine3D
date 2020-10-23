@@ -7,17 +7,17 @@ import maths.Matrix;
 import maths.TransMatFactory;
 import maths.vector.Direction;
 import maths.vector.Point;
+import objects.LightSource;
 import objects.Object3D;
 import objects.Ray;
 import objects.object3d.Cube;
-import objects.object3d.Sphere;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RaytracingEngine3D {
+public class RayTracingEngine3D {
 
     public static void main (String[] args) {
 
@@ -50,6 +50,9 @@ public class RaytracingEngine3D {
         c.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
         objects.add( c );
 
+        final List<LightSource> lights = new ArrayList<>();
+        lights.add( new LightSource( new Point(0, 7, 3) ) );
+
         for (int i = 0; i < 100; i++)
         {
 
@@ -80,6 +83,8 @@ public class RaytracingEngine3D {
                 }
             }
 
+            objects.forEach(Object3D::updateInverse);
+
             for (int u = 0; u < screenSize.width; u++)
             for (int v = 0; v < screenSize.height; v++)
             {
@@ -98,7 +103,8 @@ public class RaytracingEngine3D {
 //                    object.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI / 10) );
 
                     // Calculate specific ray for this object
-                    Matrix inverseTransform = object.getTransformation().inverse();
+//                    Matrix inverseTransform = object.getTransformation().inverse();
+                    Matrix inverseTransform = object.getInverseCache();
                     final Ray ray = new Ray(
                             new Point( inverseTransform.multiply( eyeLocation ) ),
                             new Direction( inverseTransform.multiply(defaultDirection) )
@@ -128,6 +134,7 @@ public class RaytracingEngine3D {
             drawLib.forceUpdate();
             long end = System.currentTimeMillis();
             long delta = end - start;
+            System.out.println("Calculation time: " + delta + "ms");
             try
             {
                 if ( delta <= 200 )
