@@ -1,5 +1,6 @@
 package objects.object3d;
 
+import data.HitInfo;
 import maths.Vector;
 import maths.vector.Point;
 import objects.Ray;
@@ -25,8 +26,10 @@ public class Sphere extends Object3D {
     }
 
     @Override
-    public Double getCollidingT(Ray ray)
+    public HitInfo calcHitInfo(Ray ray)
     {
+        HitInfo hitInfo = new HitInfo();
+
         Vector origin = ray.getOrigin();
         origin = origin.subtract( this.location );
 
@@ -36,20 +39,18 @@ public class Sphere extends Object3D {
 
         double D = Math.pow(B, 2) - (A * C);
         if (D < 0) {
-            return null;
+            return hitInfo;
         }
 
         D = Math.sqrt(D);
         double t1 = (-B + D) / A;
         double t2 = (-B - D) / A;
 
-        if (t1 < 0 && t2 < 0)
-            return null;
-        else if (t1 < 0)
-            return t2;
-        else if (t2 < 0)
-            return t1;
-        else
-            return Math.min(t1, t2);
+        if (t1 >= 0)
+            hitInfo.addHit(t1);
+        if (t2 >= 0)
+            hitInfo.addHit(t2);
+
+        return hitInfo;
     }
 }

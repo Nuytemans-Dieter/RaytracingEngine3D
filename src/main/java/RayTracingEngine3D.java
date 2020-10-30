@@ -8,7 +8,6 @@ import maths.TransMatFactory;
 import maths.vector.Direction;
 import maths.vector.Point;
 import objects.LightEmitter;
-import objects.lighting.GlobalIllumination;
 import objects.lighting.LightSource;
 import objects.Object3D;
 import objects.Ray;
@@ -18,7 +17,6 @@ import objects.object3d.Sphere;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class RayTracingEngine3D {
 
@@ -49,12 +47,13 @@ public class RayTracingEngine3D {
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-//        Object3D c = new Cube();
-//        c.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
-//        objects.add( c );
-        Object3D sphere = new Sphere();
-        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
-        objects.add( sphere );
+        Object3D c = new Cube();
+        c.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
+        c.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6) );
+        objects.add( c );
+//        Object3D sphere = new Sphere();
+//        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
+//        objects.add( sphere );
 //        Object3D room = new Cube();
 //        room.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
 //        objects.add( room );
@@ -102,7 +101,7 @@ public class RayTracingEngine3D {
                     );
 
                     // Calculate collisions
-                    Double t = object.getCollidingT(ray);
+                    Double t = object.calcHitInfo(ray).getLowestT();
                     if ((t != null && t >= 0) && (closestT == null || t <= closestT))
                     {
                         // Use the transformation of the object to place this hitpoint at the right location
@@ -120,7 +119,7 @@ public class RayTracingEngine3D {
                     final Point lightLocation = light.getLocation();
                     final Direction dir = new Direction(hitLocation, lightLocation);
 
-                    final double bias = 0.05;
+                    final double bias = 0.01;
 
                     // Get hitpoints on the line between the hitpoint and the light location
                     double lightClosestT = 1;
@@ -132,9 +131,10 @@ public class RayTracingEngine3D {
                                 new Direction( inverseTransform.multiply( dir ) )
                         );
 
-                        Double t = object.getCollidingT( lightRay );
-                        if ((t != null && t >= bias) && (t < lightClosestT))
-                            lightClosestT = t;
+                        List<Double> hitTimes = object.calcHitInfo( lightRay ).getHitTimes();
+                        for (double t : hitTimes)
+                            if ((t >= bias) && (t < lightClosestT))
+                                lightClosestT = t;
                     }
 
                     // Add the illumination from this light

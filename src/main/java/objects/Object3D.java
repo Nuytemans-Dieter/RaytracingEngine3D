@@ -1,5 +1,6 @@
 package objects;
 
+import data.HitInfo;
 import graphics.Rgb;
 import maths.Matrix;
 import maths.vector.Direction;
@@ -25,12 +26,12 @@ public abstract class Object3D extends Positionable {
     }
 
     /**
-     * Get the t for which a Ray collides with this Object3D
+     * Get the HitInfo for which a Ray collides with this Object3D
      *
      * @param ray the ray for which the collision is to be checked
-     * @return null when there are no intersections. The closest value of t will be returned
+     * @return HitInfo that contains zero or more values for t of intersection
      */
-    public abstract Double getCollidingT(Ray ray);
+    public abstract HitInfo calcHitInfo(Ray ray);
 
     /**
      * Get a copy of the rgb of this object

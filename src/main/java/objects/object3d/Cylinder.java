@@ -1,5 +1,6 @@
 package objects.object3d;
 
+import data.HitInfo;
 import maths.Vector;
 import maths.vector.Point;
 import objects.Object3D;
@@ -22,7 +23,7 @@ public class Cylinder extends Object3D {
     }
 
     @Override
-    public Double getCollidingT(Ray ray)
+    public HitInfo calcHitInfo(Ray ray)
     {
         Vector origin = ray.getOrigin();
         Vector dir = ray.getDirection();
@@ -41,13 +42,13 @@ public class Cylinder extends Object3D {
         boolean t1InRange = (t1 >= 0 && Math.abs( p1.getY() ) <= this.height/2);
         boolean t2InRange = (t2 >= 0 && Math.abs( p2.getY() ) <= this.height/2);
 
-        if (t1InRange && t2InRange)
-            return Math.min(t1, t2);
-        else if (!t1InRange && t2InRange)
-            return t2;
-        else if (t1InRange)
-            return t1;
-        else
+//        if (t1InRange && t2InRange)
+//            return Math.min(t1, t2);
+//        else if (!t1InRange && t2InRange)
+//            return t2;
+//        else if (t1InRange)
+//            return t1;
+//        else
             return null;
     }
 }

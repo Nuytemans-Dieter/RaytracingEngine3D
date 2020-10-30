@@ -1,5 +1,6 @@
 package objects.object3d;
 
+import data.HitInfo;
 import graphics.Rgb;
 import maths.Vector;
 import maths.vector.Direction;
@@ -28,9 +29,9 @@ public class Cube extends Object3D {
     }
 
     @Override
-    public Double getCollidingT(Ray ray)
+    public HitInfo calcHitInfo(Ray ray)
     {
-        Double lowest = null;
+        HitInfo hitInfo = new HitInfo();
         Point intersection;
         double t;
 
@@ -41,44 +42,39 @@ public class Cube extends Object3D {
         t = (size - origin.getX()) / direction.getX();
         intersection = ray.getPoint(t);
         if (t >= 0 && Math.abs(intersection.getY()) <= size && Math.abs(intersection.getZ()) <= size)
-            lowest = t;
+            hitInfo.addHit(t);
 
         // X = -1
         t = (-size - origin.getX()) / direction.getX();
         intersection = ray.getPoint(t);
         if (t >= 0 && Math.abs(intersection.getY()) <= size && Math.abs(intersection.getZ()) <= size)
-            if (lowest == null || t < lowest)
-                lowest = t;
+            hitInfo.addHit(t);
 
         // Y = 1
         t = (size - origin.getY()) / direction.getY();
         intersection = ray.getPoint(t);
         if (t >= 0 && Math.abs(intersection.getX()) <= size && Math.abs(intersection.getZ()) <= size)
-            if (lowest == null || t < lowest)
-                lowest = t;
+            hitInfo.addHit(t);
 
         // Y = -1
         t = (-size - origin.getY()) / direction.getY();
         intersection = ray.getPoint(t);
         if (t >= 0 && Math.abs(intersection.getX()) <= size && Math.abs(intersection.getZ()) <= size)
-            if (lowest == null || t < lowest)
-                lowest = t;
+            hitInfo.addHit(t);
 
         // Z = 1
         t = (size - origin.getZ()) / direction.getZ();
         intersection = ray.getPoint(t);
         if (t >= 0 && Math.abs(intersection.getX()) <= size && Math.abs(intersection.getY()) <= size)
-            if (lowest == null || t < lowest)
-                lowest = t;
+            hitInfo.addHit(t);
 
         // Z = -1
         t = (-size - origin.getZ()) / direction.getZ();
         intersection = ray.getPoint(t);
         if (t >= 0 && Math.abs(intersection.getX()) <= size && Math.abs(intersection.getY()) <= size)
-            if (lowest == null || t < lowest)
-                lowest = t;
+            hitInfo.addHit(t);
 
 
-        return lowest;
+        return hitInfo;
     }
 }
