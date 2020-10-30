@@ -1,11 +1,6 @@
 import datacontainers.RayTraceInfo;
 import datacontainers.ScreenInfo;
-import graphics.DrawLib;
-import input.KeyboardInput;
-import interfaces.ITransMatFactory;
-import interfaces.Input;
 import maths.Matrix;
-import maths.TransMatFactory;
 import maths.vector.Direction;
 import maths.vector.Point;
 import objects.LightEmitter;
@@ -13,7 +8,6 @@ import objects.Object3D;
 import objects.Ray;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RayTracer {
@@ -26,6 +20,9 @@ public class RayTracer {
 
     private final ScreenInfo screenInfo;
     private final double camDistance;
+
+    // Bias to prevent surface acne when calculating light
+    final double bias = 0.01;
 
     public RayTracer(List<Object3D> objects, List<LightEmitter> lights, double globalIllumination)
     {
@@ -55,6 +52,13 @@ public class RayTracer {
         return this.screenInfo;
     }
 
+    /**
+     * Get the RayTraceInfo for a ray through the camera and a specific pixel indicated by u and v
+     *
+     * @param u the column's index of this pixel
+     * @param v the row's index of this pixel
+     * @return RayTraceInfo that contains: the hit location, value of t at hit location and the closest object
+     */
     public RayTraceInfo tracePoint(int u, int v)
     {
         // Calculate current pixel offset
@@ -94,6 +98,13 @@ public class RayTracer {
         return new RayTraceInfo(hitLocation, closestT, closestObject);
     }
 
+    /**
+     * Get the illumination for a specific RayTraceInfo
+     * Get an object like this with RayTracer#tracePoint(u, v)
+     *
+     * @param info the RayTraceInfo for a specific pixel
+     * @return the amount of direct light in this location
+     */
     public double getIllumination(RayTraceInfo info)
     {
         // Calculate illumination in this point
@@ -104,8 +115,6 @@ public class RayTracer {
             {
                 final Point lightLocation = light.getLocation();
                 final Direction dir = new Direction(info.getHitLocation(), lightLocation);
-
-                final double bias = 0.01;
 
                 // Get hitpoints on the line between the hitpoint and the light location
                 double lightClosestT = 1;

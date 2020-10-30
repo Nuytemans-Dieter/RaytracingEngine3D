@@ -5,18 +5,13 @@ import graphics.Rgb;
 import input.KeyboardInput;
 import interfaces.ITransMatFactory;
 import interfaces.Input;
-import maths.Matrix;
 import maths.TransMatFactory;
-import maths.vector.Direction;
 import maths.vector.Point;
 import objects.LightEmitter;
 import objects.lighting.LightSource;
 import objects.Object3D;
-import objects.Ray;
 import objects.object3d.Cube;
-import objects.object3d.Sphere;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
