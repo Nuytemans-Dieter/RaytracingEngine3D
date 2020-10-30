@@ -53,7 +53,7 @@ public class Vector {
                 this.getX() + vector.get(0),
                 this.getY() + vector.get(1),
                 this.getZ() + vector.get(2),
-                this.getZ() + vector.get(3)
+                this.get(3) + vector.get(3)
             }
         );
     }
