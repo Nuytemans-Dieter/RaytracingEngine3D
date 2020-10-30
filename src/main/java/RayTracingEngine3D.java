@@ -1,3 +1,5 @@
+import datacontainers.RayTraceInfo;
+import datacontainers.ScreenInfo;
 import graphics.DrawLib;
 import graphics.Rgb;
 import input.KeyboardInput;
@@ -22,27 +24,7 @@ public class RayTracingEngine3D {
 
     public static void main (String[] args) {
 
-
-        // Get the screen dimensions
-        // Due to using a 4k monitor, I manually specify the dimensions (for obvious performance reasons)
-//        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final Dimension screenSize = new Dimension(600, 400);
-        final double aspect = (double)screenSize.width / (double)screenSize.height;
-
-        // Camera and internal screen settings
-        final double camDistance = 7;
-        final double viewAngle = Math.PI / 3;
-        final double W = 2 * camDistance * Math.tan( viewAngle / 2 );
-        final double H = W / aspect;
-        Point eyeLocation = new Point(0, 0, camDistance);
-
-        // Precompute half-screen sizes
-        final double W_half = W/2;
-        final double H_half = H/2;
-
-        // Initialisations
-        final Input input = new KeyboardInput();
-        final DrawLib drawLib = new DrawLib(screenSize.width, screenSize.height, (KeyboardInput) input);
+        // Initialise the matrix factory
         final ITransMatFactory matrixFactory = new TransMatFactory();
 
         // Initialise objects
@@ -64,94 +46,30 @@ public class RayTracingEngine3D {
 
         double globalIllumination = 0.6;
 
+        RayTracer rayTracer = new RayTracer(objects, lights, globalIllumination);
+        ScreenInfo screenInfo = rayTracer.getScreenInfo();
+
+        // Initialisations
+        final Input input = new KeyboardInput();
+        final DrawLib drawLib = new DrawLib(screenInfo.getScreenSize().width, screenInfo.getScreenSize().height, (KeyboardInput) input);
+
         // Generate a number of frames (assuming a changing environment or moving camera)
         for (int i = 0; i < 1; i++)
         {
-
             long start = System.currentTimeMillis();
 
             // Update all inverse matrices per frame refresh
             objects.forEach(Object3D::updateInverse);
 
             // Iterate through each pixel
-            for (int u = 0; u < screenSize.width; u++)
-            for (int v = 0; v < screenSize.height; v++)
+            for (int u = 0; u < screenInfo.getScreenSize().width; u++)
+            for (int v = 0; v < screenInfo.getScreenSize().height; v++)
             {
-                // Calculate current pixel offset
-                final double ux = -W_half + (W * u) / screenSize.width;
-                final double uy = -H_half + (H * v) / screenSize.height;
-
-                // Build the ray through this pixel and the camera
-                Direction defaultDirection = new Direction(-ux, -uy, -camDistance);
-
-                // Find the closest hit
-                Point hitLocation = null;
-                Double closestT = null;
-                Object3D closestObject = null;
-
-                // Find all intersections
-                for (Object3D object : objects)
-                {
-
-                    // Calculate specific ray for this object
-                    Matrix inverseTransform = object.getInverseCache();
-                    final Ray ray = new Ray(
-                            new Point( inverseTransform.multiply( eyeLocation ) ),
-                            new Direction( inverseTransform.multiply( defaultDirection ) )
-                    );
-
-                    // Calculate collisions
-                    Double t = object.calcHitInfo(ray).getLowestT();
-                    if ((t != null && t >= 0) && (closestT == null || t <= closestT))
-                    {
-                        // Use the transformation of the object to place this hitpoint at the right location
-                        hitLocation = new Point(object.getTransformation().multiply( ray.getPoint( t ) ));
-                        closestT = t;
-                        closestObject = object;
-                    }
-                }
-
-                // Calculate illumination in this point
-                double illumination = 0;
-                if (hitLocation != null)
-                for (LightEmitter light : lights)
-                {
-                    final Point lightLocation = light.getLocation();
-                    final Direction dir = new Direction(hitLocation, lightLocation);
-
-                    final double bias = 0.01;
-
-                    // Get hitpoints on the line between the hitpoint and the light location
-                    double lightClosestT = 1;
-                    for (Object3D object : objects)
-                    {
-                        Matrix inverseTransform = object.getInverseCache();
-                        final Ray lightRay = new Ray(
-                                new Point( inverseTransform.multiply( hitLocation ) ),
-                                new Direction( inverseTransform.multiply( dir ) )
-                        );
-
-                        List<Double> hitTimes = object.calcHitInfo( lightRay ).getHitTimes();
-                        for (double t : hitTimes)
-                            if ((t >= bias) && (t < lightClosestT))
-                                lightClosestT = t;
-                    }
-
-                    // Add the illumination from this light
-                    // If there is no colliding object on this line, or when the object is located behind the light
-                    if ( lightClosestT >= 1 )
-                    {
-                        illumination += light.getIntensity();
-                    }
-
-                }
-
-                // Add global illumination for all points
-                illumination += globalIllumination;
+                RayTraceInfo info = rayTracer.tracePoint(u, v);
+                double illumination = rayTracer.getIllumination( info );
 
                 // Find the colour of this point returning to the eye from the point of intersection
-                Rgb color = (closestObject != null) ? closestObject.getcolor().applyIntensity( (float) illumination ) : new Rgb(0, 0, 0);
-
+                Rgb color = (info.getClosestObject() != null) ? info.getClosestObject().getcolor().applyIntensity( (float) illumination ) : new Rgb(0, 0, 0);
 
                 // Compute the hit point and the normal vector in this point
 //            Point hitPoint = ray.getPoint(closestT);

@@ -1,6 +1,6 @@
 package objects;
 
-import data.HitInfo;
+import datacontainers.HitInfo;
 import graphics.Rgb;
 import maths.Matrix;
 import maths.vector.Direction;

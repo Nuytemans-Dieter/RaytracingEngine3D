@@ -1,9 +1,7 @@
 package objects.object3d;
 
-import data.HitInfo;
-import graphics.Rgb;
+import datacontainers.HitInfo;
 import maths.Vector;
-import maths.vector.Direction;
 import maths.vector.Point;
 import objects.Ray;
 import objects.Object3D;

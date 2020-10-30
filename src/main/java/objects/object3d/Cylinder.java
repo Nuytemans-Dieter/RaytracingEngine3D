@@ -1,6 +1,6 @@
 package objects.object3d;
 
-import data.HitInfo;
+import datacontainers.HitInfo;
 import maths.Vector;
 import maths.vector.Point;
 import objects.Object3D;
