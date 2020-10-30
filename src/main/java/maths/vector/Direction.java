@@ -10,6 +10,22 @@ public class Direction extends Vector {
     }
 
     /**
+     * Creates a Direction between two points (two - one)
+     *
+     * @param one the starting point
+     * @param two the end point
+     */
+    public Direction(Point one, Point two)
+    {
+        super(
+            two.getX() - one.getX(),
+            two.getY() - one.getY(),
+            two.getZ() - one.getZ(),
+            0
+        );
+    }
+
+    /**
      * Creates a Direction from a given Vector
      * Will set the last element, k, to 0 to indicate being a direction
      *

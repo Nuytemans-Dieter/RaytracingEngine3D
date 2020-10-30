@@ -49,17 +49,23 @@ public class RayTracingEngine3D {
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-        Object3D c = new Cube();
-        c.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
-        objects.add( c );
-        Object3D room = new Cube();
-        room.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
-        objects.add( room );
+//        Object3D c = new Cube();
+//        c.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
+//        objects.add( c );
+        Object3D sphere = new Sphere();
+        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
+        objects.add( sphere );
+//        Object3D room = new Cube();
+//        room.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
+//        objects.add( room );
 
         final List<LightEmitter> lights = new ArrayList<>();
-        lights.add( new GlobalIllumination(0.2) );
-        lights.add( new LightSource( new Point(3, 0.5, 0.5), 0.2 ) );
+//        lights.add( new GlobalIllumination(0.6) );
+        lights.add( new LightSource( new Point(0, 2, 0), 0.6 ) );
 
+        double globalIllumination = 0.6;
+
+        // Generate a number of frames (assuming a changing environment or moving camera)
         for (int i = 0; i < 1; i++)
         {
 
@@ -68,18 +74,22 @@ public class RayTracingEngine3D {
             // Update all inverse matrices per frame refresh
             objects.forEach(Object3D::updateInverse);
 
+            // Iterate through each pixel
             for (int u = 0; u < screenSize.width; u++)
             for (int v = 0; v < screenSize.height; v++)
             {
+                // Calculate current pixel offset
                 final double ux = -W_half + (W * u) / screenSize.width;
                 final double uy = -H_half + (H * v) / screenSize.height;
 
                 // Build the ray through this pixel and the camera
                 Direction defaultDirection = new Direction(-ux, -uy, -camDistance);
 
+                // Find the closest hit
                 Point hitLocation = null;
                 Double closestT = null;
                 Object3D closestObject = null;
+
                 // Find all intersections
                 for (Object3D object : objects)
                 {
@@ -88,51 +98,56 @@ public class RayTracingEngine3D {
                     Matrix inverseTransform = object.getInverseCache();
                     final Ray ray = new Ray(
                             new Point( inverseTransform.multiply( eyeLocation ) ),
-                            new Direction( inverseTransform.multiply(defaultDirection) )
+                            new Direction( inverseTransform.multiply( defaultDirection ) )
                     );
 
                     // Calculate collisions
                     Double t = object.getCollidingT(ray);
                     if ((t != null && t >= 0) && (closestT == null || t <= closestT))
                     {
-                        hitLocation = ray.getPoint( t );
+                        // Use the transformation of the object to place this hitpoint at the right location
+                        hitLocation = new Point(object.getTransformation().multiply( ray.getPoint( t ) ));
                         closestT = t;
                         closestObject = object;
                     }
                 }
 
+                // Calculate illumination in this point
                 double illumination = 0;
                 if (hitLocation != null)
                 for (LightEmitter light : lights)
                 {
                     final Point lightLocation = light.getLocation();
-                    Direction dir = new Direction(
-                        lightLocation.getX() - hitLocation.getX(),
-                        lightLocation.getY() - hitLocation.getY(),
-                        lightLocation.getZ() - hitLocation.getZ()
-                    );
+                    final Direction dir = new Direction(hitLocation, lightLocation);
 
-                    Double lightClosestT = null;
+                    final double bias = 0.05;
+
+                    // Get hitpoints on the line between the hitpoint and the light location
+                    double lightClosestT = 1;
                     for (Object3D object : objects)
                     {
-                        final Ray ray = new Ray(
-//                                new Point( object.getInverseCache().multiply( hitLocation ) ),
-//                                new Direction( object.getInverseCache().multiply( dir ) )
-                                hitLocation, dir
+                        Matrix inverseTransform = object.getInverseCache();
+                        final Ray lightRay = new Ray(
+                                new Point( inverseTransform.multiply( hitLocation ) ),
+                                new Direction( inverseTransform.multiply( dir ) )
                         );
-                        Double t = object.getCollidingT( ray );
-                        if (lightClosestT == null || t < lightClosestT)
+
+                        Double t = object.getCollidingT( lightRay );
+                        if ((t != null && t >= bias) && (t < lightClosestT))
                             lightClosestT = t;
                     }
 
-                    System.out.println(lightClosestT);
-                    if (lightClosestT == null || lightClosestT < 0.2 || lightClosestT > 1  )
+                    // Add the illumination from this light
+                    // If there is no colliding object on this line, or when the object is located behind the light
+                    if ( lightClosestT >= 1 )
+                    {
                         illumination += light.getIntensity();
+                    }
 
                 }
-                else for (LightEmitter light : lights)
-                    if (light instanceof GlobalIllumination)
-                        illumination += light.getIntensity();
+
+                // Add global illumination for all points
+                illumination += globalIllumination;
 
                 // Find the colour of this point returning to the eye from the point of intersection
                 Rgb color = (closestObject != null) ? closestObject.getcolor().applyIntensity( (float) illumination ) : new Rgb(0, 0, 0);
