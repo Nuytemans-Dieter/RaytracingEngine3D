@@ -2,6 +2,7 @@ package objects.object3d;
 
 import datacontainers.HitInfo;
 import maths.Vector;
+import maths.vector.Direction;
 import maths.vector.Point;
 import objects.Object3D;
 import objects.Ray;
@@ -50,5 +51,11 @@ public class Cylinder extends Object3D {
 //            return t1;
 //        else
             return null;
+    }
+
+    @Override
+    public Direction getNormal(Point location)
+    {
+        return null;
     }
 }

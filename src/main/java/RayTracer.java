@@ -1,11 +1,14 @@
 import datacontainers.RayTraceInfo;
 import datacontainers.ScreenInfo;
+import graphics.Rgb;
 import maths.Matrix;
 import maths.vector.Direction;
 import maths.vector.Point;
 import objects.LightEmitter;
+import objects.Material;
 import objects.Object3D;
 import objects.Ray;
+import objects.lighting.GlobalIllumination;
 
 import java.awt.*;
 import java.util.List;
@@ -14,7 +17,7 @@ public class RayTracer {
 
     private final List<Object3D> objects;
     private final List<LightEmitter> lights;
-    private final double globalIllumination;
+    private final GlobalIllumination globalIllumination;
 
     private final Point eyeLocation;
 
@@ -24,7 +27,7 @@ public class RayTracer {
     // Bias to prevent surface acne when calculating light
     final double bias = 0.01;
 
-    public RayTracer(List<Object3D> objects, List<LightEmitter> lights, double globalIllumination)
+    public RayTracer(List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination)
     {
 
         // Get the screen dimensions
@@ -105,10 +108,14 @@ public class RayTracer {
      * @param info the RayTraceInfo for a specific pixel
      * @return the amount of direct light in this location
      */
-    public double getIllumination(RayTraceInfo info)
+    public Rgb getDiffusion(RayTraceInfo info)
     {
+        if (info.getClosestObject() == null)
+            return new Rgb(0, 0, 0);
+
         // Calculate illumination in this point
-        double illumination = 0;
+        Rgb illumination = new Rgb(0, 0, 0);
+        Material hitMaterial = info.getClosestObject().getMaterial();
 
         if (info.getHitLocation() != null)
             for (LightEmitter light : lights)
@@ -136,15 +143,27 @@ public class RayTracer {
                 // If there is no colliding object on this line, or when the object is located behind the light
                 if ( lightClosestT >= 1 )
                 {
-                    illumination += light.getIntensity();
+                    Direction normal = info.getClosestObject().getNormal( info.getHitLocation() );
+                    double intensity = normal.dotProduct( dir ) / ( normal.getNorm() * dir.getNorm() );
+                    illumination.addRgb(
+                        (float) Math.max( hitMaterial.diffusivityR * intensity * light.getColor().r(), 0 ),
+                        (float) Math.max( hitMaterial.diffusivityG * intensity * light.getColor().g(), 0 ),
+                        (float) Math.max( hitMaterial.diffusivityB * intensity * light.getColor().b(), 0 )
+                    );
                 }
 
             }
 
         // Add global illumination for all points
-        illumination += globalIllumination;
+        illumination.addRgb(
+            globalIllumination.getColor().r(),
+            globalIllumination.getColor().g(),
+            globalIllumination.getColor().b()
+        );
 
-        return illumination;
+        Rgb diffusion = info.getClosestObject().getcolor();
+        diffusion.applyIntensity( illumination );
+        return diffusion;
     }
 
 }

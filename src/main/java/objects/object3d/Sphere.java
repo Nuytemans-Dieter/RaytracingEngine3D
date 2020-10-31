@@ -2,6 +2,8 @@ package objects.object3d;
 
 import datacontainers.HitInfo;
 import maths.Vector;
+import maths.vector.Direction;
+import maths.vector.Point;
 import objects.Ray;
 import objects.Object3D;
 
@@ -51,5 +53,16 @@ public class Sphere extends Object3D {
             hitInfo.addHit(t2);
 
         return hitInfo;
+    }
+
+    @Override
+    public Direction getNormal(Point location)
+    {
+        Point transformedLocation = new Point(this.getTransformation().multiply( this.location ));
+        return new Direction(
+            (location.getX() - transformedLocation.getX()) / this.radius,
+            (location.getY() - transformedLocation.getY()) / this.radius,
+            (location.getZ() - transformedLocation.getZ()) / this.radius
+        );
     }
 }

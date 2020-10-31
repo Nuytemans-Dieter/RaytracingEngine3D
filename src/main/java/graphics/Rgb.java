@@ -36,11 +36,27 @@ public class Rgb {
         return b;
     }
 
+    public void addRgb(float r, float g, float b)
+    {
+        this.r += r;
+        this.g += g;
+        this.b += b;
+    }
+
     public Rgb applyIntensity(float intensity)
     {
         this.r = this.r * intensity;
         this.g = this.g * intensity;
         this.b = this.b * intensity;
+
+        return this;
+    }
+
+    public Rgb applyIntensity(Rgb intensity)
+    {
+        this.r = this.r * intensity.r;
+        this.g = this.g * intensity.g;
+        this.b = this.b * intensity.b;
 
         return this;
     }

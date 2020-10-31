@@ -5,11 +5,12 @@ import graphics.Rgb;
 import maths.Matrix;
 import maths.vector.Direction;
 import maths.vector.Point;
+import objects.materials.Lambertian;
 
 
 public abstract class Object3D extends Positionable {
 
-    protected Rgb color = new Rgb(0.5f, 0.5f, 0.5f);
+    protected Material material = new Lambertian();
 
     private Matrix transformation = new Matrix();
     private Matrix inverseTransformation = new Matrix();
@@ -25,6 +26,12 @@ public abstract class Object3D extends Positionable {
         super(location);
     }
 
+    public Object3D setMaterial(Material material)
+    {
+        this.material = material;
+        return this;
+    }
+
     /**
      * Get the HitInfo for which a Ray collides with this Object3D
      *
@@ -33,6 +40,17 @@ public abstract class Object3D extends Positionable {
      */
     public abstract HitInfo calcHitInfo(Ray ray);
 
+
+    /**
+     * Get the Material that is applied to this object
+     *
+     * @return an instance of the material
+     */
+    public Material getMaterial()
+    {
+        return this.material;
+    }
+
     /**
      * Get a copy of the rgb of this object
      *
@@ -40,7 +58,7 @@ public abstract class Object3D extends Positionable {
      */
     public Rgb getcolor()
     {
-        return new Rgb(color.r(), color.g(), color.b());
+        return new Rgb(material.r(), material.g(), material.b());
     }
 
     public Point getLocation()
@@ -83,6 +101,14 @@ public abstract class Object3D extends Positionable {
         this.location = new Point(location.add( direction ));
     }
 
+
+    /**
+     * Get the normal vector a specific location on this Object3D
+     *
+     * @param location the location for which the normal vector is sought. Must lie on the object
+     * @return the normal vector (Direction)
+     */
+    public abstract Direction getNormal(Point location);
 
     /**
      * Recalculate the inverse from the current transformation
