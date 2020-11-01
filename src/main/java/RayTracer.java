@@ -247,7 +247,7 @@ public class RayTracer {
                     // If the hit point is facing the light
                     if (spec > 0)
                     {
-                        double phong = Math.pow(spec, hitMaterial.specularExponent);
+                        double phong = Math.pow(spec, hitMaterial.roughness);
                         illumination.addRgb(
                                 (float) Math.max(hitMaterial.specularR * phong * light.getColor().r(), 0),
                                 (float) Math.max(hitMaterial.specularG * phong * light.getColor().g(), 0),

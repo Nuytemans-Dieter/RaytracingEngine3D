@@ -12,7 +12,7 @@ public class Lambertian extends Material {
             new Rgb(0.5f, 0.5f, 0.5f),
             0.4f,
             0.4f,
-            16
+            2
         );
     }
 }
