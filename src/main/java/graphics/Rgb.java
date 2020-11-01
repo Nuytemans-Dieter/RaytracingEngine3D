@@ -36,11 +36,24 @@ public class Rgb {
         return b;
     }
 
-    public void addRgb(float r, float g, float b)
+    public Rgb addRgb(float r, float g, float b)
     {
         this.r += r;
         this.g += g;
         this.b += b;
+
+        return this;
+    }
+
+    public Rgb addRgb(Rgb rgb)
+    {
+        return addRgb( rgb.r, rgb.g, rgb.b);
+    }
+
+    @Override
+    public Rgb clone()
+    {
+        return new Rgb(r, g, b);
     }
 
     public Rgb applyIntensity(float intensity)

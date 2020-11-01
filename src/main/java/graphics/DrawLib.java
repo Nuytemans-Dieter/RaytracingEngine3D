@@ -103,6 +103,9 @@ class PointPanel extends JPanel {
      */
     public void drawPoint(int x, int y, float r, float g, float b)
     {
+        r = Math.min(r, 1);
+        g = Math.min(g, 1);
+        b = Math.min(b, 1);
         frame.setRGB(x, frame.getHeight() - 1 - y, new Color(r, g, b).getRGB());
     }
 

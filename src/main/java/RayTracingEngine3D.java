@@ -31,18 +31,20 @@ public class RayTracingEngine3D {
 //        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6) );
 //        objects.add( cube );
         Object3D sphere = new Sphere();
-//        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
+        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
         objects.add( sphere );
+//        Object3D sphere2 = new Sphere();
+//        sphere2.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
+//        objects.add( sphere2 );
 //        Object3D room = new Cube();
 //        room.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
 //        objects.add( room );
 
         final List<LightEmitter> lights = new ArrayList<>();
 //        lights.add( new GlobalIllumination(0.6) );
-        lights.add( new LightSource( new Point(2, 2, 2), 1 ) );
-        lights.add( new LightSource( new Point(-2, -2, -2), 0.6 ) );
+        lights.add( new LightSource( new Point(2, -2, 5), 2.0, new Rgb(1.0f, 1.0f, 1.0f) ) );
 
-        RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(0.6));
+        RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(1.0));
         ScreenInfo screenInfo = rayTracer.getScreenInfo();
 
         // Initialisations
@@ -62,10 +64,11 @@ public class RayTracingEngine3D {
             for (int v = 0; v < screenInfo.getScreenSize().height; v++)
             {
                 RayTraceInfo info = rayTracer.tracePoint(u, v);
+                Rgb global = rayTracer.getGlobalIllumination( info );
                 Rgb diffusion = rayTracer.getDiffusion( info );
+                Rgb specular = rayTracer.getSpecular( info );
 
-                float a = 1, b = 1, c = 1;
-                Rgb illumination = diffusion.applyIntensity( a );
+                Rgb illumination = global.addRgb( diffusion ).addRgb( specular );
 
                 // Find the colour of this point returning to the eye from the point of intersection
                 Rgb color = (info.getClosestObject() != null) ? illumination : new Rgb(0, 0, 0);

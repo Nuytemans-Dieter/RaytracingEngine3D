@@ -79,6 +79,29 @@ public class Vector {
         );
     }
 
+    public Vector multiply(double value)
+    {
+        return new Vector(
+            new double[]{
+                this.getX() * value,
+                this.getY() * value,
+                this.getZ() * value,
+                this.get(3)
+            }
+        );
+    }
+
+    public Vector divide(double value)
+    {
+        return new Vector(
+            new double[]{
+                this.getX() / value,
+                this.getY() / value,
+                this.getZ() / value,
+                this.get(3)
+            }
+        );
+    }
 
     public double dotProduct(Vector vector)
     {
@@ -93,6 +116,16 @@ public class Vector {
         return Math.sqrt(Math.pow(this.getX(), 2.0) + Math.pow(this.getY(), 2.0) + Math.pow(this.getZ(), 2.0));
     }
 
+    public Vector normalise()
+    {
+        double magnitude = this.getNorm();
+        return new Vector(
+            this.getX() / magnitude,
+            this.getY() / magnitude,
+            this.getZ() / magnitude,
+            this.get(3)
+        );
+    }
 
     /**
      * Get the element at a specified location
