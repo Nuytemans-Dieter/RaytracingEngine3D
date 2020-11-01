@@ -64,11 +64,7 @@ public class RayTracingEngine3D {
             for (int v = 0; v < screenInfo.getScreenSize().height; v++)
             {
                 RayTraceInfo info = rayTracer.tracePoint(u, v);
-                Rgb global = rayTracer.getGlobalIllumination( info );
-                Rgb diffusion = rayTracer.getDiffusion( info );
-                Rgb specular = rayTracer.getSpecular( info );
-
-                Rgb illumination = global.addRgb( diffusion ).addRgb( specular );
+                Rgb illumination = rayTracer.getIllumination( info );
 
                 // Find the colour of this point returning to the eye from the point of intersection
                 Rgb color = (info.getClosestObject() != null) ? illumination : new Rgb(0, 0, 0);
