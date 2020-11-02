@@ -8,9 +8,12 @@ import interfaces.Input;
 import maths.TransMatFactory;
 import maths.vector.Point;
 import objects.LightEmitter;
+import objects.Material;
 import objects.lighting.GlobalIllumination;
 import objects.lighting.LightSource;
 import objects.Object3D;
+import objects.materials.Lambertian;
+import objects.materials.Mirror;
 import objects.object3d.Cube;
 import objects.object3d.Sphere;
 
@@ -31,14 +34,12 @@ public class RayTracingEngine3D {
 //        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6) );
 //        objects.add( cube );
         Object3D sphere = new Sphere();
-        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
+//        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
         objects.add( sphere );
+
 //        Object3D sphere2 = new Sphere();
-//        sphere2.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
-//        objects.add( sphere2 );
-//        Object3D room = new Cube();
-//        room.setTransformation( matrixFactory.getScaling(10.0, 10.0, 10.0) );
-//        objects.add( room );
+//        sphere2.setTransformation( matrixFactory.getTranslation( -1.5, 1, 1 ));
+//        objects.add(sphere2);
 
         final List<LightEmitter> lights = new ArrayList<>();
 //        lights.add( new GlobalIllumination(0.6) );
@@ -63,11 +64,19 @@ public class RayTracingEngine3D {
             for (int u = 0; u < screenInfo.getScreenSize().width; u++)
             for (int v = 0; v < screenInfo.getScreenSize().height; v++)
             {
-                RayTraceInfo info = rayTracer.tracePoint(u, v);
-                Rgb illumination = rayTracer.getIllumination( info );
+                Rgb color = new Rgb(0, 0, 0);
 
-                // Find the colour of this point returning to the eye from the point of intersection
-                Rgb color = (info.getClosestObject() != null) ? illumination : new Rgb(0, 0, 0);
+                RayTraceInfo info = rayTracer.tracePoint(u, v);
+                if ( info.getClosestObject() != null )
+                {
+                    Material material = info.getClosestObject().getMaterial();
+                    Rgb illumination = rayTracer.getIllumination( info ).applyIntensity( material.colorStrength );
+//                    Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
+
+                    // Find the colour of this point returning to the eye from the point of intersection
+//                    color = illumination.addRgb( reflection );
+                    color.addRgb( illumination );
+                }
 
                 // Compute the hit point and the normal vector in this point
 //            Point hitPoint = ray.getPoint(closestT);

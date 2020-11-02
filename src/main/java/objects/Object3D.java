@@ -20,6 +20,12 @@ public abstract class Object3D extends Positionable {
         super( new Point(0, 0, 0) );
     }
 
+    public Object3D(Material material)
+    {
+        super( new Point(0, 0, 0) );
+
+        this.material = material;
+    }
 
     public Object3D(Point location)
     {

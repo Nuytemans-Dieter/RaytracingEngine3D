@@ -19,9 +19,12 @@ public class Material {
     public final float specularB;
     public final float roughness;
 
-    public final float reflectivity;
+    // TODO Make refraction immutable or private with getter (copy)
     public final float[] refraction;
+
+    public final float reflectivity;
     public final float transparency;
+    public final float colorStrength;
 
     public Material(Rgb color, float diffusivity, float specularValue)
     {
@@ -30,7 +33,7 @@ public class Material {
 
     public Material(Rgb color, float diffusivity, float specularValue, float roughness)
     {
-        this(color, diffusivity, diffusivity, diffusivity, specularValue, specularValue, specularValue, roughness, 0.0f, new float[]{50f, 50f, 50f}, 1.0f);
+        this(color, diffusivity, diffusivity, diffusivity, specularValue, specularValue, specularValue, roughness, 0.0f, new float[]{50f, 50f, 50f}, 0.0f);
     }
 
     public Material(Rgb color, float diffusivity, float specular, float roughness, float reflectivity, float[] refraction, float transparency)
@@ -55,10 +58,12 @@ public class Material {
         this.ambientB = Math.max(1 - specularB - diffusivityB, 0);
         this.roughness = roughness;
 
-        this.reflectivity = reflectivity;
         assert (refraction.length == 3);
         this.refraction = refraction;
+
+        this.reflectivity = reflectivity;
         this.transparency = transparency;
+        this.colorStrength = Math.max( 1 - reflectivity - transparency, 0 );
     }
 
     public Rgb getColor()

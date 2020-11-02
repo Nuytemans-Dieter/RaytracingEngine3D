@@ -26,7 +26,9 @@ public class RayTracer {
     private final double camDistance;
 
     // Bias to prevent surface acne when calculating light
-    final double bias = 0.01;
+    private final double BIAS = 0.01;
+    // Reflection depth: Maximum recursion depth when doing reflective calculations
+    private final int REFLECTION_DEPTH = 2;
 
     public RayTracer(List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination)
     {
@@ -144,7 +146,7 @@ public class RayTracer {
 
                     List<Double> hitTimes = object.calcHitInfo( lightRay ).getHitTimes();
                     for (double t : hitTimes)
-                        if ((t >= bias) && (t < lightClosestT))
+                        if ((t >= BIAS) && (t < lightClosestT))
                             lightClosestT = t;
                 }
 
@@ -159,9 +161,9 @@ public class RayTracer {
                     // Only light up if the hit point is facing the light
                     if (dir.dotProduct( normal ) > 0)
                         illumination.addRgb(
-                                (float) Math.max( hitMaterial.diffusivityR * intensity * light.getColor().r(), 0 ),
-                                (float) Math.max( hitMaterial.diffusivityG * intensity * light.getColor().g(), 0 ),
-                                (float) Math.max( hitMaterial.diffusivityB * intensity * light.getColor().b(), 0 )
+                            (float) Math.max( hitMaterial.diffusivityR * intensity * light.getColor().r(), 0 ),
+                            (float) Math.max( hitMaterial.diffusivityG * intensity * light.getColor().g(), 0 ),
+                            (float) Math.max( hitMaterial.diffusivityB * intensity * light.getColor().b(), 0 )
                         );
 
                     // Calculate the specular component
@@ -175,26 +177,86 @@ public class RayTracer {
                     {
                         double phong = Math.pow(spec, hitMaterial.roughness);
                         illumination.addRgb(
-                                (float) Math.max(hitMaterial.specularR * phong * light.getColor().r(), 0),
-                                (float) Math.max(hitMaterial.specularG * phong * light.getColor().g(), 0),
-                                (float) Math.max(hitMaterial.specularB * phong * light.getColor().b(), 0)
+                            (float) Math.max(hitMaterial.specularR * phong * light.getColor().r(), 0),
+                            (float) Math.max(hitMaterial.specularG * phong * light.getColor().g(), 0),
+                            (float) Math.max(hitMaterial.specularB * phong * light.getColor().b(), 0)
                         );
                     }
                 }
 
             }
 
-        Material material = info.getClosestObject().getMaterial();
-
         // Add global illumination
         illumination.addRgb(
-            Math.max(globalIllumination.getColor().r() * material.ambientR, 0),
-            Math.max(globalIllumination.getColor().g() * material.ambientB, 0),
-            Math.max(globalIllumination.getColor().b() * material.ambientB, 0)
+            Math.max(globalIllumination.getColor().r() * hitMaterial.ambientR, 0),
+            Math.max(globalIllumination.getColor().g() * hitMaterial.ambientB, 0),
+            Math.max(globalIllumination.getColor().b() * hitMaterial.ambientB, 0)
         );
 
-        Rgb diffusion = info.getClosestObject().getcolor();
-        diffusion.applyIntensity( illumination );
-        return diffusion;
+        Rgb color = info.getClosestObject().getcolor();
+        color.applyIntensity( illumination );
+        return color;
+    }
+
+
+    public Rgb calculateReflection(RayTraceInfo info)
+    {
+        return this.calculateReflection(info, this.REFLECTION_DEPTH);
+    }
+
+    private Rgb calculateReflection(RayTraceInfo info, int recursiveIndex)
+    {
+        int index = recursiveIndex - 1;
+
+        // Stop recursion when there is no hit object
+        if (info.getHitLocation() == null || info.getClosestObject() == null || info.getHitRay() == null)
+            return new Rgb(0, 0, 0);
+
+        Vector direction = info.getHitRay().getDirection().normalise();
+        Vector normal = info.getClosestObject().getNormal( info.getHitLocation() ).normalise();
+        double product = direction.dotProduct( normal );
+        if (product < 0)
+            normal = normal.multiply(-1);
+
+        Vector reflectedDirection = direction.subtract( normal.multiply( 2 * product ) );
+
+        // Find the closest hit
+        Point hitLocation = null;
+        Double closestT = null;
+        Object3D closestObject = null;
+        Ray hitRay = null;
+
+        // Find all intersections
+        for (Object3D object : objects)
+        {
+
+            // Calculate specific ray for this object
+            Matrix inverseTransform = object.getInverseCache();
+            final Ray reflected = new Ray(
+                    new Point( inverseTransform.multiply( info.getHitLocation() ) ),
+                    new Direction( inverseTransform.multiply( reflectedDirection ) )
+            );
+
+            // Calculate collisions
+            Double t = object.calcHitInfo( reflected ).getLowestT();
+            if ((t != null && t >= 0) && (closestT == null || t <= closestT))
+            {
+                // Use the transformation of the object to place this hitpoint at the right location
+                hitLocation = new Point(object.getTransformation().multiply( reflected.getPoint( t ) ));
+                closestT = t;
+                closestObject = object;
+                hitRay = reflected;
+            }
+        }
+
+        RayTraceInfo newInfo = new RayTraceInfo(hitLocation, closestT, closestObject, hitRay);
+
+        Material hitMaterial = info.getClosestObject().getMaterial();
+
+        Rgb lightComponent = hitMaterial.getColor().applyIntensity( hitMaterial.colorStrength );
+        Rgb reflectionComponent = index > 0 ? this.calculateReflection(newInfo, index).applyIntensity( hitMaterial.reflectivity ) : new Rgb(0, 0, 0);
+        Rgb refractionComponent = new Rgb(0, 0, 0);
+
+        return lightComponent.addRgb( reflectionComponent ).addRgb( refractionComponent );
     }
 }

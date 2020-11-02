@@ -9,10 +9,13 @@ public class Lambertian extends Material {
     {
         super
         (
-            new Rgb(0.5f, 0.5f, 0.5f),
-            0.4f,
-            0.4f,
-            2
+            new Rgb(0.35f, 0.35f, 0.35f),
+            0.5f,
+            0.2f,
+            2,
+            0.0f,
+            new float[]{1, 1, 1},
+            0.0f
         );
     }
 }

@@ -4,6 +4,7 @@ import datacontainers.HitInfo;
 import maths.Vector;
 import maths.vector.Direction;
 import maths.vector.Point;
+import objects.Material;
 import objects.Ray;
 import objects.Object3D;
 
@@ -20,6 +21,11 @@ public class Sphere extends Object3D {
         radius = 1.0;
     }
 
+    public Sphere(Material material)
+    {
+        super(material);
+        radius = 1.0;
+    }
 
     public Sphere(double radius)
     {
