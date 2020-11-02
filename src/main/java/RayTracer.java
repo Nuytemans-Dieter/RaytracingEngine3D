@@ -28,7 +28,7 @@ public class RayTracer {
     // Bias to prevent surface acne when calculating light
     private final double BIAS = 0.01;
     // Reflection depth: Maximum recursion depth when doing reflective calculations
-    private final int REFLECTION_DEPTH = 2;
+    private final int REFLECTION_DEPTH = 1;
 
     public RayTracer(List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination)
     {
@@ -214,8 +214,10 @@ public class RayTracer {
         if (info.getHitLocation() == null || info.getClosestObject() == null || info.getHitRay() == null)
             return color;
 
-        Vector direction = info.getHitRay().getDirection().normalise();
+        Ray viewRay = info.getHitRay();
+        Vector direction = viewRay.getDirection().normalise();
         Vector normal = info.getClosestObject().getNormal( info.getHitLocation() ).normalise();
+
         double product = direction.dotProduct( normal );
         if (product < 0)
             normal = normal.multiply(-1);
@@ -256,10 +258,17 @@ public class RayTracer {
         Material hitMaterial = info.getClosestObject().getMaterial();
 
         Rgb lightComponent = hitMaterial.getColor().applyIntensity( hitMaterial.colorStrength );
-        Rgb reflectionComponent = index > 0 ? this.calculateReflection(newInfo, index).applyIntensity( hitMaterial.reflectivity ) : new Rgb(0, 0, 0);
-        Rgb refractionComponent = new Rgb(0, 0, 0);
+        Rgb reflectionComponent;
+        if (index > 0)
+        {
+            reflectionComponent = this.calculateReflection(newInfo, index);
+            reflectionComponent.applyIntensity( hitMaterial.reflectivity );
+        }
+        else reflectionComponent = new Rgb(0, 0, 0);
 
-        color.addRgb( lightComponent ).addRgb( reflectionComponent ).addRgb( refractionComponent );
+//        Rgb refractionComponent = new Rgb(0, 0, 0).applyIntensity( hitMaterial.transparency );
+
+        color.addRgb( lightComponent ).addRgb( reflectionComponent );//.addRgb( refractionComponent );
         return color;
     }
 }
