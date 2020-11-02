@@ -29,17 +29,14 @@ public class RayTracingEngine3D {
 
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
-//        Object3D cube = new Cube();
-//        cube.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
-//        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6) );
-//        objects.add( cube );
-        Object3D sphere = new Sphere();
-//        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.3, 1.0) );
+
+        Object3D sphere = new Sphere( );
+        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
         objects.add( sphere );
 
-//        Object3D sphere2 = new Sphere();
-//        sphere2.setTransformation( matrixFactory.getTranslation( -1.5, 1, 1 ));
-//        objects.add(sphere2);
+        Object3D sphere2 = new Sphere( new Mirror() );
+        sphere2.setTransformation( matrixFactory.getTranslation( 2, 0, 0 ));
+        objects.add(sphere2);
 
         final List<LightEmitter> lights = new ArrayList<>();
 //        lights.add( new GlobalIllumination(0.6) );
@@ -71,11 +68,11 @@ public class RayTracingEngine3D {
                 {
                     Material material = info.getClosestObject().getMaterial();
                     Rgb illumination = rayTracer.getIllumination( info ).applyIntensity( material.colorStrength );
-//                    Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
+                    Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
 
                     // Find the colour of this point returning to the eye from the point of intersection
 //                    color = illumination.addRgb( reflection );
-                    color.addRgb( illumination );
+                    color.addRgb( illumination ).addRgb( reflection );
                 }
 
                 // Compute the hit point and the normal vector in this point

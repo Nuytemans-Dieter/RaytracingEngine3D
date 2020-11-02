@@ -62,9 +62,9 @@ public abstract class Object3D extends Positionable {
      *
      * @return copy of the rgb object
      */
-    public Rgb getcolor()
+    public Rgb getColor()
     {
-        return new Rgb(material.r(), material.g(), material.b());
+        return material.getColor().clone();
     }
 
     public Point getLocation()

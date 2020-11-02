@@ -68,7 +68,7 @@ public class Material {
 
     public Rgb getColor()
     {
-        return this.color;
+        return this.color.clone();
     }
 
     public float r()

@@ -11,10 +11,10 @@ public class Mirror extends Material {
         super
             (
                 new Rgb(0.35f, 0.35f, 0.35f),
-                0.5f,
                 0.2f,
+                0.4f,
                 2,
-                1.0f,
+                0.8f,
                 new float[]{1, 1, 1},
                 0.0f
             );

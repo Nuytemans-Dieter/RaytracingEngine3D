@@ -193,7 +193,7 @@ public class RayTracer {
             Math.max(globalIllumination.getColor().b() * hitMaterial.ambientB, 0)
         );
 
-        Rgb color = info.getClosestObject().getcolor();
+        Rgb color = info.getClosestObject().getColor();
         color.applyIntensity( illumination );
         return color;
     }
@@ -208,9 +208,11 @@ public class RayTracer {
     {
         int index = recursiveIndex - 1;
 
+        Rgb color = new Rgb(0, 0, 0);
+
         // Stop recursion when there is no hit object
         if (info.getHitLocation() == null || info.getClosestObject() == null || info.getHitRay() == null)
-            return new Rgb(0, 0, 0);
+            return color;
 
         Vector direction = info.getHitRay().getDirection().normalise();
         Vector normal = info.getClosestObject().getNormal( info.getHitLocation() ).normalise();
@@ -257,6 +259,7 @@ public class RayTracer {
         Rgb reflectionComponent = index > 0 ? this.calculateReflection(newInfo, index).applyIntensity( hitMaterial.reflectivity ) : new Rgb(0, 0, 0);
         Rgb refractionComponent = new Rgb(0, 0, 0);
 
-        return lightComponent.addRgb( reflectionComponent ).addRgb( refractionComponent );
+        color.addRgb( lightComponent ).addRgb( reflectionComponent ).addRgb( refractionComponent );
+        return color;
     }
 }
