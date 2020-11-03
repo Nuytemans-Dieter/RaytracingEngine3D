@@ -28,7 +28,7 @@ public class RayTracer {
     // Bias to prevent surface acne when calculating light
     private final double BIAS = 0.01;
     // Reflection depth: Maximum recursion depth when doing reflective calculations
-    private final int REFLECTION_DEPTH = 1;
+    private final int REFLECTION_DEPTH = 5;
 
     public RayTracer(List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination)
     {
@@ -74,6 +74,20 @@ public class RayTracer {
         // Build the ray through this pixel and the camera
         Direction defaultDirection = new Direction(-ux, -uy, -camDistance);
 
+        return this.tracePoint( new Ray( eyeLocation, defaultDirection ) );
+    }
+
+    /**
+     * Get the RayTraceInfo for given ray
+     *
+     * @param ray the ray that should be traced for its nearest collision
+     * @return RayTraceInfo that contains: the hit location, value of t at hit location and the closest object
+     */
+    public RayTraceInfo tracePoint( Ray ray )
+    {
+        Point origin = ray.getOrigin();
+        Direction direction = ray.getDirection();
+
         // Find the closest hit
         Point hitLocation = null;
         Double closestT = null;
@@ -86,20 +100,20 @@ public class RayTracer {
 
             // Calculate specific ray for this object
             Matrix inverseTransform = object.getInverseCache();
-            final Ray ray = new Ray(
-                    new Point( inverseTransform.multiply( eyeLocation ) ),
-                    new Direction( inverseTransform.multiply( defaultDirection ) )
+            final Ray transformedRay = new Ray(
+                    new Point( inverseTransform.multiply( origin ) ),
+                    new Direction( inverseTransform.multiply( direction ) )
             );
 
             // Calculate collisions
-            Double t = object.calcHitInfo(ray).getLowestT();
+            Double t = object.calcHitInfo( transformedRay ).getLowestT();
             if ((t != null && t >= 0) && (closestT == null || t <= closestT))
             {
                 // Use the transformation of the object to place this hitpoint at the right location
-                hitLocation = new Point(object.getTransformation().multiply( ray.getPoint( t ) ));
+                hitLocation = new Point(object.getTransformation().multiply( transformedRay.getPoint( t ) ));
                 closestT = t;
                 closestObject = object;
-                hitRay = ray;
+                hitRay = transformedRay;
             }
         }
 
@@ -206,69 +220,107 @@ public class RayTracer {
 
     private Rgb calculateReflection(RayTraceInfo info, int recursiveIndex)
     {
-        int index = recursiveIndex - 1;
+        int recursiveDepth = recursiveIndex - 1;
 
-        Rgb color = new Rgb(0, 0, 0);
+        Rgb color = Rgb.fromColor( Rgb.Color.BLACK );
 
-        // Stop recursion when there is no hit object
-        if (info.getHitLocation() == null || info.getClosestObject() == null || info.getHitRay() == null)
+        if (info.getClosestObject() == null || info.getHitLocation() == null || info.getHitRay() == null)
             return color;
 
-        Ray viewRay = info.getHitRay();
-        Vector direction = viewRay.getDirection().normalise();
-        Vector normal = info.getClosestObject().getNormal( info.getHitLocation() ).normalise();
+        Rgb illumination = this.getIllumination( info );
+        Object3D object = info.getClosestObject();
+        Material material = object.getMaterial();
+        Point location = info.getHitLocation();
 
-        double product = direction.dotProduct( normal );
-        if (product < 0)
-            normal = normal.multiply(-1);
+        if (recursiveDepth < 0)
+            return illumination;
 
-        Vector reflectedDirection = direction.subtract( normal.multiply( 2 * product ) );
+        illumination.applyIntensity( material.colorStrength );
 
-        // Find the closest hit
-        Point hitLocation = null;
-        Double closestT = null;
-        Object3D closestObject = null;
-        Ray hitRay = null;
-
-        // Find all intersections
-        for (Object3D object : objects)
+        if (material.reflectivity >= 0)
         {
+            Ray ray = info.getHitRay();
+            Vector direction = ray.getDirection().normalise();
+            Vector normal = object.getNormal( location ).normalise();
 
-            // Calculate specific ray for this object
-            Matrix inverseTransform = object.getInverseCache();
-            final Ray reflected = new Ray(
-                    new Point( inverseTransform.multiply( info.getHitLocation() ) ),
-                    new Direction( inverseTransform.multiply( reflectedDirection ) )
-            );
+            double product = direction.dotProduct( normal );
+            if (product < 0)
+                normal = normal.multiply(-1);
 
-            // Calculate collisions
-            Double t = object.calcHitInfo( reflected ).getLowestT();
-            if ((t != null && t >= 0) && (closestT == null || t <= closestT))
-            {
-                // Use the transformation of the object to place this hitpoint at the right location
-                hitLocation = new Point(object.getTransformation().multiply( reflected.getPoint( t ) ));
-                closestT = t;
-                closestObject = object;
-                hitRay = reflected;
-            }
+            Direction reflectedDirection = new Direction( direction.subtract( normal.multiply( 2 * product ) ));
+            Ray reflected = new Ray(location, reflectedDirection);
+            Rgb reflectedComponent = this.calculateReflection( this.tracePoint( reflected ), recursiveDepth );
+            reflectedComponent.applyIntensity( material.reflectivity );
+            color.addRgb( reflectedComponent );
         }
-
-        RayTraceInfo newInfo = new RayTraceInfo(hitLocation, closestT, closestObject, hitRay);
-
-        Material hitMaterial = info.getClosestObject().getMaterial();
-
-        Rgb lightComponent = hitMaterial.getColor().applyIntensity( hitMaterial.colorStrength );
-        Rgb reflectionComponent;
-        if (index > 0)
-        {
-            reflectionComponent = this.calculateReflection(newInfo, index);
-            reflectionComponent.applyIntensity( hitMaterial.reflectivity );
-        }
-        else reflectionComponent = new Rgb(0, 0, 0);
-
-//        Rgb refractionComponent = new Rgb(0, 0, 0).applyIntensity( hitMaterial.transparency );
-
-        color.addRgb( lightComponent ).addRgb( reflectionComponent );//.addRgb( refractionComponent );
-        return color;
+        return illumination;
     }
+
+//    private Rgb calculateReflection(RayTraceInfo info, int recursiveIndex)
+//    {
+//        int index = recursiveIndex - 1;
+//
+//        Rgb color = new Rgb(0, 0, 0);
+//
+//        // Stop recursion when there is no hit object
+//        if (info.getHitLocation() == null || info.getClosestObject() == null || info.getHitRay() == null)
+//            return color;
+//
+//        Ray viewRay = info.getHitRay();
+//        Vector direction = viewRay.getDirection().normalise();
+//        Vector normal = info.getClosestObject().getNormal( info.getHitLocation() ).normalise();
+//
+//        double product = direction.dotProduct( normal );
+//        if (product < 0)
+//            normal = normal.multiply(-1);
+//
+//        Vector reflectedDirection = direction.subtract( normal.multiply( 2 * product ) );
+//
+//        // Find the closest hit
+//        Point hitLocation = null;
+//        Double closestT = null;
+//        Object3D closestObject = null;
+//        Ray hitRay = null;
+//
+//        // Find all intersections
+//        for (Object3D object : objects)
+//        {
+//
+//            // Calculate specific ray for this object
+//            Matrix inverseTransform = object.getInverseCache();
+//            final Ray reflected = new Ray(
+//                    new Point( inverseTransform.multiply( info.getHitLocation() ) ),
+//                    new Direction( inverseTransform.multiply( reflectedDirection ) )
+//            );
+//
+//            // Calculate collisions
+//            Double t = object.calcHitInfo( reflected ).getLowestT();
+//            if ((t != null && t >= 0) && (closestT == null || t <= closestT))
+//            {
+//                // Use the transformation of the object to place this hitpoint at the right location
+//                hitLocation = new Point(object.getTransformation().multiply( reflected.getPoint( t ) ));
+//                closestT = t;
+//                closestObject = object;
+//                hitRay = reflected;
+//            }
+//        }
+//
+//        RayTraceInfo newInfo = new RayTraceInfo(hitLocation, closestT, closestObject, hitRay);
+//
+//        Material hitMaterial = info.getClosestObject().getMaterial();
+//
+//        Rgb lightComponent = hitMaterial.getColor().applyIntensity( hitMaterial.colorStrength );
+//        Rgb reflectionComponent;
+//        if (index > 0)
+//        {
+//            reflectionComponent = this.calculateReflection(newInfo, index);
+//            reflectionComponent.applyIntensity( hitMaterial.reflectivity );
+//        }
+//        else reflectionComponent = new Rgb(0, 0, 0);
+//
+////        Rgb refractionComponent = new Rgb(0, 0, 0).applyIntensity( hitMaterial.transparency );
+//
+//        color.addRgb( lightComponent ).addRgb( reflectionComponent );//.addRgb( refractionComponent );
+//        return color;
+//    }
 }

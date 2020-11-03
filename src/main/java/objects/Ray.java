@@ -29,12 +29,12 @@ public class Ray {
     }
 
 
-    public Vector getOrigin()
+    public Point getOrigin()
     {
         return origin;
     }
 
-    public Vector getDirection()
+    public Direction getDirection()
     {
         return direction;
     }

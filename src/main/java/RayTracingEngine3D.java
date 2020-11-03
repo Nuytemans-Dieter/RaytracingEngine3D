@@ -30,7 +30,7 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-        Object3D sphere = new Sphere( );
+        Object3D sphere = new Sphere( new Lambertian( Rgb.Color.GREEN ) );
         sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
         objects.add( sphere );
 
@@ -40,7 +40,8 @@ public class RayTracingEngine3D {
 
         final List<LightEmitter> lights = new ArrayList<>();
 //        lights.add( new GlobalIllumination(0.6) );
-        lights.add( new LightSource( new Point(2, -2, 5), 2.0, new Rgb(1.0f, 1.0f, 1.0f) ) );
+        lights.add( new LightSource( new Point(2, -2, 5), 1.0, new Rgb(1f, 1f, 1f) ) );
+        lights.add( new LightSource( new Point(3, -2, 0), 1.0, new Rgb(1f, 1f, 1f) ) );
 
         RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(1.0));
         ScreenInfo screenInfo = rayTracer.getScreenInfo();

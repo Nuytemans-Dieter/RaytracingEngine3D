@@ -78,7 +78,8 @@ public class Rgb {
         RED,
         GREEN,
         BLUE,
-        GREY
+        GREY,
+        BLACK
     }
 
     public static Rgb fromColor(Color color)
@@ -93,6 +94,8 @@ public class Rgb {
                 return new Rgb(0.2f, 0.2f, 0.7f);
             case GREY:
                 return new Rgb(0.35f, 0.35f, 0.35f);
+            case BLACK:
+                return new Rgb(0, 0, 0);
             default:
                 return new Rgb(0.5f, 0.5f, 0.5f);
         }
