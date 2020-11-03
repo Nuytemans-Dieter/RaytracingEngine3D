@@ -52,11 +52,11 @@ public class Material {
         this.specularR = specularR;
         this.specularG = specularG;
         this.specularB = specularB;
+        this.roughness = roughness;
 
         this.ambientR = Math.max(1 - specularR - diffusivityR, 0);
         this.ambientG = Math.max(1 - specularG - diffusivityG, 0);
         this.ambientB = Math.max(1 - specularB - diffusivityB, 0);
-        this.roughness = roughness;
 
         assert (refraction.length == 3);
         this.refraction = refraction;

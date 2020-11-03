@@ -74,12 +74,18 @@ public class Rgb {
         return this;
     }
 
+    public String toString()
+    {
+        return "(" + r + ", " + g + ", " + b + ")";
+    }
+
     public enum Color {
         RED,
         GREEN,
         BLUE,
         GREY,
-        BLACK
+        BLACK,
+        WHITE
     }
 
     public static Rgb fromColor(Color color)
@@ -96,6 +102,8 @@ public class Rgb {
                 return new Rgb(0.35f, 0.35f, 0.35f);
             case BLACK:
                 return new Rgb(0, 0, 0);
+            case WHITE:
+                return new Rgb(1, 1, 1);
             default:
                 return new Rgb(0.5f, 0.5f, 0.5f);
         }
