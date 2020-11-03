@@ -1,15 +1,16 @@
 package objects.materials;
 
+
 import graphics.Rgb;
 import objects.Material;
 
 public class Lambertian extends Material {
 
-    public Lambertian()
+    public Lambertian(Rgb.Color color)
     {
         super
         (
-            new Rgb(0.35f, 0.35f, 0.35f),
+            Rgb.fromColor( color ),
             0.5f,
             0.2f,
             2,
@@ -17,5 +18,10 @@ public class Lambertian extends Material {
             new float[]{1, 1, 1},
             0.0f
         );
+    }
+
+    public Lambertian()
+    {
+        this( Rgb.Color.GREY );
     }
 }

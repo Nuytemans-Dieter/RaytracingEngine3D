@@ -74,4 +74,28 @@ public class Rgb {
         return this;
     }
 
+    public enum Color {
+        RED,
+        GREEN,
+        BLUE,
+        GREY
+    }
+
+    public static Rgb fromColor(Color color)
+    {
+        switch ( color )
+        {
+            case RED:
+                return new Rgb(0.7f, 0.2f, 0.2f);
+            case GREEN:
+                return new Rgb(0.2f, 0.7f, 0.2f);
+            case BLUE:
+                return new Rgb(0.2f, 0.2f, 0.7f);
+            case GREY:
+                return new Rgb(0.35f, 0.35f, 0.35f);
+            default:
+                return new Rgb(0.5f, 0.5f, 0.5f);
+        }
+    }
+
 }
