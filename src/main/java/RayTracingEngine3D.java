@@ -31,20 +31,21 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-        Object3D sphere = new Sphere().setMaterial( new Lambertian( Rgb.Color.RED ) );
-        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
-        objects.add( sphere );
-//
-        Object3D sphere2 = new Sphere().setMaterial( new Gold() );
+//        Object3D sphere = new Sphere().setMaterial( new Lambertian( Rgb.Color.RED ) );
+//        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
+//        objects.add( sphere );
+
+        Object3D sphere2 = new Sphere().setMaterial( new Mirror() );
         sphere2.setTransformation( matrixFactory.getTranslation( 2, 0, 0 ));
         objects.add(sphere2);
 
-//        Object3D cube = new Cube().setMaterial( new Mirror() );
-////        cube.setTransformation( matrixFactory.getScaling(10, 10, 10) );
+        Object3D cube = new Cube().setMaterial( new Lambertian(Rgb.Color.GREEN) );
+//        cube.setTransformation( matrixFactory.getScaling(10, 10, 10) );
 //        cube.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
-//        objects.add( cube );
+        objects.add( cube );
 
         final List<LightEmitter> lights = new ArrayList<>();
+        lights.add( new LightSource( new Point(0, 0, 5), 1.0, new Rgb(1,1,1) ) );
 //        lights.add( new GlobalIllumination(0.6) );
         lights.add( new LightSource( new Point(2, -2, 5), 1.0, new Rgb(1f, 1f, 1f) ) );
         lights.add( new LightSource( new Point(3, -2, 0), 1.0, new Rgb(1f, 1f, 1f) ) );
@@ -74,7 +75,7 @@ public class RayTracingEngine3D {
                 if ( info.getClosestObject() != null )
                 {
                     Material material = info.getClosestObject().getMaterial();
-                    Rgb illumination = rayTracer.getIllumination( info ).applyIntensity( material.colorStrength );
+                    Rgb illumination = rayTracer.calculateIllumination( info ).applyIntensity( material.colorStrength );
                     Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
 
                     // Find the colour of this point returning to the eye from the point of intersection

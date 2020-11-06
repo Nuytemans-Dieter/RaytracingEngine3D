@@ -149,7 +149,7 @@ public class RayTracer {
      * @param info the RayTraceInfo for a specific pixel
      * @return the amount of direct light in this location
      */
-    public Rgb getIllumination(RayTraceInfo info)
+    public Rgb calculateIllumination(RayTraceInfo info)
     {
         if (info.getClosestObject() == null)
             return voidColor.clone();
@@ -269,7 +269,7 @@ public class RayTracer {
             if (hitInfo.getClosestObject() != null)
             {
                 Rgb reflectedComponent = this.calculateReflection(hitInfo , recursiveDepth );
-                Rgb illuminationComponent = this.getIllumination( hitInfo );
+                Rgb illuminationComponent = this.calculateIllumination( hitInfo );
 
                 reflectedComponent.applyIntensity( hitInfo.getClosestObject().getMaterial().reflectivity );
                 illuminationComponent.applyIntensity( hitInfo.getClosestObject().getMaterial().colorStrength );
