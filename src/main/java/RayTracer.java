@@ -230,6 +230,7 @@ public class RayTracer {
 
         Rgb color = Rgb.fromColor( Rgb.Color.BLACK );
 
+        // If this ray does not hit anything, assume a hit with the void
         if (info.getClosestObject() == null || info.getHitLocation() == null || info.getHitRay() == null)
             return voidColor.clone();
 
@@ -237,6 +238,7 @@ public class RayTracer {
         Material material = object.getMaterial();
         Point location = info.getHitLocation();
 
+        // If the depth is reached, assume this
         if (recursiveDepth < 0)
             return color;
 
@@ -247,20 +249,18 @@ public class RayTracer {
             Vector normal = object.getNormal( location ).normalise();
 
             double product = direction.dotProduct( normal );
-            if (product < 0)
-                normal = normal.multiply(-1);
 
             Direction reflectedDirection = new Direction( direction.subtract( normal.multiply( 2 * product ) ));
-            Ray reflected = new Ray(location, reflectedDirection);
-            RayTraceInfo hitInfo = this.tracePoint( reflected );
+            Ray reflectedRay = new Ray(location, reflectedDirection);
+            RayTraceInfo hitInfo = this.tracePoint( reflectedRay );
 
-            Rgb reflectedComponent = this.calculateReflection(hitInfo , recursiveDepth );
+//            Rgb reflectedComponent = this.calculateReflection(hitInfo , recursiveDepth );
             Rgb illuminationComponent = this.getIllumination( hitInfo );
 
-            reflectedComponent.applyIntensity( material.reflectivity );
-            illuminationComponent.applyIntensity( material.colorStrength );
+//            reflectedComponent.applyIntensity( material.reflectivity );
+//            illuminationComponent.applyIntensity( material.colorStrength );
 
-            color.addRgb( reflectedComponent );
+//            color.addRgb( reflectedComponent );
             color.addRgb( illuminationComponent );
         }
         return color;

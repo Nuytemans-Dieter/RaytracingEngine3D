@@ -71,10 +71,10 @@ public class Vector {
     {
         return new Vector(
             new double[]{
-                this.getX() - vector.get(0),
-                this.getY() - vector.get(1),
-                this.getZ() - vector.get(2),
-                this.get(3) - vector.get(3)
+                this.getX() - vector.getX(),
+                this.getY() - vector.getY(),
+                this.getZ() - vector.getZ(),
+                this.getP() - vector.getP()
             }
         );
     }
@@ -86,7 +86,7 @@ public class Vector {
                 this.getX() * value,
                 this.getY() * value,
                 this.getZ() * value,
-                this.get(3)
+                this.getP()
             }
         );
     }
@@ -105,15 +105,15 @@ public class Vector {
 
     public double dotProduct(Vector vector)
     {
-        return  this.getX() * vector.getX() +
-                this.getY() * vector.getY() +
-                this.getZ() * vector.getZ();
+        return  ( this.getX() * vector.getX() ) +
+                ( this.getY() * vector.getY() ) +
+                ( this.getZ() * vector.getZ() );
     }
 
 
     public double getNorm()
     {
-        return Math.sqrt(Math.pow(this.getX(), 2.0) + Math.pow(this.getY(), 2.0) + Math.pow(this.getZ(), 2.0));
+        return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2) + Math.pow(this.getZ(), 2));
     }
 
     public Vector normalise()
@@ -153,6 +153,10 @@ public class Vector {
     public double getZ()
     {
         return vector[2];
+    }
+
+    public double getP() {
+        return vector[3];
     }
 
     /**
