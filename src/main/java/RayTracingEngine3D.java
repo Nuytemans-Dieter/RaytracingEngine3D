@@ -72,8 +72,11 @@ public class RayTracingEngine3D {
                     Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
 
                     // Find the colour of this point returning to the eye from the point of intersection
-//                    color = illumination.addRgb( reflection );
                     color.addRgb( illumination ).addRgb( reflection );
+                }
+                else
+                {
+                    color.addRgb( rayTracer.getVoidColor() );
                 }
 
                 // Compute the hit point and the normal vector in this point
