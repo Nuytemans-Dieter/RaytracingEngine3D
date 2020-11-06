@@ -12,6 +12,7 @@ import objects.Material;
 import objects.lighting.GlobalIllumination;
 import objects.lighting.LightSource;
 import objects.Object3D;
+import objects.materials.Gold;
 import objects.materials.Lambertian;
 import objects.materials.Mirror;
 import objects.object3d.Cube;
@@ -30,13 +31,18 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-        Object3D sphere = new Sphere( new Lambertian( Rgb.Color.GREEN ) );
+        Object3D sphere = new Sphere().setMaterial( new Lambertian( Rgb.Color.RED ) );
         sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
         objects.add( sphere );
-
-        Object3D sphere2 = new Sphere( new Mirror() );
+//
+        Object3D sphere2 = new Sphere().setMaterial( new Gold() );
         sphere2.setTransformation( matrixFactory.getTranslation( 2, 0, 0 ));
         objects.add(sphere2);
+
+//        Object3D cube = new Cube().setMaterial( new Mirror() );
+////        cube.setTransformation( matrixFactory.getScaling(10, 10, 10) );
+//        cube.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
+//        objects.add( cube );
 
         final List<LightEmitter> lights = new ArrayList<>();
 //        lights.add( new GlobalIllumination(0.6) );

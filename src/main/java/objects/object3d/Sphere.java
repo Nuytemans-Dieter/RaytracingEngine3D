@@ -21,12 +21,6 @@ public class Sphere extends Object3D {
         radius = 1.0;
     }
 
-    public Sphere(Material material)
-    {
-        super(material);
-        radius = 1.0;
-    }
-
     public Sphere(double radius)
     {
         this.radius = radius;

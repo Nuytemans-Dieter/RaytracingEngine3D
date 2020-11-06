@@ -80,6 +80,40 @@ public class Cube extends Object3D {
     @Override
     public Direction getNormal(Point location)
     {
-        return null;
+        // Prevent rounding errors
+        Point p = new Point(
+            (int) location.getX(),
+            (int) location.getY(),
+            (int) location.getZ()
+        );
+
+        if (p.getX() == size && Math.abs( p.getY() ) <= size && Math.abs( p.getZ() ) <= size)
+        {
+            return new Direction(size, 0, 0);
+        }
+        else if (p.getX() == - size && Math.abs( p.getY() ) <= size && Math.abs( p.getZ() ) <= size)
+        {
+            return new Direction(-size, 0, 0);
+        }
+        else if (p.getY() == size && Math.abs( p.getX() ) <= size && Math.abs( p.getZ() ) <= size)
+        {
+            return new Direction(0, size, 0);
+        }
+        else if (p.getY() == - size && Math.abs( p.getX() ) <= size && Math.abs( p.getZ() ) <= size)
+        {
+            return new Direction(0, -size, 0);
+        }
+        else if (p.getZ() == size && Math.abs( p.getX() ) <= size && Math.abs( p.getY() ) <= size)
+        {
+            return new Direction(0, 0, size);
+        }
+        else if (p.getZ() == - size && Math.abs( p.getX() ) <= size && Math.abs( p.getY() ) <= size)
+        {
+            return new Direction(0, 0, -size);
+        }
+        else
+        {
+            return new Direction(0, 0, 0);
+        }
     }
 }
