@@ -93,7 +93,19 @@ public class RayTracer {
      * @param ray the ray that should be traced for its nearest collision
      * @return RayTraceInfo that contains: the hit location, value of t at hit location and the closest object
      */
-    public RayTraceInfo tracePoint( Ray ray )
+    public RayTraceInfo tracePoint( Ray ray)
+    {
+        return this.tracePoint( ray, 0 );
+    }
+
+    /**
+     * Get the RayTraceInfo for given ray
+     *
+     * @param ray the ray that should be traced for its nearest collision
+     * @param epsilon a bias to avoid surface acne due to rounding errors
+     * @return RayTraceInfo that contains: the hit location, value of t at hit location and the closest object
+     */
+    public RayTraceInfo tracePoint( Ray ray, double epsilon )
     {
         Point origin = ray.getOrigin();
         Direction direction = ray.getDirection();
@@ -117,7 +129,7 @@ public class RayTracer {
 
             // Calculate collisions
             Double t = object.calcHitInfo( transformedRay ).getLowestT();
-            if ((t != null && t >= 0) && (closestT == null || t <= closestT))
+            if ((t != null && t >= epsilon) && (closestT == null || t <= closestT))
             {
                 // Use the transformation of the object to place this hitpoint at the right location
                 hitLocation = new Point(object.getTransformation().multiply( transformedRay.getPoint( t ) ));
@@ -252,16 +264,23 @@ public class RayTracer {
 
             Direction reflectedDirection = new Direction( direction.subtract( normal.multiply( 2 * product ) ));
             Ray reflectedRay = new Ray(location, reflectedDirection);
-            RayTraceInfo hitInfo = this.tracePoint( reflectedRay );
+            RayTraceInfo hitInfo = this.tracePoint( reflectedRay, this.BIAS );
 
-//            Rgb reflectedComponent = this.calculateReflection(hitInfo , recursiveDepth );
-            Rgb illuminationComponent = this.getIllumination( hitInfo );
+            if (hitInfo.getClosestObject() != null)
+            {
+                Rgb reflectedComponent = this.calculateReflection(hitInfo , recursiveDepth );
+                Rgb illuminationComponent = this.getIllumination( hitInfo );
 
-//            reflectedComponent.applyIntensity( material.reflectivity );
-//            illuminationComponent.applyIntensity( material.colorStrength );
+                reflectedComponent.applyIntensity( hitInfo.getClosestObject().getMaterial().reflectivity );
+                illuminationComponent.applyIntensity( hitInfo.getClosestObject().getMaterial().colorStrength );
 
-//            color.addRgb( reflectedComponent );
-            color.addRgb( illuminationComponent );
+                color.addRgb( reflectedComponent );
+                color.addRgb( illuminationComponent );
+            }
+            else
+            {
+                color.addRgb( this.voidColor.clone() );
+            }
         }
         return color;
     }
