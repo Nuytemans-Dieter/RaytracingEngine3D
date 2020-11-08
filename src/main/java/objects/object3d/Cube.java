@@ -9,7 +9,7 @@ import objects.Object3D;
 
 public class Cube extends Object3D {
 
-    private double size;
+    private final double size;
 
     public Cube ()
     {
@@ -80,40 +80,61 @@ public class Cube extends Object3D {
     @Override
     public Direction getNormal(Point location)
     {
-        // Prevent rounding errors
-        Point p = new Point(
-            (int) location.getX(),
-            (int) location.getY(),
-            (int) location.getZ()
-        );
+        // Move the hit point to the simplified coordinate system
+        Vector loc = this.getInverseCache().multiply( location );
 
-        if (p.getX() == size && Math.abs( p.getY() ) <= size && Math.abs( p.getZ() ) <= size)
-        {
-            return new Direction(size, 0, 0);
-        }
-        else if (p.getX() == - size && Math.abs( p.getY() ) <= size && Math.abs( p.getZ() ) <= size)
-        {
-            return new Direction(-size, 0, 0);
-        }
-        else if (p.getY() == size && Math.abs( p.getX() ) <= size && Math.abs( p.getZ() ) <= size)
-        {
-            return new Direction(0, size, 0);
-        }
-        else if (p.getY() == - size && Math.abs( p.getX() ) <= size && Math.abs( p.getZ() ) <= size)
-        {
-            return new Direction(0, -size, 0);
-        }
-        else if (p.getZ() == size && Math.abs( p.getX() ) <= size && Math.abs( p.getY() ) <= size)
-        {
-            return new Direction(0, 0, size);
-        }
-        else if (p.getZ() == - size && Math.abs( p.getX() ) <= size && Math.abs( p.getY() ) <= size)
-        {
-            return new Direction(0, 0, -size);
-        }
-        else
-        {
-            return new Direction(0, 0, 0);
-        }
+        double bias = 1.000001;
+        return new Direction( loc.divide( this.size ).multiply( bias ).round() );
     }
+
+
+//    @Override
+//    public Direction getNormal(Point location)
+//    {
+//
+//        location = new Point(this.getInverseCache().multiply( location ));
+//
+//        double bias = 0.0001;
+//
+//        // Prevent rounding errors
+//        Point p = new Point(
+//            (int) (location.getX() + bias),
+//            (int) (location.getY() + bias),
+//            (int) (location.getZ() + bias)
+//        );
+//
+//        Direction direction;
+//
+//        if (p.getX() == size && Math.abs( p.getY() ) <= size && Math.abs( p.getZ() ) <= size)
+//        {
+//            direction = new Direction(size, 0, 0);
+//        }
+//        else if (p.getX() == - size && Math.abs( p.getY() ) <= size && Math.abs( p.getZ() ) <= size)
+//        {
+//            direction = new Direction(-size, 0, 0);
+//        }
+//        else if (p.getY() == size && Math.abs( p.getX() ) <= size && Math.abs( p.getZ() ) <= size)
+//        {
+//            direction = new Direction(0, size, 0);
+//        }
+//        else if (p.getY() == - size && Math.abs( p.getX() ) <= size && Math.abs( p.getZ() ) <= size)
+//        {
+//            direction = new Direction(0, -size, 0);
+//        }
+//        else if (p.getZ() == size && Math.abs( p.getX() ) <= size && Math.abs( p.getY() ) <= size)
+//        {
+//            direction = new Direction(0, 0, size);
+//        }
+//        else if (p.getZ() == - size && Math.abs( p.getX() ) <= size && Math.abs( p.getY() ) <= size)
+//        {
+//            direction = new Direction(0, 0, -size);
+//        }
+//        else
+//        {
+//            direction = new Direction(0, 0, 0);
+//        }
+//
+//        direction = new Direction( direction.normalise() );
+//        return direction;
+//    }
 }

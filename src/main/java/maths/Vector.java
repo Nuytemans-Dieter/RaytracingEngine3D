@@ -128,6 +128,22 @@ public class Vector {
     }
 
     /**
+     * Does not modify this object.
+     * Each element will be rounded to its nearest integer
+     *
+     * @return the Vector that is the result of this operation
+     */
+    public Vector round()
+    {
+        return new Vector(
+            (int) this.getX(),
+            (int) this.getY(),
+            (int) this.getZ(),
+            (int) this.getP()
+        );
+    }
+
+    /**
      * Get the element at a specified location
      *
      * @param i the location [0, 3]
