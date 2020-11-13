@@ -112,7 +112,7 @@ public abstract class Object3D extends Positionable {
      * Get the normal vector a specific location on this Object3D
      *
      * @param location the location for which the normal vector is sought. Must lie on the object
-     * @return the normal vector (Direction)
+     * @return the normal vector (Direction), this Vector will be normalised
      */
     public abstract Direction getNormal(Point location);
 

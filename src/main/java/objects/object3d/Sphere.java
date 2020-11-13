@@ -58,11 +58,7 @@ public class Sphere extends Object3D {
     @Override
     public Direction getNormal(Point location)
     {
-        Point transformedLocation = new Point(this.getTransformation().multiply( this.location ));
-        return new Direction(
-            (location.getX() - transformedLocation.getX()) / this.radius,
-            (location.getY() - transformedLocation.getY()) / this.radius,
-            (location.getZ() - transformedLocation.getZ()) / this.radius
-        );
+        Point simpleHitLocation = new Point( this.getInverseCache().multiply( location ) );
+        return new Direction( simpleHitLocation.subtract( this.location ).normalise() );
     }
 }

@@ -6,6 +6,7 @@ import input.KeyboardInput;
 import interfaces.ITransMatFactory;
 import interfaces.Input;
 import maths.TransMatFactory;
+import maths.vector.Direction;
 import maths.vector.Point;
 import objects.LightEmitter;
 import objects.Material;
@@ -35,21 +36,21 @@ public class RayTracingEngine3D {
 //        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
 //        objects.add( sphere );
 
-        Object3D sphere2 = new Sphere().setMaterial( new Mirror() );
-        sphere2.setTransformation( matrixFactory.getTranslation( 4, 0, 0 ));
+        Object3D sphere2 = new Sphere().setMaterial( new Gold() );
+        sphere2.move(new Direction(1, 1, 1));
+        sphere2.setTransformation( matrixFactory.getTranslation( 0, 0, 0 ));
         objects.add(sphere2);
 
-        Object3D cube = new Cube().setMaterial( new Lambertian(Rgb.Color.GREEN) );
-//        cube.addTransformations( matrixFactory.getScaling(10, 10, 10) );
-        cube.addTransformations( matrixFactory.getTranslation(1, 2, 2) );
-        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
+        Object3D cube = new Sphere().setMaterial( new Mirror() );
+        cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
+//        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
         objects.add( cube );
 
         final List<LightEmitter> lights = new ArrayList<>();
         lights.add( new LightSource( new Point(0, 0, 5), 1.0, new Rgb(1,1,1) ) );
 //        lights.add( new GlobalIllumination(0.6) );
-//        lights.add( new LightSource( new Point(2, -2, 5), 1.0, new Rgb(1f, 1f, 1f) ) );
-//        lights.add( new LightSource( new Point(3, -2, 0), 1.0, new Rgb(1f, 1f, 1f) ) );
+        lights.add( new LightSource( new Point(2, -2, 5), 1.0, new Rgb(1f, 1f, 1f) ) );
+        lights.add( new LightSource( new Point(3, -2, 0), 1.0, new Rgb(1f, 1f, 1f) ) );
 
         RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(1.0));
         ScreenInfo screenInfo = rayTracer.getScreenInfo();
