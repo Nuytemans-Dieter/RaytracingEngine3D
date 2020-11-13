@@ -8,28 +8,18 @@ import maths.vector.Point;
 import objects.materials.Lambertian;
 
 
-public abstract class Object3D extends Positionable {
+public abstract class Object3D {
 
     protected Material material = new Lambertian();
 
     private Matrix transformation = new Matrix();
     private Matrix inverseTransformation = new Matrix();
 
-    public Object3D()
-    {
-        super( new Point(0, 0, 0) );
-    }
+    public Object3D() {}
 
     public Object3D(Material material)
     {
-        super( new Point(0, 0, 0) );
-
         this.material = material;
-    }
-
-    public Object3D(Point location)
-    {
-        super(location);
     }
 
     public Object3D setMaterial(Material material)
@@ -67,11 +57,6 @@ public abstract class Object3D extends Positionable {
         return material.getColor().clone();
     }
 
-    public Point getLocation()
-    {
-        return this.location;
-    }
-
     /**
      * Removes all current transformations and applies the given transformation matrix
      *
@@ -98,23 +83,6 @@ public abstract class Object3D extends Positionable {
         return this.transformation;
     }
 
-    /**
-     * Move this object by applying a certain direction
-     *
-     * @param direction the direction (vector) of movement
-     */
-    public void move(Direction direction) {
-        this.location = new Point(location.add( direction ));
-    }
-
-
-    /**
-     * Get the normal vector a specific location on this Object3D
-     *
-     * @param location the location for which the normal vector is sought. Must lie on the object
-     * @return the normal vector (Direction), this Vector will be normalised
-     */
-    public abstract Direction getNormal(Point location);
 
     /**
      * Recalculate the inverse from the current transformation

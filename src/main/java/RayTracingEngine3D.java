@@ -1,4 +1,4 @@
-import datacontainers.RayTraceInfo;
+import raytracing.RayTraceInfo;
 import datacontainers.ScreenInfo;
 import graphics.DrawLib;
 import graphics.Rgb;
@@ -6,7 +6,6 @@ import input.KeyboardInput;
 import interfaces.ITransMatFactory;
 import interfaces.Input;
 import maths.TransMatFactory;
-import maths.vector.Direction;
 import maths.vector.Point;
 import objects.LightEmitter;
 import objects.Material;
@@ -14,10 +13,9 @@ import objects.lighting.GlobalIllumination;
 import objects.lighting.LightSource;
 import objects.Object3D;
 import objects.materials.Gold;
-import objects.materials.Lambertian;
 import objects.materials.Mirror;
-import objects.object3d.Cube;
 import objects.object3d.Sphere;
+import raytracing.RayTracer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +35,11 @@ public class RayTracingEngine3D {
 //        objects.add( sphere );
 
         Object3D sphere2 = new Sphere().setMaterial( new Gold() );
-        sphere2.move(new Direction(1, 1, 1));
-        sphere2.setTransformation( matrixFactory.getTranslation( 0, 0, 0 ));
         objects.add(sphere2);
 
         Object3D cube = new Sphere().setMaterial( new Mirror() );
         cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
+//        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
 //        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
         objects.add( cube );
 

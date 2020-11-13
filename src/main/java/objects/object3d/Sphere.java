@@ -10,21 +10,7 @@ import objects.Object3D;
 
 public class Sphere extends Object3D {
 
-    private final double radius;
-
-
-    /**
-     * Creates a Sphere at (0, 0, 0) with radius 1
-     */
-    public Sphere()
-    {
-        radius = 1.0;
-    }
-
-    public Sphere(double radius)
-    {
-        this.radius = radius;
-    }
+    static final int radius = 1;
 
     @Override
     public HitInfo calcHitInfo(Ray ray)
@@ -32,7 +18,6 @@ public class Sphere extends Object3D {
         HitInfo hitInfo = new HitInfo();
 
         Vector origin = ray.getOrigin();
-        origin = origin.subtract( this.location );
 
         double A = ray.getDirection().dotProduct(ray.getDirection());
         double B = ray.getDirection().dotProduct(origin);
@@ -48,17 +33,15 @@ public class Sphere extends Object3D {
         double t2 = (-B - D) / A;
 
         if (t1 >= 0)
-            hitInfo.addHit(t1);
+            hitInfo.addHit(t1, this.getNormal( ray.getPoint( t1 ) ));
         if (t2 >= 0)
-            hitInfo.addHit(t2);
+            hitInfo.addHit(t2, this.getNormal( ray.getPoint( t2 ) ));
 
         return hitInfo;
     }
 
-    @Override
-    public Direction getNormal(Point location)
+    private Direction getNormal(Point location)
     {
-        Point simpleHitLocation = new Point( this.getInverseCache().multiply( location ) );
-        return new Direction( simpleHitLocation.subtract( this.location ).normalise() );
+        return new Direction( location );
     }
 }

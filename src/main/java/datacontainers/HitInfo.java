@@ -1,42 +1,67 @@
 package datacontainers;
 
-import java.util.ArrayList;
-import java.util.List;
+import maths.vector.Direction;
+import raytracing.RayTracer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HitInfo {
 
-    private boolean isHit;
+    // Keep track of the t-value
     private Double lowestT;
-    private final List<Double> hitTimes;
+    private final Map<Double, Direction> tNormalMap;
 
-    public HitInfo(double... hits)
+    // The normal at the intersection point with the lowestT
+    private Direction lowestTNormal;
+
+    /**
+     * Create a HitInfo object with basic information about a ray - object collision
+     *
+     * @param tNormalMap mapping T value and normal of the intersection with the object
+     */
+    public HitInfo(Map<Double, Direction> tNormalMap)
     {
         this.lowestT = null;
 
-        this.hitTimes = new ArrayList<>();
-        for (double hit : hits)
-        {
-            if (this.lowestT == null || hit < this.lowestT)
-                lowestT = hit;
-            this.hitTimes.add(hit);
-        }
+        // Add all entries
+        this.tNormalMap = new HashMap<>();
+        this.tNormalMap.putAll( tNormalMap );
 
-        isHit = hitTimes.size() != 0;
+        // Find lowest value
+        for (Map.Entry<Double, Direction> entry : tNormalMap.entrySet())
+        {
+            if (this.lowestT == null || entry.getKey() < this.lowestT)
+            {
+                lowestT = entry.getKey();
+                lowestTNormal = entry.getValue();
+            }
+        }
     }
 
-    public void addHit(double hit)
+
+    /**
+     * Create a HitInfo object with basic information about a ray - object collision
+     */
+    public HitInfo()
     {
-        this.hitTimes.add( hit );
+        this( new HashMap<Double, Direction>() );
+    }
 
-        if (this.lowestT == null || hit < this.lowestT)
-            lowestT = hit;
+    public void addHit(double hit, Direction normal)
+    {
+        this.tNormalMap.put( hit, normal );
 
-        isHit = hitTimes.size() != 0;
+        if (this.lowestT == null || (hit < this.lowestT && hit >= RayTracer.BIAS))
+        {
+            this.lowestT = hit;
+            this.lowestTNormal = normal;
+        }
     }
 
     public boolean isHit()
     {
-        return isHit;
+        return tNormalMap.size() != 0;
     }
 
     public Double getLowestT()
@@ -44,9 +69,14 @@ public class HitInfo {
         return lowestT;
     }
 
-    public List<Double> getHitTimes()
+    public Direction getLowestTNormal()
     {
-        return this.hitTimes;
+        return this.lowestTNormal;
+    }
+
+    public Map<Double, Direction> getTNormalMap()
+    {
+        return this.tNormalMap;
     }
 
 }

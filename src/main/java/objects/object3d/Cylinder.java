@@ -53,9 +53,4 @@ public class Cylinder extends Object3D {
             return null;
     }
 
-    @Override
-    public Direction getNormal(Point location)
-    {
-        return null;
-    }
 }

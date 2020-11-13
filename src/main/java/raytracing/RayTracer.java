@@ -1,4 +1,6 @@
-import datacontainers.RayTraceInfo;
+package raytracing;
+
+import datacontainers.HitInfo;
 import datacontainers.ScreenInfo;
 import graphics.Rgb;
 import maths.Matrix;
@@ -13,6 +15,7 @@ import objects.lighting.GlobalIllumination;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 public class RayTracer {
 
@@ -27,7 +30,7 @@ public class RayTracer {
     private final double camDistance;
 
     // Bias to prevent surface acne when calculating light
-    private final double BIAS = 0.01;
+    public static final double BIAS = 0.01;
     // Reflection depth: Maximum recursion depth when doing reflective calculations
     private final int REFLECTION_DEPTH = 5;
 
@@ -115,6 +118,7 @@ public class RayTracer {
         Double closestT = null;
         Object3D closestObject = null;
         Ray hitRay = null;
+        Direction closestNormal = null;
 
         // Find all intersections
         for (Object3D object : objects)
@@ -128,7 +132,8 @@ public class RayTracer {
             );
 
             // Calculate collisions
-            Double t = object.calcHitInfo( transformedRay ).getLowestT();
+            HitInfo info = object.calcHitInfo( transformedRay );
+            Double t = info.getLowestT();
             if ((t != null && t >= epsilon) && (closestT == null || t <= closestT))
             {
                 // Use the transformation of the object to place this hitpoint at the right location
@@ -136,15 +141,16 @@ public class RayTracer {
                 closestT = t;
                 closestObject = object;
                 hitRay = transformedRay;
+                closestNormal = new Direction( object.getInverseCache().multiply( info.getLowestTNormal() ) );
             }
         }
 
-        return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay);
+        return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay, closestNormal);
     }
 
     /**
      * Get the illumination for a specific RayTraceInfo (combined diffusion, specular and global illumination)
-     * Get an object like this with RayTracer#tracePoint(u, v)
+     * Get an object like this with raytracing.RayTracer#tracePoint(u, v)
      *
      * @param info the RayTraceInfo for a specific pixel
      * @return the amount of direct light in this location
@@ -158,9 +164,11 @@ public class RayTracer {
         Rgb illumination = new Rgb(0, 0, 0);
         Material hitMaterial = info.getClosestObject().getMaterial();
 
-        Vector toViewer = info.getHitRay().getDirection().normalise().multiply( -1 );
+        Vector toViewer = info.getHitRay().getDirection().normalise().multiply(-1);
+        Direction normal = info.getNormal();
 
         if (info.getHitLocation() != null)
+        {
             for (LightEmitter light : lights)
             {
                 final Point lightLocation = light.getLocation();
@@ -168,55 +176,59 @@ public class RayTracer {
 
                 // Get hitpoints on the line between the hitpoint and the light location
                 double lightClosestT = 1;
+
                 for (Object3D object : objects)
                 {
                     Matrix inverseTransform = object.getInverseCache();
                     final Ray lightRay = new Ray(
-                            new Point( inverseTransform.multiply( info.getHitLocation() ) ),
-                            new Direction( inverseTransform.multiply( dir ) )
+                            new Point(inverseTransform.multiply(info.getHitLocation())),
+                            new Direction(inverseTransform.multiply(dir))
                     );
 
-                    List<Double> hitTimes = object.calcHitInfo( lightRay ).getHitTimes();
-                    for (double t : hitTimes)
-                        if ((t >= BIAS) && (t < lightClosestT))
-                            lightClosestT = t;
+                    HitInfo hitInfo = object.calcHitInfo(lightRay);
+                    Map<Double, Direction> hitTimes = hitInfo.getTNormalMap();
+
+                    for (Map.Entry<Double, Direction> entry : hitTimes.entrySet())
+                        if ((entry.getKey() >= BIAS) && (entry.getKey() < lightClosestT))
+                            lightClosestT = entry.getKey();
+
                 }
 
                 // Add the illumination from this light if there is no colliding object on this line, or when the object is located behind the light
-                if ( lightClosestT >= 1)
+                if (lightClosestT >= 1)
                 {
 
                     // Calculate diffusion
 
-                    Direction normal = info.getClosestObject().getNormal( info.getHitLocation() );
-                    double intensity = normal.dotProduct( dir ) / ( normal.getNorm() * dir.getNorm() );
+                    double intensity = normal.dotProduct(dir) / (normal.getNorm() * dir.getNorm());
                     // Only light up if the hit point is facing the light
-                    if (dir.dotProduct( normal ) > 0)
+                    if (dir.dotProduct(normal) > 0)
                         illumination.addRgb(
-                            (float) Math.max( hitMaterial.diffusivityR * intensity * light.getColor().r(), 0 ),
-                            (float) Math.max( hitMaterial.diffusivityG * intensity * light.getColor().g(), 0 ),
-                            (float) Math.max( hitMaterial.diffusivityB * intensity * light.getColor().b(), 0 )
+                                (float) Math.max(hitMaterial.diffusivityR * intensity * light.getColor().r(), 0),
+                                (float) Math.max(hitMaterial.diffusivityG * intensity * light.getColor().g(), 0),
+                                (float) Math.max(hitMaterial.diffusivityB * intensity * light.getColor().b(), 0)
                         );
 
                     // Calculate the specular component
 
-                    Vector toLight = new Direction( info.getHitLocation(), lightLocation );
-                    Vector halfway = toLight.add( toViewer ).normalise();
-                    double spec = halfway.dotProduct( normal );
+                    Vector toLight = new Direction(info.getHitLocation(), lightLocation);
+                    Vector halfway = toLight.add(toViewer).normalise();
+                    double spec = halfway.dotProduct(normal);
 
                     // If the hit point is facing the light
                     if (spec > 0)
                     {
                         double phong = Math.pow(spec, hitMaterial.roughness);
                         illumination.addRgb(
-                            (float) Math.max(hitMaterial.specularR * phong * light.getColor().r(), 0),
-                            (float) Math.max(hitMaterial.specularG * phong * light.getColor().g(), 0),
-                            (float) Math.max(hitMaterial.specularB * phong * light.getColor().b(), 0)
+                                (float) Math.max(hitMaterial.specularR * phong * light.getColor().r(), 0),
+                                (float) Math.max(hitMaterial.specularG * phong * light.getColor().g(), 0),
+                                (float) Math.max(hitMaterial.specularB * phong * light.getColor().b(), 0)
                         );
                     }
                 }
 
             }
+        }
 
         // Add global illumination
         illumination.addRgb(
@@ -250,7 +262,7 @@ public class RayTracer {
         Material material = object.getMaterial();
         Point location = info.getHitLocation();
 
-        // If the depth is reached, assume this
+        // If the depth is reached, assume black
         if (recursiveDepth < 0)
             return color;
 
@@ -258,7 +270,7 @@ public class RayTracer {
         {
             Ray ray = info.getHitRay();
             Vector direction = ray.getDirection();
-            Vector normal = object.getNormal( location ).normalise();
+            Direction normal = info.getNormal();
 
             double product = direction.dotProduct( normal );
 

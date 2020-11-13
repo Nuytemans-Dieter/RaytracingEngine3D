@@ -11,7 +11,7 @@ public class TestSphere {
     @Test
     public void test()
     {
-        Sphere sphere = new Sphere(1.0);
+        Sphere sphere = new Sphere();
 
         Point camLoc = new Point(2,2,2);
         Direction direction = new Direction(-1, -1, -1);
