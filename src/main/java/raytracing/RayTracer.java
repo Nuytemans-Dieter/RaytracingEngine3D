@@ -198,7 +198,9 @@ public class RayTracer {
                 if (lightClosestT >= 1)
                 {
 
+
                     // Calculate diffusion
+
 
                     double intensity = normal.dotProduct(dir) / (normal.getNorm() * dir.getNorm());
                     // Only light up if the hit point is facing the light
@@ -209,14 +211,15 @@ public class RayTracer {
                                 (float) Math.max(hitMaterial.diffusivityB * intensity * light.getColor().b(), 0)
                         );
 
+
                     // Calculate the specular component
+
 
                     Vector toLight = new Direction(info.getHitLocation(), lightLocation);
                     Vector halfway = toLight.add(toViewer).normalise();
                     double spec = halfway.dotProduct(normal);
 
-                    // If the hit point is facing the light
-                    if (spec > 0)
+                    if (spec > 0) // If the hit point is facing the light
                     {
                         double phong = Math.pow(spec, hitMaterial.roughness);
                         illumination.addRgb(
@@ -266,7 +269,11 @@ public class RayTracer {
         if (recursiveDepth < 0)
             return color;
 
-        if (material.reflectivity >= 0)
+
+        // Calculate reflection
+
+
+        if (material.reflectivity > 0)
         {
             Ray ray = info.getHitRay();
             Vector direction = ray.getDirection();
@@ -276,7 +283,7 @@ public class RayTracer {
 
             Direction reflectedDirection = new Direction( direction.subtract( normal.multiply( 2 * product ) ));
             Ray reflectedRay = new Ray(location, reflectedDirection);
-            RayTraceInfo hitInfo = this.tracePoint( reflectedRay, this.BIAS );
+            RayTraceInfo hitInfo = this.tracePoint( reflectedRay, BIAS );
 
             if (hitInfo.getClosestObject() != null)
             {
@@ -294,6 +301,11 @@ public class RayTracer {
                 color.addRgb( this.voidColor.clone() );
             }
         }
+
+
+        // Calculate refraction here
+
+
         return color;
     }
 }
