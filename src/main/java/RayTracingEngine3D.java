@@ -35,12 +35,12 @@ public class RayTracingEngine3D {
 //        objects.add( sphere );
 
         Object3D sphere2 = new Sphere().setMaterial( new Gold() );
+        sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
         objects.add(sphere2);
 
         Object3D cube = new Sphere().setMaterial( new Mirror() );
         cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
-//        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
-//        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI/4) );
+        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
         objects.add( cube );
 
         final List<LightEmitter> lights = new ArrayList<>();
@@ -56,57 +56,46 @@ public class RayTracingEngine3D {
         final Input input = new KeyboardInput();
         final DrawLib drawLib = new DrawLib(screenInfo.getScreenSize().width, screenInfo.getScreenSize().height, (KeyboardInput) input);
 
-        // Generate a number of frames (assuming a changing environment or moving camera)
-        for (int i = 0; i < 1; i++)
+        // Start timing the ray tracing
+        long start = System.currentTimeMillis();
+
+        // Update all inverse matrices per frame refresh
+        objects.forEach(Object3D::updateInverse);
+
+        // Iterate through each pixel
+        for (int u = 0; u < screenInfo.getScreenSize().width; u++)
+        for (int v = 0; v < screenInfo.getScreenSize().height; v++)
         {
-            long start = System.currentTimeMillis();
+            Rgb color = new Rgb(0, 0, 0);
 
-            // Update all inverse matrices per frame refresh
-            objects.forEach(Object3D::updateInverse);
-
-            // Iterate through each pixel
-            for (int u = 0; u < screenInfo.getScreenSize().width; u++)
-            for (int v = 0; v < screenInfo.getScreenSize().height; v++)
+            RayTraceInfo info = rayTracer.tracePoint(u, v);
+            if ( info.getClosestObject() != null )
             {
-                Rgb color = new Rgb(0, 0, 0);
+                Material material = info.getClosestObject().getMaterial();
+                Rgb illumination = rayTracer.calculateIllumination( info ).applyIntensity( material.colorStrength );
+                Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
 
-                RayTraceInfo info = rayTracer.tracePoint(u, v);
-                if ( info.getClosestObject() != null )
-                {
-                    Material material = info.getClosestObject().getMaterial();
-                    Rgb illumination = rayTracer.calculateIllumination( info ).applyIntensity( material.colorStrength );
-                    Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
+                // Find the colour of this point returning to the eye from the point of intersection
+                color.addRgb( illumination ).addRgb( reflection );
+            }
+            else
+            {
+                color.addRgb( rayTracer.getVoidColor() );
+            }
 
-                    // Find the colour of this point returning to the eye from the point of intersection
-                    color.addRgb( illumination ).addRgb( reflection );
-                }
-                else
-                {
-                    color.addRgb( rayTracer.getVoidColor() );
-                }
-
-                // Compute the hit point and the normal vector in this point
+            // Compute the hit point and the normal vector in this point
 //            Point hitPoint = ray.getPoint(closestT);
 
-                // Update the color in this pixel
-                drawLib.drawPoint(u, v, color);
-            }
-
-            // Make sure all pixels are effectively drawn to the screen
-            drawLib.forceUpdate();
-            
-            long end = System.currentTimeMillis();
-            long delta = end - start;
-            System.out.println("Calculation time: " + delta + "ms");
-            try
-            {
-                if ( delta <= 200 )
-                    Thread.sleep(200 - delta);
-            } catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
+            // Update the color in this pixel
+            drawLib.drawPoint(u, v, color);
         }
+
+        // Make sure all pixels are effectively drawn to the screen
+        drawLib.forceUpdate();
+
+        long end = System.currentTimeMillis();
+        long delta = end - start;
+        System.out.println("Calculation time: " + delta + "ms");
     }
 
 }
