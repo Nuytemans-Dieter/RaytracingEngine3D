@@ -10,8 +10,6 @@ import objects.Object3D;
 
 public class Sphere extends Object3D {
 
-    static final int radius = 1;
-
     @Override
     public HitInfo calcHitInfo(Ray ray)
     {
@@ -21,7 +19,7 @@ public class Sphere extends Object3D {
 
         double A = ray.getDirection().dotProduct(ray.getDirection());
         double B = ray.getDirection().dotProduct(origin);
-        double C = Math.pow(origin.getNorm(), 2) - Math.pow(radius, 2);
+        double C = Math.pow(origin.getNorm(), 2) - 1;
 
         double D = Math.pow(B, 2) - (A * C);
         if (D < 0) {
