@@ -11,11 +11,6 @@ public class Cube extends Object3D {
 
     static final int size = 1;
 
-    public Cube ()
-    {
-        super();
-    }
-
     @Override
     public HitInfo calcHitInfo(Ray ray)
     {

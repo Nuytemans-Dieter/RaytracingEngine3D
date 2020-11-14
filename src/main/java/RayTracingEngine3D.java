@@ -1,3 +1,4 @@
+import objects.materials.Lambertian;
 import raytracing.RayTraceInfo;
 import datacontainers.ScreenInfo;
 import graphics.DrawLib;
@@ -34,8 +35,8 @@ public class RayTracingEngine3D {
 //        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
 //        objects.add( sphere );
 
-        Object3D sphere2 = new Sphere().setMaterial( new Gold() );
-        sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
+        Object3D sphere2 = new Sphere().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
+        sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 2 ) );
         objects.add(sphere2);
 
         Object3D cube = new Sphere().setMaterial( new Mirror() );
@@ -46,8 +47,8 @@ public class RayTracingEngine3D {
         final List<LightEmitter> lights = new ArrayList<>();
         lights.add( new LightSource( new Point(0, 0, 5), 1.0, new Rgb(1,1,1) ) );
 //        lights.add( new GlobalIllumination(0.6) );
-        lights.add( new LightSource( new Point(2, -2, 5), 1.0, new Rgb(1f, 1f, 1f) ) );
-        lights.add( new LightSource( new Point(3, -2, 0), 1.0, new Rgb(1f, 1f, 1f) ) );
+//        lights.add( new LightSource( new Point(2, -2, 5), 1.0, new Rgb(1f, 1f, 1f) ) );
+//        lights.add( new LightSource( new Point(3, -2, 0), 1.0, new Rgb(1f, 1f, 1f) ) );
 
         RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(1.0));
         ScreenInfo screenInfo = rayTracer.getScreenInfo();

@@ -141,7 +141,7 @@ public class RayTracer {
                 closestT = t;
                 closestObject = object;
                 hitRay = transformedRay;
-                closestNormal = new Direction( object.getInverseCache().multiply( info.getLowestTNormal() ) );
+                closestNormal = info.getLowestTNormal();
             }
         }
 
