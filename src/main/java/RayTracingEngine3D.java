@@ -1,4 +1,5 @@
 import objects.materials.Lambertian;
+import objects.object3d.Cube;
 import raytracing.RayTraceInfo;
 import datacontainers.ScreenInfo;
 import graphics.DrawLib;
@@ -36,7 +37,7 @@ public class RayTracingEngine3D {
 //        objects.add( sphere );
 
         Object3D sphere2 = new Sphere().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
-        sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 2 ) );
+        sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 2 ) );
         objects.add(sphere2);
 
         Object3D cube = new Sphere().setMaterial( new Mirror() );

@@ -29,10 +29,8 @@ public class RayTracer {
     private final ScreenInfo screenInfo;
     private final double camDistance;
 
-    // Bias to prevent surface acne when calculating light
-    public static final double BIAS = 0.01;
-    // Reflection depth: Maximum recursion depth when doing reflective calculations
-    private final int REFLECTION_DEPTH = 5;
+    public static final double BIAS = 0.01;     // Bias to prevent surface acne when calculating light
+    private final int REFLECTION_DEPTH = 5;     // Maximum recursion depth when doing reflective calculations
 
     public RayTracer(List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination)
     {
