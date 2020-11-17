@@ -169,36 +169,19 @@ public class RayTracer {
         {
             for (LightEmitter light : lights)
             {
-                final Point lightLocation = light.getLocation();
-                final Direction dir = new Direction(info.getHitLocation(), lightLocation);
+                // Build a ray from the hitpoint to the light: t=0 at hitpoint, t=1 at the light
+                final Direction dir = new Direction(info.getHitLocation(), light.getLocation());
+                final Ray lightRay = new Ray(info.getHitLocation(), dir);
 
                 // Get hitpoints on the line between the hitpoint and the light location
-                double lightClosestT = 1;
-
-                for (Object3D object : objects)
-                {
-                    Matrix inverseTransform = object.getInverseCache();
-                    final Ray lightRay = new Ray(
-                            new Point(inverseTransform.multiply(info.getHitLocation())),
-                            new Direction(inverseTransform.multiply(dir))
-                    );
-
-                    HitInfo hitInfo = object.calcHitInfo(lightRay);
-                    Map<Double, Direction> hitTimes = hitInfo.getTNormalMap();
-
-                    for (Map.Entry<Double, Direction> entry : hitTimes.entrySet())
-                        if ((entry.getKey() >= BIAS) && (entry.getKey() < lightClosestT))
-                            lightClosestT = entry.getKey();
-
-                }
+                RayTraceInfo hit = this.tracePoint( lightRay, BIAS );
+                double lightClosestT = hit.getClosestT() != null ? hit.getClosestT() : 1;
 
                 // Add the illumination from this light if there is no colliding object on this line, or when the object is located behind the light
                 if (lightClosestT >= 1)
                 {
 
-
                     // Calculate diffusion
-
 
                     double intensity = normal.dotProduct(dir) / (normal.getNorm() * dir.getNorm());
                     // Only light up if the hit point is facing the light
@@ -209,11 +192,9 @@ public class RayTracer {
                                 (float) Math.max(hitMaterial.diffusivityB * intensity * light.getColor().b(), 0)
                         );
 
-
                     // Calculate the specular component
 
-
-                    Vector toLight = new Direction(info.getHitLocation(), lightLocation);
+                    Vector toLight = new Direction(info.getHitLocation(), light.getLocation());
                     Vector halfway = toLight.add(toViewer).normalise();
                     double spec = halfway.dotProduct(normal);
 
