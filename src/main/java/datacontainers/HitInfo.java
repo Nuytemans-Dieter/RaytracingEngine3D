@@ -52,7 +52,7 @@ public class HitInfo {
     {
         this.tNormalMap.put( hit, normal );
 
-        if (this.lowestT == null || (hit < this.lowestT && hit >= RayTracer.BIAS))
+        if (this.lowestT == null || hit < this.lowestT)
         {
             this.lowestT = hit;
             this.lowestTNormal = normal;
