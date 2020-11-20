@@ -31,9 +31,9 @@ public class Sphere extends Object3D {
         double t2 = (-B - D) / A;
 
         if (t1 >= 0)
-            hitInfo.addHit(t1, new Direction( ray.getPoint( t1 ) ));
+            hitInfo.addHit(t1, new Direction( this.getTransformation().multiply( ray.getPoint( t1 )) ));
         if (t2 >= 0)
-            hitInfo.addHit(t2, new Direction( ray.getPoint( t2 ) ));
+            hitInfo.addHit(t2, new Direction( this.getTransformation().multiply( ray.getPoint( t2 )) ));
 
         return hitInfo;
     }

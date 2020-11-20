@@ -38,12 +38,13 @@ public class RayTracingEngine3D {
 
         Object3D sphere2 = new Sphere().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
         sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 2 ) );
+//        sphere2.addTransformations( matrixFactory.getTranslation( 2, 0.2, 0 ) );
         objects.add(sphere2);
 
-//        Object3D cube = new Sphere().setMaterial( new Mirror() );
-//        cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
-//        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
-//        objects.add( cube );
+        Object3D cube = new Sphere().setMaterial( new Mirror() );
+        cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
+        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
+        objects.add( cube );
 
         final List<LightEmitter> lights = new ArrayList<>();
         lights.add( new LightSource( new Point(0, 0, 5), 1.0, new Rgb(1,1,1) ) );
