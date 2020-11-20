@@ -1,5 +1,8 @@
 package maths;
 
+import maths.vector.Direction;
+import maths.vector.Point;
+
 public class Matrix {
 
     private final double[][] matrix;
@@ -188,6 +191,30 @@ public class Matrix {
         }
 
         return result;
+    }
+
+
+    /**
+     * Internally identical to Matrix#multiply(Vector) but wraps this method and returns a Point instead of a Vector
+     *
+     * @param point the point we want to transform
+     * @return the result of multiplication with the given point, which is a point as well
+     */
+    public Point multiply(Point point)
+    {
+        return new Point( this.multiply( point.getVectorCopy() ) );
+    }
+
+
+    /**
+     * Internally identical to Matrix#multiply(Vector) but wraps this method and returns a Direction instead of a Vector
+     *
+     * @param direction the direction we want to transform
+     * @return the result of multiplication with the given direction, which is a direction as well
+     */
+    public Direction multiply(Direction direction)
+    {
+        return new Direction( this.multiply( direction.getVectorCopy() ) );
     }
 
 

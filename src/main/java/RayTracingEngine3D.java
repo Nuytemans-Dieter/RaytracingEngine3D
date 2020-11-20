@@ -40,10 +40,10 @@ public class RayTracingEngine3D {
         sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 2 ) );
         objects.add(sphere2);
 
-        Object3D cube = new Sphere().setMaterial( new Mirror() );
-        cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
+//        Object3D cube = new Sphere().setMaterial( new Mirror() );
+//        cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
 //        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
-        objects.add( cube );
+//        objects.add( cube );
 
         final List<LightEmitter> lights = new ArrayList<>();
         lights.add( new LightSource( new Point(0, 0, 5), 1.0, new Rgb(1,1,1) ) );
@@ -61,7 +61,7 @@ public class RayTracingEngine3D {
         // Start timing the ray tracing
         long start = System.currentTimeMillis();
 
-        // Update all inverse matrices per frame refresh
+        // Update all inverse matrices
         objects.forEach(Object3D::updateInverse);
 
         // Iterate through each pixel

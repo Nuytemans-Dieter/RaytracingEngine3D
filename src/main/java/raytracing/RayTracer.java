@@ -125,8 +125,8 @@ public class RayTracer {
             // Calculate specific ray for this object
             Matrix inverseTransform = object.getInverseCache();
             final Ray transformedRay = new Ray(
-                    new Point( inverseTransform.multiply( origin ) ),
-                    new Direction( inverseTransform.multiply( direction ) )
+                    inverseTransform.multiply( origin ),
+                    inverseTransform.multiply( direction )
             );
 
             // Calculate collisions
@@ -135,7 +135,7 @@ public class RayTracer {
             if ((t != null && t >= epsilon) && (closestT == null || t <= closestT))
             {
                 // Use the transformation of the object to place this hitpoint at the right location
-                hitLocation = new Point(object.getTransformation().multiply( transformedRay.getPoint( t ) ));
+                hitLocation = object.getTransformation().multiply( transformedRay.getPoint( t ) );
                 closestT = t;
                 closestObject = object;
                 hitRay = transformedRay;
@@ -170,7 +170,7 @@ public class RayTracer {
             for (LightEmitter light : lights)
             {
                 // Build a ray from the hitpoint to the light: t=0 at hitpoint, t=1 at the light
-                final Direction dir = new Direction(info.getHitLocation(), light.getLocation());
+                final Direction dir = new Direction( info.getHitLocation(), light.getLocation());
                 final Ray lightRay = new Ray(info.getHitLocation(), dir);
 
                 // Get hitpoints on the line between the hitpoint and the light location
@@ -194,9 +194,9 @@ public class RayTracer {
 
                     // Calculate the specular component
 
-                    Vector toLight = new Direction(info.getHitLocation(), light.getLocation()).normalise();
-                    Vector halfway = toLight.add(toViewer).normalise();
-                    double spec = halfway.dotProduct(normal);
+                    Vector toLight = new Direction( info.getHitLocation(), light.getLocation() ).normalise();
+                    Vector halfway = toLight.add( toViewer ).normalise();
+                    double spec = halfway.dotProduct( normal );
 
                     if (spec > 0) // If the hit point is facing the light
                     {
