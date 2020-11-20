@@ -42,7 +42,7 @@ public class RayTracingEngine3D {
 
         Object3D cube = new Sphere().setMaterial( new Mirror() );
         cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
-        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
+//        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
         objects.add( cube );
 
         final List<LightEmitter> lights = new ArrayList<>();

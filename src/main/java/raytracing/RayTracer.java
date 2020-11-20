@@ -29,7 +29,7 @@ public class RayTracer {
     private final ScreenInfo screenInfo;
     private final double camDistance;
 
-    public static final double BIAS = 0.01;     // Bias to prevent surface acne when calculating light
+    public static final double BIAS = 0.00001;  // Bias to prevent surface acne when calculating light
     private final int REFLECTION_DEPTH = 5;     // Maximum recursion depth when doing reflective calculations
 
     public RayTracer(List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination)
@@ -194,7 +194,7 @@ public class RayTracer {
 
                     // Calculate the specular component
 
-                    Vector toLight = new Direction(info.getHitLocation(), light.getLocation());
+                    Vector toLight = new Direction(info.getHitLocation(), light.getLocation()).normalise();
                     Vector halfway = toLight.add(toViewer).normalise();
                     double spec = halfway.dotProduct(normal);
 
