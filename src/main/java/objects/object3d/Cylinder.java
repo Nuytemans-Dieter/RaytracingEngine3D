@@ -9,48 +9,54 @@ import objects.Ray;
 
 public class Cylinder extends Object3D {
 
-    private double radius;
-    private double height;
-
-    public Cylinder()
-    {
-        this(1, 1);
-    }
-
-    public Cylinder(double radius, double height)
-    {
-        this.radius = radius;
-        this.height = height;
-    }
-
     @Override
     public HitInfo calcHitInfo(Ray ray)
     {
-        Vector origin = ray.getOrigin();
-        Vector dir = ray.getDirection();
+        HitInfo hitInfo = new HitInfo();
 
-        double D =  Math.pow((origin.getX() * dir.getX() + origin.getZ() * dir.getZ()), 2) -
-                    ( (Math.pow(dir.getX(), 2) * Math.pow(dir.getZ(), 2)) * ( Math.pow(origin.getX(), 2) + Math.pow( origin.getZ(), 2 ) - Math.pow(radius, 2) ) );
-        if (D < 0)
-            return null;
+        Point origin = ray.getOrigin();
+        Direction direction = ray.getDirection();
 
-        double t1 = (-(origin.getX() * dir.getX() + origin.getZ() * dir.getZ()) + Math.sqrt( D )) / ( Math.pow(dir.getX(), 2) + Math.pow(dir.getZ(), 2) );
-        double t2 = (-(origin.getX() * dir.getX() + origin.getZ() * dir.getZ()) - Math.sqrt( D )) / ( Math.pow(dir.getX(), 2) + Math.pow(dir.getZ(), 2) );
+        // Check collision with the cylinder walls (All points on X²+Z²=1 and |Y|<=1)
 
-        Point p1 = ray.getPoint(t1);
-        Point p2 = ray.getPoint(t2);
+        double A = Math.pow( direction.getX(), 2) + Math.pow( direction.getZ(), 2);
+        double B = 2 * ( origin.getX() * direction.getX() + origin.getZ() * direction.getZ() );
+        double C = Math.pow( origin.getX(), 2) + Math.pow( origin.getZ(), 2) - 1;
 
-        boolean t1InRange = (t1 >= 0 && Math.abs( p1.getY() ) <= this.height/2);
-        boolean t2InRange = (t2 >= 0 && Math.abs( p2.getY() ) <= this.height/2);
+        double sqrt = Math.sqrt( Math.pow(B, 2) - 4 * A  * C );
+        double t1 = (- B + sqrt ) / (2 * A);
+        double t2 = (- B - sqrt ) / (2 * A);
 
-//        if (t1InRange && t2InRange)
-//            return Math.min(t1, t2);
-//        else if (!t1InRange && t2InRange)
-//            return t2;
-//        else if (t1InRange)
-//            return t1;
-//        else
-            return null;
+        if (t1 >= 0 && isYInRange(ray, t1))
+            hitInfo.addHit( t1, new Direction( ray.getPoint( t1 ).modify(1, 0) ));
+        if (t2 >= 0 && isYInRange(ray, t2))
+            hitInfo.addHit( t2, new Direction( ray.getPoint( t2 ).modify(1, 0) ));
+
+
+        // Check collision with the cylinder surfaces (All points on |Y|=1, X²+Z²<1)
+
+        double t3 = ( 1 - origin.getY()) / direction.getY();
+        double t4 = (-1 - origin.getY()) / direction.getY();
+
+        if (t3 >= 0 && areXAndZInRange(ray, t3))    // Y = 1
+            hitInfo.addHit( t3, new Direction(0, 1, 0) );
+        if (t4 >= 0 && areXAndZInRange(ray, t4))    // Y = -1
+            hitInfo.addHit( t4, new Direction(0, -1, 0) );
+
+        return hitInfo;
     }
 
+
+    private boolean isYInRange(Ray ray, double t)
+    {
+        double y = ray.getOrigin().getY() + t * ray.getDirection().getY();
+        return Math.abs(y) <= 1;
+    }
+
+    private boolean areXAndZInRange(Ray ray, double t)
+    {
+        double x = ray.getOrigin().getX() + t * ray.getDirection().getX();
+        double z = ray.getOrigin().getZ() + t * ray.getDirection().getZ();
+        return (Math.pow(x, 2) + Math.pow(z, 2)) <= 1;
+    }
 }
