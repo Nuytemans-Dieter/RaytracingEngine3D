@@ -21,6 +21,16 @@ public class Point extends Vector {
         super(vector.getX(), vector.getY(), vector.getZ(), 1);
     }
 
+    /**
+     * Calls the super's Vector#normalise() and wraps it in a Point class
+     *
+     * @return normalised Point
+     */
+    public Point normalise()
+    {
+        return new Point( super.normalise() );
+    }
+
     public double distance(Point point)
     {
         return Math.sqrt(

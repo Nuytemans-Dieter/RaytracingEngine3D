@@ -36,4 +36,14 @@ public class Direction extends Vector {
         super(vector.getX(), vector.getY(), vector.getZ(), 0);
     }
 
+    /**
+     * Calls the super's Vector#normalise() and wraps it in a Direction class
+     *
+     * @return normalised Direction
+     */
+    public Direction normalise()
+    {
+        return new Direction( super.normalise() );
+    }
+
 }

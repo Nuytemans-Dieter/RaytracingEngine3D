@@ -162,11 +162,12 @@ public class RayTracer {
         Rgb illumination = new Rgb(0, 0, 0);
         Material hitMaterial = info.getClosestObject().getMaterial();
 
-        Vector toViewer = info.getHitRay().getDirection().normalise().multiply(-1);
-        Direction normal = info.getNormal();
+        Vector toViewer = info.getHitRay().getDirection().multiply(-1).normalise();
 
         if (info.getHitLocation() != null)
         {
+            Direction normal = info.getClosestObject().getTransformation().multiply( info.getNormal() ).normalise();
+
             for (LightEmitter light : lights)
             {
                 // Build a ray from the hitpoint to the light: t=0 at hitpoint, t=1 at the light
@@ -183,9 +184,10 @@ public class RayTracer {
 
                     // Calculate diffusion
 
-                    double intensity = normal.dotProduct(dir) / (normal.getNorm() * dir.getNorm());
+                    double intensity = normal.dotProduct(dir) / Math.abs(normal.getNorm() * dir.getNorm());
+
                     // Only light up if the hit point is facing the light
-                    if (dir.dotProduct(normal) > 0)
+                    if (intensity > 0)
                         illumination.addRgb(
                                 (float) Math.max(hitMaterial.diffusivityR * intensity * light.getColor().r(), 0),
                                 (float) Math.max(hitMaterial.diffusivityG * intensity * light.getColor().g(), 0),
@@ -194,7 +196,7 @@ public class RayTracer {
 
                     // Calculate the specular component
 
-                    Vector toLight = new Direction( info.getHitLocation(), light.getLocation() ).normalise();
+                    Vector toLight = new Direction( info.getHitLocation(), light.getLocation() );
                     Vector halfway = toLight.add( toViewer ).normalise();
                     double spec = halfway.dotProduct( normal );
 
