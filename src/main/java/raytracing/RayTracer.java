@@ -31,6 +31,8 @@ public class RayTracer {
 
     public static final double BIAS = 0.00001;  // Bias to prevent surface acne when calculating light
     private final int REFLECTION_DEPTH = 5;     // Maximum recursion depth when doing reflective calculations
+    private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
+    private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
 
     public RayTracer(List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination)
     {
@@ -246,15 +248,13 @@ public class RayTracer {
         Material material = object.getMaterial();
         Point location = info.getHitLocation();
 
-        // If the depth is reached, assume black
+        // If the depth is reached, assume black: this reflection contributes too little
         if (recursiveDepth < 0)
             return color;
 
-
         // Calculate reflection
 
-
-        if (material.reflectivity > 0)
+        if (material.reflectivity >= this.REFLECTION_THRESHOLD)
         {
             Ray ray = info.getHitRay();
             Vector direction = ray.getDirection();
@@ -293,9 +293,16 @@ public class RayTracer {
 
     public Rgb calculateRefraction(RayTraceInfo info)
     {
-        if (info.getNormal() == null || info.getHitLocation() == null || info.getHitRay() == null)
+        if (info.getClosestObject() != null || info.getNormal() == null || info.getHitLocation() == null || info.getHitRay() == null)
             return Rgb.fromColor( Rgb.Color.BLACK );
 
-        return Rgb.fromColor( Rgb.Color.GREEN );
+        Rgb color = Rgb.fromColor( Rgb.Color.GREEN );
+
+        if (info.getClosestObject().getMaterial().transparency >= this.REFRACTION_THRESHOLD)
+        {
+
+        }
+
+        return color;
     }
 }
