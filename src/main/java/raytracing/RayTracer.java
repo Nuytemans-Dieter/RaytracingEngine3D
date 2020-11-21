@@ -258,11 +258,11 @@ public class RayTracer {
         {
             Ray ray = info.getHitRay();
             Vector direction = ray.getDirection();
-            Direction normal = info.getNormal();
+            Vector normal = info.getNormal().normalise();
 
             double product = direction.dotProduct( normal );
+            Direction reflectedDirection = direction.subtract( normal.multiply( 2 * product ) ).toDirection();
 
-            Direction reflectedDirection = new Direction( direction.subtract( normal.multiply( 2 * product ) ));
             Ray reflectedRay = new Ray(location, reflectedDirection);
             RayTraceInfo hitInfo = this.tracePoint( reflectedRay, BIAS );
 

@@ -1,5 +1,8 @@
 package maths;
 
+import maths.vector.Direction;
+import maths.vector.Point;
+
 public class Vector {
 
     private final double[] vector;
@@ -103,11 +106,32 @@ public class Vector {
         );
     }
 
+    public Point toPoint()
+    {
+        return new Point(this.getX(), this.getY(), this.getZ());
+    }
+
+    public Direction toDirection()
+    {
+        return new Direction(this.getX(), this.getY(), this.getZ());
+    }
+
     public double dotProduct(Vector vector)
     {
         return  ( this.getX() * vector.getX() ) +
                 ( this.getY() * vector.getY() ) +
                 ( this.getZ() * vector.getZ() );
+    }
+
+
+    public Vector elementWiseProduct(Vector vector)
+    {
+        return new Vector(
+            this.getX() * vector.getX(),
+            this.getY() * vector.getY(),
+            this.getZ() * vector.getZ(),
+            this.getP() * vector.getP()
+        );
     }
 
 
