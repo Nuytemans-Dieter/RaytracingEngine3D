@@ -269,12 +269,17 @@ public class RayTracer {
             if (hitInfo.getClosestObject() != null)
             {
                 Rgb reflectedComponent = this.calculateReflection(hitInfo , recursiveDepth );
+                Rgb refractedComponent = this.calculateRefraction( hitInfo );
                 Rgb illuminationComponent = this.calculateIllumination( hitInfo );
 
-                reflectedComponent.applyIntensity( hitInfo.getClosestObject().getMaterial().reflectivity );
-                illuminationComponent.applyIntensity( hitInfo.getClosestObject().getMaterial().colorStrength );
+                Material hitMaterial = hitInfo.getClosestObject().getMaterial();
+
+                reflectedComponent.applyIntensity( hitMaterial.reflectivity );
+                refractedComponent.applyIntensity( hitMaterial.transparency );
+                illuminationComponent.applyIntensity( hitMaterial.colorStrength );
 
                 color.addRgb( reflectedComponent );
+                color.addRgb( refractedComponent );
                 color.addRgb( illuminationComponent );
             }
             else
@@ -283,10 +288,14 @@ public class RayTracer {
             }
         }
 
-
-        // Calculate refraction here
-
-
         return color;
+    }
+
+    public Rgb calculateRefraction(RayTraceInfo info)
+    {
+        if (info.getNormal() == null || info.getHitLocation() == null || info.getHitRay() == null)
+            return Rgb.fromColor( Rgb.Color.BLACK );
+
+        return Rgb.fromColor( Rgb.Color.GREEN );
     }
 }

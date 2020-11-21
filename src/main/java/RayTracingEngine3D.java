@@ -78,9 +78,10 @@ public class RayTracingEngine3D {
                 Material material = info.getClosestObject().getMaterial();
                 Rgb illumination = rayTracer.calculateIllumination( info ).applyIntensity( material.colorStrength );
                 Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
+                Rgb refraction = rayTracer.calculateRefraction( info ).applyIntensity( material.transparency );
 
                 // Find the colour of this point returning to the eye from the point of intersection
-                color.addRgb( illumination ).addRgb( reflection );
+                color.addRgb( illumination ).addRgb( reflection ).addRgb( refraction );
             }
             else
             {
