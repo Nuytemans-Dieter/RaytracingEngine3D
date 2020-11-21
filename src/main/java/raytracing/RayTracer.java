@@ -29,7 +29,7 @@ public class RayTracer {
     private final ScreenInfo screenInfo;
     private final double camDistance;
 
-    public static final double BIAS = 0.00001;  // Bias to prevent surface acne when calculating light
+    public static final double BIAS = 0.000001; // Bias to prevent surface acne when calculating light
     private final int REFLECTION_DEPTH = 5;     // Maximum recursion depth when doing reflective calculations
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
     private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
@@ -186,7 +186,11 @@ public class RayTracer {
 
                     // Calculate diffusion
 
-                    double intensity = normal.dotProduct(dir) / Math.abs(normal.getNorm() * dir.getNorm());
+                    double product = normal.dotProduct(dir);
+                    if ( product < 0 )
+                        normal = normal.multiply( -1 ).toDirection();
+
+                    double intensity = product / Math.abs(normal.getNorm() * dir.getNorm());
 
                     // Only light up if the hit point is facing the light
                     if (intensity > 0)
@@ -278,9 +282,9 @@ public class RayTracer {
                 refractedComponent.applyIntensity( hitMaterial.transparency );
                 illuminationComponent.applyIntensity( hitMaterial.colorStrength );
 
-                color.addRgb( reflectedComponent );
-                color.addRgb( refractedComponent );
-                color.addRgb( illuminationComponent );
+                color.addRgb( reflectedComponent )
+                     .addRgb( refractedComponent )
+                     .addRgb( illuminationComponent );
             }
             else
             {
@@ -296,11 +300,11 @@ public class RayTracer {
         if (info.getClosestObject() != null || info.getNormal() == null || info.getHitLocation() == null || info.getHitRay() == null)
             return Rgb.fromColor( Rgb.Color.BLACK );
 
-        Rgb color = Rgb.fromColor( Rgb.Color.GREEN );
+        Rgb color = Rgb.fromColor( Rgb.Color.BLACK );
 
         if (info.getClosestObject().getMaterial().transparency >= this.REFRACTION_THRESHOLD)
         {
-
+            color = Rgb.fromColor( Rgb.Color.RED );
         }
 
         return color;
