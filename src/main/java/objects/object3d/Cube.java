@@ -55,7 +55,7 @@ public class Cube extends Object3D {
         t = (-size - origin.getZ()) / direction.getZ();
         intersection = ray.getPoint(t);
         if (t >= 0 && Math.abs(intersection.getX()) <= size && Math.abs(intersection.getY()) <= size)
-            hitInfo.addHit(t, new Direction(0, 0, 1));
+            hitInfo.addHit(t, new Direction(0, 0, -1));
 
 
         return hitInfo;

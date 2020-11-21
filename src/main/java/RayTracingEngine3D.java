@@ -1,3 +1,4 @@
+import objects.materials.Aluminium;
 import objects.materials.Lambertian;
 import objects.object3d.Cube;
 import objects.object3d.Cylinder;
@@ -33,25 +34,22 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-//        Object3D sphere = new Sphere().setMaterial( new Lambertian( Rgb.Color.RED ) );
-//        sphere.setTransformation( matrixFactory.getScaling(1.0, 1.6, 1.0) );
-//        objects.add( sphere );
+        Object3D sphere = new Sphere().setMaterial( new Mirror() );
+        sphere.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
+        sphere.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
+        objects.add( sphere );
 
         Object3D sphere2 = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
         sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
-//        sphere2.addTransformations( matrixFactory.getTranslation( 2, 0.2, 0 ) );
         objects.add(sphere2);
 
-        Object3D cube = new Sphere().setMaterial( new Mirror() );
-        cube.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
-        cube.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
-        objects.add( cube );
+        Object3D room = new Cube().setMaterial( new Aluminium() );
+        room.addTransformations( matrixFactory.getScaling(20, 20, 20) );
+        objects.add( room );
 
         final List<LightEmitter> lights = new ArrayList<>();
         lights.add( new LightSource( new Point(0, 0, 5), 1.0, new Rgb(1,1,1) ) );
 //        lights.add( new GlobalIllumination(0.6) );
-//        lights.add( new LightSource( new Point(2, -2, 5), 1.0, new Rgb(1f, 1f, 1f) ) );
-//        lights.add( new LightSource( new Point(3, -2, 0), 1.0, new Rgb(1f, 1f, 1f) ) );
 
         RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(1.0));
         ScreenInfo screenInfo = rayTracer.getScreenInfo();
