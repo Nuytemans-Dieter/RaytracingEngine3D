@@ -262,7 +262,8 @@ public class RayTracer {
         {
             Ray ray = info.getHitRay();
             Vector direction = ray.getDirection();
-            Vector normal = info.getNormal().normalise();
+            Vector normal = info.getNormal();
+            normal = info.getClosestObject().getTransformation().multiply( normal ).normalise();
 
             double product = direction.dotProduct( normal );
             Direction reflectedDirection = direction.subtract( normal.multiply( 2 * product ) ).toDirection();
