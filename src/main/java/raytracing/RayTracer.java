@@ -15,7 +15,6 @@ import objects.lighting.GlobalIllumination;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Map;
 
 public class RayTracer {
 
@@ -29,7 +28,7 @@ public class RayTracer {
     private final ScreenInfo screenInfo;
     private final double camDistance;
 
-    public static final double BIAS = 0.000001; // Bias to prevent surface acne when calculating light
+    public static final double EPSILON = 0.000001; // Bias to prevent surface acne when calculating light
     private final int REFLECTION_DEPTH = 5;     // Maximum recursion depth when doing reflective calculations
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
     private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
@@ -177,7 +176,7 @@ public class RayTracer {
                 final Ray lightRay = new Ray(info.getHitLocation(), dir);
 
                 // Get hitpoints on the line between the hitpoint and the light location
-                RayTraceInfo hit = this.tracePoint( lightRay, BIAS );
+                RayTraceInfo hit = this.tracePoint( lightRay, EPSILON);
                 double lightClosestT = hit.getClosestT() != null ? hit.getClosestT() : 1;
 
                 // Add the illumination from this light if there is no colliding object on this line, or when the object is located behind the light
@@ -269,7 +268,7 @@ public class RayTracer {
             Direction reflectedDirection = direction.subtract( normal.multiply( 2 * product ) ).toDirection();
 
             Ray reflectedRay = new Ray(location, reflectedDirection);
-            RayTraceInfo hitInfo = this.tracePoint( reflectedRay, BIAS );
+            RayTraceInfo hitInfo = this.tracePoint( reflectedRay, EPSILON);
 
             if (hitInfo.getClosestObject() != null)
             {
