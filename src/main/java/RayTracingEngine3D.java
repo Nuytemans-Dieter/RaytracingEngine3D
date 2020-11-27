@@ -43,7 +43,7 @@ public class RayTracingEngine3D {
         sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
         objects.add(sphere2);
 
-        Object3D room = new Cube().setMaterial( new Aluminium() );
+        Object3D room = new Cube().setMaterial( new Lambertian( Rgb.Color.RED ) );
         room.addTransformations( matrixFactory.getScaling(20, 20, 20) );
         objects.add( room );
 

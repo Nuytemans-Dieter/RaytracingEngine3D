@@ -24,12 +24,13 @@ public class RayTracer {
     private final Rgb voidColor = new Rgb(0.2f, 0.2f, 0.2f);
 
     private final Point eyeLocation;
+    private final Direction viewDirection;
 
     private final ScreenInfo screenInfo;
     private final double camDistance;
 
-    public static final double EPSILON = 0.000001; // Bias to prevent surface acne when calculating light
-    private final int REFLECTION_DEPTH = 5;     // Maximum recursion depth when doing reflective calculations
+    public static final double EPSILON = 0.000001;   // Bias to prevent surface acne when calculating light
+    private final int REFLECTION_DEPTH = 2;          // Maximum recursion depth when doing reflective calculations
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
     private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
 
@@ -48,6 +49,7 @@ public class RayTracer {
         final double W = 2 * camDistance * Math.tan( viewAngle / 2 );
         final double H = W / aspect;
         this.eyeLocation = new Point(0, 0, camDistance);
+        this.viewDirection = new Direction(0, 0, 1);
 
         screenInfo = new ScreenInfo(screenSize, W, H);
 
@@ -84,7 +86,7 @@ public class RayTracer {
         final double uy = -screenInfo.H_half + (screenInfo.H * v) / screenInfo.getScreenSize().height;
 
         // Build the ray through this pixel and the camera
-        Direction defaultDirection = new Direction(-ux, -uy, -camDistance);
+        Direction defaultDirection = new Direction(-ux, -uy, -camDistance).add( this.viewDirection ).toDirection();
 
         return this.tracePoint( new Ray( eyeLocation, defaultDirection ) );
     }
@@ -241,11 +243,15 @@ public class RayTracer {
     {
         int recursiveDepth = recursiveIndex - 1;
 
+        // Starting color
+
         Rgb color = Rgb.fromColor( Rgb.Color.BLACK );
 
         // If this ray does not hit anything, assume a hit with the void
         if (info.getClosestObject() == null || info.getHitLocation() == null || info.getHitRay() == null)
             return voidColor.clone();
+
+        // Variables to improve readability
 
         Object3D object = info.getClosestObject();
         Material material = object.getMaterial();
@@ -259,6 +265,9 @@ public class RayTracer {
 
         if (material.reflectivity >= this.REFLECTION_THRESHOLD)
         {
+
+            // Reflection calculations
+
             Ray ray = info.getHitRay();
             Vector direction = ray.getDirection();
             Vector normal = info.getNormal();
