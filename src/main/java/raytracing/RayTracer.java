@@ -3,7 +3,9 @@ package raytracing;
 import datacontainers.HitInfo;
 import datacontainers.ScreenInfo;
 import graphics.Rgb;
+import interfaces.ITransMatFactory;
 import maths.Matrix;
+import maths.TransMatFactory;
 import maths.Vector;
 import maths.vector.Direction;
 import maths.vector.Point;
@@ -24,7 +26,8 @@ public class RayTracer {
     private final Rgb voidColor = new Rgb(0.2f, 0.2f, 0.2f);
 
     private final Point eyeLocation;
-    private final Direction viewDirection;
+//    private final Direction viewDirection;
+    private final Matrix transformation;
 
     private final ScreenInfo screenInfo;
     private final double camDistance;
@@ -49,7 +52,8 @@ public class RayTracer {
         final double W = 2 * camDistance * Math.tan( viewAngle / 2 );
         final double H = W / aspect;
         this.eyeLocation = new Point(0, 0, camDistance);
-        this.viewDirection = new Direction(0, 0, 1);
+//        this.viewDirection = new Direction(0, 0, 1);
+        this.transformation = new TransMatFactory().getRotation(ITransMatFactory.RotationAxis.Y, -Math.PI / 10);
 
         screenInfo = new ScreenInfo(screenSize, W, H);
 
@@ -82,11 +86,13 @@ public class RayTracer {
     public RayTraceInfo tracePoint(int u, int v)
     {
         // Calculate current pixel offset
-        final double ux = -screenInfo.W_half + (screenInfo.W * u) / screenInfo.getScreenSize().width;
-        final double uy = -screenInfo.H_half + (screenInfo.H * v) / screenInfo.getScreenSize().height;
+                            // Offset of the current pixel                      Offset used to center screen
+        final double ux = (screenInfo.W * u) / screenInfo.getScreenSize().width  - screenInfo.W_half;
+        final double uy = (screenInfo.H * v) / screenInfo.getScreenSize().height - screenInfo.H_half;
 
         // Build the ray through this pixel and the camera
-        Direction defaultDirection = new Direction(-ux, -uy, -camDistance).add( this.viewDirection ).toDirection();
+        Direction defaultDirection = new Direction(-ux, -uy, -camDistance)/*.add( this.viewDirection ).toDirection()*/;
+        defaultDirection = this.transformation.multiply( defaultDirection );
 
         return this.tracePoint( new Ray( eyeLocation, defaultDirection ) );
     }
@@ -147,6 +153,51 @@ public class RayTracer {
         }
 
         return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay, closestNormal);
+    }
+
+    public Rgb calcLight(RayTraceInfo info)
+    {
+        return this.calcLight( info, this.REFLECTION_DEPTH );
+    }
+
+    private Rgb calcLight(RayTraceInfo info, int depth)
+    {
+        Rgb color = new Rgb(0, 0, 0);
+
+        Object3D hitObject = info.getClosestObject();
+
+        if (hitObject == null)
+            return this.voidColor.clone();
+
+        color.addRgb( this.calculateIllumination( info ) );
+
+        if (depth == 0)
+            return color;
+
+        color.applyIntensity( hitObject.getMaterial().colorStrength );
+
+        final float reflectivity = hitObject.getMaterial().reflectivity;
+        if (reflectivity > this.REFLECTION_THRESHOLD)
+        {
+            depth--;
+
+            // Reflection calculations
+
+            Ray ray = info.getHitRay();
+            Vector direction = ray.getDirection();
+            Vector normal = info.getNormal();
+            normal = info.getClosestObject().getTransformation().multiply( normal ).normalise();
+
+            double product = direction.dotProduct( normal );
+            Direction reflectedDirection = direction.subtract( normal.multiply( 2 * product ) ).toDirection();
+
+            Ray reflectedRay = new Ray(info.getHitLocation(), reflectedDirection);
+            RayTraceInfo reflectedHitInfo = this.tracePoint( reflectedRay, EPSILON);
+
+            color.addRgb( this.calcLight( reflectedHitInfo, depth ) ).applyIntensity( reflectivity );
+        }
+
+        return color;
     }
 
     /**
