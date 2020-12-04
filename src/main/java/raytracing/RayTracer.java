@@ -32,6 +32,8 @@ public class RayTracer {
     private final ScreenInfo screenInfo;
     private final double camDistance;
 
+    public final boolean DISABLE_SHADOWS = true;
+
     public static final double EPSILON = 0.000001;   // Bias to prevent surface acne when calculating light
     private final int REFLECTION_DEPTH = 2;          // Maximum recursion depth when doing reflective calculations
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
@@ -233,7 +235,7 @@ public class RayTracer {
                 double lightClosestT = hit.getClosestT() != null ? hit.getClosestT() : 1;
 
                 // Add the illumination from this light if there is no colliding object on this line, or when the object is located behind the light
-                if (lightClosestT >= 1)
+                if (lightClosestT >= 1 || this.DISABLE_SHADOWS)
                 {
 
                     // Calculate diffusion
