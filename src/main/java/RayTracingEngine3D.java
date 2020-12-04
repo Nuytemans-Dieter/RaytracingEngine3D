@@ -35,12 +35,17 @@ public class RayTracingEngine3D {
         final List<Object3D> objects = new ArrayList<>();
 
         Object3D sphere = new Sphere().setMaterial( new Mirror() );
-        sphere.addTransformations( matrixFactory.getTranslation(3, 0, 0) );
-        sphere.addTransformations( matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI / 4) );
+        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 0) );
+        sphere.addTransformations(
+                matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI),
+                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI),
+                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI)
+        );
         objects.add( sphere );
 
         Object3D sphere2 = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
         sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
+        sphere2.addTransformations( matrixFactory.getTranslation(-1, 0, 0) );
         objects.add(sphere2);
 
         Object3D room = new Cube().setMaterial( new Lambertian( Rgb.Color.RED ) );
