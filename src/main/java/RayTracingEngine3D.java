@@ -70,41 +70,22 @@ public class RayTracingEngine3D {
         objects.forEach(Object3D::updateInverse);
 
         // Iterate through each pixel
-        for (int u = 0; u < screenInfo.getScreenSize().width; u++)
-        for (int v = 0; v < screenInfo.getScreenSize().height; v++)
-        {
-            Rgb color = new Rgb(0, 0, 0);
+        int width = screenInfo.getScreenSize().width;
+        int height = screenInfo.getScreenSize().height;
+        ScreenChunkTracer threadOne = new ScreenChunkTracer(    0,      width / 2, 0, height / 2, rayTracer, drawLib, start);
+        ScreenChunkTracer threadTwo = new ScreenChunkTracer(    width / 2,    width,     0, height / 2, rayTracer, drawLib, start);
+        ScreenChunkTracer threadThree = new ScreenChunkTracer(  0,      width / 2, height / 2, height,  rayTracer, drawLib, start);
+        ScreenChunkTracer threadFour = new ScreenChunkTracer(   width / 2,    width,     height / 2, height,  rayTracer, drawLib, start);
 
-            RayTraceInfo info = rayTracer.tracePoint(u, v);
-            if ( info.getClosestObject() != null )
-            {
-                Material material = info.getClosestObject().getMaterial();
-//                Rgb illumination = rayTracer.calculateIllumination( info ).applyIntensity( material.colorStrength );
-//                Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
-//                Rgb refraction = rayTracer.calculateRefraction( info ).applyIntensity( material.transparency );
-
-                // Find the colour of this point returning to the eye from the point of intersection
-//                color.addRgb( illumination ).addRgb( reflection ).addRgb( refraction );
-                color.addRgb( rayTracer.calcLight( info ) );
-            }
-            else
-            {
-                color.addRgb( rayTracer.getVoidColor() );
-            }
-
-            // Compute the hit point and the normal vector in this point
-//            Point hitPoint = ray.getPoint(closestT);
-
-            // Update the color in this pixel
-            drawLib.drawPoint(u, v, color);
-        }
+        threadOne.start();
+        threadTwo.start();
+        threadThree.start();
+        threadFour.start();
 
         // Make sure all pixels are effectively drawn to the screen
         drawLib.forceUpdate();
 
-        long end = System.currentTimeMillis();
-        long delta = end - start;
-        System.out.println("Calculation time: " + delta + "ms");
+
     }
 
 }
