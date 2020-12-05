@@ -63,11 +63,11 @@ public class RayTracingEngine3D {
         final Input input = new KeyboardInput();
         final DrawLib drawLib = new DrawLib(screenInfo.getScreenSize().width, screenInfo.getScreenSize().height, (KeyboardInput) input);
 
-        // Start timing the ray tracing
-        long start = System.currentTimeMillis();
-
         // Update all inverse matrices
         objects.forEach(Object3D::updateInverse);
+
+        // Start timing the ray tracing
+        long start = System.currentTimeMillis();
 
         int numChunksU = 4;
         int numChunksV = 4;
@@ -80,7 +80,7 @@ public class RayTracingEngine3D {
 
         for (int u = 0; u < numChunksU; u++)
         for (int v = 0; v < numChunksV; v++)
-            new ScreenChunkTracer(u * uWidth, (u + 1) * uWidth, v * vWidth, (v+1) * vWidth, rayTracer, drawLib, start).start();
+            new ScreenChunkTracer(u * uWidth, (u + 1) * uWidth, v * vWidth, (v+1) * vWidth, rayTracer, drawLib, start, u, v).start();
 
         // Make sure all pixels are effectively drawn to the screen
         drawLib.forceUpdate();

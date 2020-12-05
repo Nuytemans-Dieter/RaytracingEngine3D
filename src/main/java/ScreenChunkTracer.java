@@ -15,8 +15,10 @@ public class ScreenChunkTracer extends Thread {
     private final int stopV;
 
     private final long startTime;
+    private final int chunkU;
+    private final int chunkV;
 
-    public ScreenChunkTracer(int startU, int stopU, int startV, int stopV, RayTracer rayTracer, DrawLib drawLib, long startTime)
+    public ScreenChunkTracer(int startU, int stopU, int startV, int stopV, RayTracer rayTracer, DrawLib drawLib, long startTime, int chunkU, int chunkV)
     {
         this.startU = startU;
         this.stopU = stopU;
@@ -27,6 +29,8 @@ public class ScreenChunkTracer extends Thread {
         this.drawLib = drawLib;
 
         this.startTime = startTime;
+        this.chunkU = chunkU;
+        this.chunkV = chunkV;
     }
 
     @Override
@@ -67,7 +71,7 @@ public class ScreenChunkTracer extends Thread {
         drawLib.forceUpdate();
         long end = System.currentTimeMillis();
         long delta = end - this.startTime;
-        System.out.println("Calculation time: " + delta + "ms");
+        System.out.println("Calculation time: " + delta + "ms for chunk (" + chunkU + ", " + chunkV + ")");
     }
 
 }
