@@ -69,18 +69,18 @@ public class RayTracingEngine3D {
         // Update all inverse matrices
         objects.forEach(Object3D::updateInverse);
 
-        // Iterate through each pixel
+        int numChunksU = 4;
+        int numChunksV = 4;
+
         int width = screenInfo.getScreenSize().width;
         int height = screenInfo.getScreenSize().height;
-        ScreenChunkTracer threadOne = new ScreenChunkTracer(    0,      width / 2, 0, height / 2, rayTracer, drawLib, start);
-        ScreenChunkTracer threadTwo = new ScreenChunkTracer(    width / 2,    width,     0, height / 2, rayTracer, drawLib, start);
-        ScreenChunkTracer threadThree = new ScreenChunkTracer(  0,      width / 2, height / 2, height,  rayTracer, drawLib, start);
-        ScreenChunkTracer threadFour = new ScreenChunkTracer(   width / 2,    width,     height / 2, height,  rayTracer, drawLib, start);
 
-        threadOne.start();
-        threadTwo.start();
-        threadThree.start();
-        threadFour.start();
+        int uWidth = width / numChunksU;
+        int vWidth = height / numChunksV;
+
+        for (int u = 0; u < numChunksU; u++)
+        for (int v = 0; v < numChunksV; v++)
+            new ScreenChunkTracer(u * uWidth, (u + 1) * uWidth, v * vWidth, (v+1) * vWidth, rayTracer, drawLib, start).start();
 
         // Make sure all pixels are effectively drawn to the screen
         drawLib.forceUpdate();
