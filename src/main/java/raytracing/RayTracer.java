@@ -214,15 +214,25 @@ public class RayTracer {
         if (transparency > this.REFRACTION_THRESHOLD)
         {
 
+            // TODO get previous object's refractive indices
+            float[] c2 = new float[]{100, 100, 100};
+            float[] c1 = hitObject.getMaterial().getLightSpeed();
+            float[] c3 = new float[] { c2[0]/c1[0], c2[1]/c1[1], c2[2]/c1[2] };
+
             // Refraction calculations
 
             Ray ray = info.getHitRay();
-            Direction direction = ray.getDirection().getVectorCopy().toDirection();
+            Direction direction = ray.getDirection();
 
-            
+            double cosTheta2 = Math.sqrt( 1 - Math.pow( c3[0], 2 ) * (1 - Math.pow( normal.dotProduct( direction ), 2) ));
+
+            Vector dirComponent = direction.multiply( c3[0] );
+            Vector normComponent = normal.elementWiseProduct( direction ).multiply( c3[0] ).subtract( cosTheta2 ).elementWiseProduct( normal );
+            Direction refractedDirection = dirComponent.add( normComponent ).toDirection();
+
             Ray refracted = new Ray(
                 info.getHitLocation(),
-                direction
+                refractedDirection
             );
 
             RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);

@@ -61,60 +61,13 @@ public class Cube extends Object3D {
         return hitInfo;
     }
 
-//    @Override
-//    public Direction getNormal(Point location)
-//    {
-//        // Move the hit point to the simplified coordinate system
-//        Vector loc = this.getInverseCache().multiply( location );
-//
-//        double bias = 1.000001;
-//        return new Direction( loc.divide( this.size ).multiply( bias ).round() );
-//    }
+    @Override
+    public Double enclosedDistance(Point location) {
+        Point simple = this.getInverseCache().multiply( location );
 
-
-//    @Override
-//    public Direction getNormal(Point location)
-//    {
-//        location = new Point(this.getInverseCache().multiply( location ));
-//
-//        double bias = 0.001;
-//
-//        // Prevent rounding errors
-//        Point p = new Point(
-//            (int) (location.getX()),
-//            (int) (location.getY()),
-//            (int) (location.getZ())
-//        );
-//
-//        Direction direction;
-//
-//        double thresholdHigh = size + bias;
-//        double thresholdLow = size - bias;
-//
-//        if (Math.abs(p.getX()) <= thresholdHigh &&  Math.abs(p.getX()) >= thresholdLow &&
-//            Math.abs( p.getY() ) <= thresholdHigh &&         Math.abs( p.getZ() ) <= thresholdHigh)
-//        {
-//            int sign = (p.getX() > 0) ? 1 : -1;
-//            direction = new Direction(size * sign, 0, 0);
-//        }
-//        else if (   Math.abs(p.getY()) <= thresholdHigh &&  Math.abs(p.getY()) >= thresholdLow &&
-//                    Math.abs( p.getX() ) <= thresholdHigh &&         Math.abs( p.getZ() ) <= thresholdHigh)
-//        {
-//            int sign = (p.getY() > 0) ? 1 : -1;
-//            direction = new Direction(0, size * sign, 0);
-//        }
-//        else if (   Math.abs(p.getZ()) <= thresholdHigh &&      Math.abs(p.getZ()) >= thresholdLow &&
-//                    Math.abs( p.getX() ) <= thresholdHigh &&    Math.abs( p.getY() ) <= thresholdHigh)
-//        {
-//            int sign = (p.getZ() > 0) ? 1 : -1;
-//            direction = new Direction(0, 0, size * sign);
-//        }
-//        else
-//        {
-//            direction = new Direction(0, 0, 0);
-//        }
-//
-//        direction = new Direction( direction.normalise() );
-//        return direction;
-//    }
+        if (Math.abs(simple.getX()) <= 1 && Math.abs(simple.getY()) <= 1 && Math.abs(simple.getZ()) <= 1)
+            return simple.getNorm(); // Return the squared distance to the origin
+        else
+            return null;
+    }
 }

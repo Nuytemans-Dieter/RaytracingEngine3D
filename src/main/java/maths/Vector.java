@@ -62,6 +62,28 @@ public class Vector {
     }
 
     /**
+     * Get the result of adding another vector to this vector
+     * This vector is NOT modified
+     * The first three elements are simply added
+     * The last element will remain unchanged
+     *
+     * @param number the double to be added to this
+     * @return the result of the addition
+     */
+    public Vector subtract (double number)
+    {
+        return new Vector(
+            new double[]
+            {
+                this.getX() - number,
+                this.getY() - number,
+                this.getZ() - number,
+                this.getP()
+            }
+        );
+    }
+
+    /**
      * Get the result of subtracting another vector to this vector
      * This vector is NOT modified
      * The first three elements are simply subtracted

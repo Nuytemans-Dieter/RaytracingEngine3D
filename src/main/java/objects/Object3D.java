@@ -104,4 +104,11 @@ public abstract class Object3D {
         return this.inverseTransformation;
     }
 
+    /**
+     * Checks whether or not this object encloses a given position
+     *
+     * @param location the given position
+     * @return Returns null if the point is not enclosed, returns the squared distance to origin otherwise
+     */
+    public abstract Double enclosedDistance(Point location);
 }

@@ -54,7 +54,7 @@ public class RayTracingEngine3D {
         objects.add( room );
 
         final List<LightEmitter> lights = new ArrayList<>();
-        lights.add( new LightSource( new Point(0, 0, 5), 5.0, new Rgb(1,1,1) ) );
+        lights.add( new LightSource( new Point(0, 0, -5), 5.0, new Rgb(1,1,1) ) );
 //        lights.add( new GlobalIllumination(0.6) );
 
         RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(1.0));

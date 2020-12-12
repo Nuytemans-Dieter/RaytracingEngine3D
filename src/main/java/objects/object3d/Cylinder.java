@@ -46,6 +46,16 @@ public class Cylinder extends Object3D {
         return hitInfo;
     }
 
+    @Override
+    public Double enclosedDistance(Point location) {
+        Point simple = this.getInverseCache().multiply( location );
+
+        if (Math.abs(simple.getY()) <= 1 && (Math.pow(simple.getX(), 2) + Math.pow(simple.getZ(), 2) <= 1))
+            return simple.getNorm();
+        else
+            return null;
+    }
+
 
     private boolean isYInRange(Ray ray, double t)
     {

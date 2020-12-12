@@ -37,4 +37,13 @@ public class Sphere extends Object3D {
 
         return hitInfo;
     }
+
+    @Override
+    public Double enclosedDistance(Point location) {
+        Point simplifiedLocation = this.getInverseCache().multiply( location );
+
+        // Get the squared distance to the origin
+        double distance = simplifiedLocation.getNorm();
+        return distance <= 1 ? distance : null;
+    }
 }
