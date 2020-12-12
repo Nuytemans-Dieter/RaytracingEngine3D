@@ -43,7 +43,6 @@ public class RayTracer {
     {
 
         // Get the screen dimensions
-        // Due to using a 4k monitor, I manually specify the dimensions (for obvious performance reasons)
 //        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final Dimension screenSize = new Dimension(600, 400);
         final double aspect = (double)screenSize.width / (double)screenSize.height;
@@ -178,27 +177,29 @@ public class RayTracer {
 
         color.applyIntensity( hitObject.getMaterial().colorStrength );
 
+
+        // Calculate the transformed normal
+//            Vector normal = info.getNormal();
+//            normal = info.getClosestObject().getTransformation().multiply( normal ).normalise();
+
+        // Calculate the transformed normal
+        Matrix transformation = info.getClosestObject().getTransformation();
+        Matrix invTransformation = info.getClosestObject().getInverseCache();
+        Point stdPoint = invTransformation.multiply( info.getHitLocation() );
+        Point stdEndPoint = stdPoint.add( info.getNormal() ).toPoint();
+        Point endPoint = transformation.multiply( stdEndPoint );
+        Direction normal = endPoint.subtract( info.getHitLocation() ).toDirection();
+
+        depth--;
+
         final float reflectivity = hitObject.getMaterial().reflectivity;
         if (reflectivity > this.REFLECTION_THRESHOLD)
         {
-            depth--;
 
             // Reflection calculations
 
             Ray ray = info.getHitRay();
             Vector direction = ray.getDirection();
-
-            // Calculate the transformed normal
-//            Vector normal = info.getNormal();
-//            normal = info.getClosestObject().getTransformation().multiply( normal ).normalise();
-
-            // Calculate the transformed normal
-            Matrix transformation = info.getClosestObject().getTransformation();
-            Matrix invTransformation = info.getClosestObject().getInverseCache();
-            Point stdPoint = invTransformation.multiply( info.getHitLocation() );
-            Point stdEndPoint = stdPoint.add( info.getNormal() ).toPoint();
-            Point endPoint = transformation.multiply( stdEndPoint );
-            Direction normal = endPoint.subtract( info.getHitLocation() ).toDirection();
 
             double product = direction.dotProduct( normal );
             Direction reflectedDirection = direction.subtract( normal.multiply( 2 * product ) ).toDirection();
@@ -207,6 +208,25 @@ public class RayTracer {
             RayTraceInfo reflectedHitInfo = this.tracePoint( reflectedRay, EPSILON);
 
             color.addRgb( this.calcLight( reflectedHitInfo, depth ) ).applyIntensity( reflectivity );
+        }
+
+        final float transparency = hitObject.getMaterial().transparency;
+        if (transparency > this.REFRACTION_THRESHOLD)
+        {
+
+            // Refraction calculations
+
+            Ray ray = info.getHitRay();
+            Direction direction = ray.getDirection().getVectorCopy().toDirection();
+
+            
+            Ray refracted = new Ray(
+                info.getHitLocation(),
+                direction
+            );
+
+            RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);
+            color.addRgb( this.calcLight( refractedHitInfo, depth ) ).applyIntensity( transparency );
         }
 
         return color;

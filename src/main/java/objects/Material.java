@@ -21,6 +21,8 @@ public class Material {
 
     // TODO Make refraction immutable or private with getter (copy)
     public final float[] refraction;
+    // Relative speed of light in this material (actual speed / 300000)
+    public final double relativeSpeedOfLight;
 
     public final float reflectivity;
     public final float transparency;
@@ -60,6 +62,7 @@ public class Material {
 
         assert (refraction.length == 3);
         this.refraction = refraction;
+        this.relativeSpeedOfLight = 1;
 
         this.reflectivity = reflectivity;
         this.transparency = transparency;
