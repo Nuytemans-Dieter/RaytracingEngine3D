@@ -132,6 +132,30 @@ public class TestMatrix {
         assert mat.transpose().equals( transposed );
     }
 
+    @Test
+    public void testRemoveTranslation()
+    {
+        Matrix mat = new Matrix(
+                new double[][] {
+                        {1, 2, 3, 4},
+                        {5, 6, 7, 8},
+                        {9, 10, 11, 12},
+                        {13, 14, 15, 16}
+                }
+        );
+
+        Matrix result = new Matrix(
+                new double[][] {
+                        {1, 2, 3, 0},
+                        {5, 6, 7, 0},
+                        {9, 10, 11, 0},
+                        {0, 0, 0, 16}
+                }
+        );
+
+        assert mat.removeTranslation().equals( result );
+    }
+
     @Test(expected = AssertionError.class)
     public void testFaultyParameter()
     {

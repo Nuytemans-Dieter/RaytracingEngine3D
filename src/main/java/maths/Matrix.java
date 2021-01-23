@@ -185,6 +185,26 @@ public class Matrix {
 
 
     /**
+     * Remove all translation components from this matrix
+     * Does not alter this object!
+     *
+     * @return the same transformation matrix, but without translation
+     */
+    public Matrix removeTranslation()
+    {
+        return new Matrix(
+                this.matrix
+        )
+            .modify(3, 0, 0)
+            .modify(3, 1, 0)
+            .modify(3, 2, 0)
+            .modify(0, 3, 0)
+            .modify(1, 3, 0)
+            .modify(2, 3, 0);
+    }
+
+
+    /**
      * Multiplies this matrix with a vector and returns the result
      * Does not modify this object
      *
