@@ -11,8 +11,7 @@ import objects.Object3D;
 public class Sphere extends Object3D {
 
     @Override
-    public HitInfo calcHitInfo(Ray ray)
-    {
+    public HitInfo calcHitInfo(Ray ray, double epsilon) {
         HitInfo hitInfo = new HitInfo();
 
         Vector origin = ray.getOrigin();
@@ -30,9 +29,9 @@ public class Sphere extends Object3D {
         double t1 = (-B + D) / A;
         double t2 = (-B - D) / A;
 
-        if (t1 >= 0)
+        if (t1 >= epsilon)
             hitInfo.addHit(t1, new Direction( ray.getPoint( t1 )) );
-        if (t2 >= 0)
+        if (t2 >= epsilon)
             hitInfo.addHit(t2, new Direction( ray.getPoint( t2 )) );
 
         return hitInfo;

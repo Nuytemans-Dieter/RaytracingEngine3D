@@ -34,7 +34,20 @@ public abstract class Object3D {
      * @param ray the ray for which the collision is to be checked
      * @return HitInfo that contains zero or more values for t of intersection
      */
-    public abstract HitInfo calcHitInfo(Ray ray);
+    public HitInfo calcHitInfo(Ray ray)
+    {
+        return this.calcHitInfo( ray, 0 );
+    }
+
+    /**
+     * Get the HitInfo for which a Ray collides with this Object3D
+     * Considers the epsilon value that works as an offset
+     *
+     * @param ray the ray for which the collision is to be checked
+     * @param epsilon the minimum t value to be considered
+     * @return HitInfo that contains zero or more values for t of intersection
+     */
+    public abstract HitInfo calcHitInfo(Ray ray, double epsilon);
 
 
     /**

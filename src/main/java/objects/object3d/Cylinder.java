@@ -10,7 +10,7 @@ import objects.Ray;
 public class Cylinder extends Object3D {
 
     @Override
-    public HitInfo calcHitInfo(Ray ray)
+    public HitInfo calcHitInfo(Ray ray, double epsilon)
     {
         HitInfo hitInfo = new HitInfo();
 
@@ -27,9 +27,9 @@ public class Cylinder extends Object3D {
         double t1 = (- B + sqrt ) / (2 * A);
         double t2 = (- B - sqrt ) / (2 * A);
 
-        if (t1 >= 0 && isYInRange(ray, t1))
+        if (t1 >= epsilon && isYInRange(ray, t1))
             hitInfo.addHit( t1, new Direction( ray.getPoint( t1 ).modify(1, 0) ));
-        if (t2 >= 0 && isYInRange(ray, t2))
+        if (t2 >= epsilon && isYInRange(ray, t2))
             hitInfo.addHit( t2, new Direction( ray.getPoint( t2 ).modify(1, 0) ));
 
 
@@ -38,9 +38,9 @@ public class Cylinder extends Object3D {
         double t3 = ( 1 - origin.getY()) / direction.getY();
         double t4 = (-1 - origin.getY()) / direction.getY();
 
-        if (t3 >= 0 && areXAndZInRange(ray, t3))    // Y = 1
+        if (t3 >= epsilon && areXAndZInRange(ray, t3))    // Y = 1
             hitInfo.addHit( t3, new Direction(0, 1, 0) );
-        if (t4 >= 0 && areXAndZInRange(ray, t4))    // Y = -1
+        if (t4 >= epsilon && areXAndZInRange(ray, t4))    // Y = -1
             hitInfo.addHit( t4, new Direction(0, -1, 0) );
 
         return hitInfo;
