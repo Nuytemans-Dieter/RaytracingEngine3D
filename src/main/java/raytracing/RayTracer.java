@@ -35,7 +35,7 @@ public class RayTracer {
     public final boolean DISABLE_SHADOWS = false;
 
     public static final double EPSILON = 0.000001;   // Bias to prevent surface acne when calculating light
-    private final int RECURSION_DEPTH = 1;          // Maximum recursion depth for reflection and refraction
+    private final int RECURSION_DEPTH = 10;          // Maximum recursion depth for reflection and refraction
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
     private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
 
@@ -49,7 +49,7 @@ public class RayTracer {
 
         // Camera and internal screen settings
         this.camDistance = 7;
-        final double viewAngle = Math.PI / 3;
+        final double viewAngle = Math.PI / 2;
         final double W = 2 * camDistance * Math.tan( viewAngle / 2 );
         final double H = W / aspect;
         this.eyeLocation = new Point(0, 0, camDistance);
@@ -140,7 +140,7 @@ public class RayTracer {
             );
 
             // Calculate collisions
-            HitInfo info = object.calcHitInfo( transformedRay );
+            HitInfo info = object.calcHitInfo( transformedRay, epsilon );
             Double t = info.getLowestT();
             if ((t != null && t >= epsilon) && (closestT == null || t <= closestT))
             {
