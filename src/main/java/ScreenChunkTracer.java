@@ -47,21 +47,7 @@ public class ScreenChunkTracer extends Thread {
             Rgb color = new Rgb(0, 0, 0);
 
             RayTraceInfo info = rayTracer.tracePoint(u, v);
-            if ( info.getClosestObject() != null )
-            {
-//                Material material = info.getClosestObject().getMaterial();
-//                Rgb illumination = rayTracer.calculateIllumination( info ).applyIntensity( material.colorStrength );
-//                Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
-//                Rgb refraction = rayTracer.calculateRefraction( info ).applyIntensity( material.transparency );
-
-                // Find the colour of this point returning to the eye from the point of intersection
-//                color.addRgb( illumination ).addRgb( reflection ).addRgb( refraction );
-                color.addRgb( rayTracer.calcLight( info ) );
-            }
-            else
-            {
-                color.addRgb( rayTracer.getVoidColor() );
-            }
+            color.addRgb( info.getClosestObject() != null ? rayTracer.calcLight( info ) : rayTracer.getVoidColor() );
 
             // Update the color in this pixel
             drawLib.drawPoint(u, v, color);

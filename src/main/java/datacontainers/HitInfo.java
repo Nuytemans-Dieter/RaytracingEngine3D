@@ -59,11 +59,6 @@ public class HitInfo {
         }
     }
 
-    public boolean isHit()
-    {
-        return tNormalMap.size() != 0;
-    }
-
     public Double getLowestT()
     {
         return lowestT;
@@ -72,11 +67,6 @@ public class HitInfo {
     public Direction getLowestTNormal()
     {
         return this.lowestTNormal;
-    }
-
-    public Map<Double, Direction> getTNormalMap()
-    {
-        return this.tNormalMap;
     }
 
 }
