@@ -106,7 +106,7 @@ public class RayTracer {
      */
     public RayTraceInfo tracePoint( Ray ray)
     {
-        return this.tracePoint( ray, 0 );
+        return this.tracePoint( ray, RayTracer.EPSILON );
     }
 
     /**
