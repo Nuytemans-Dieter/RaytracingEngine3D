@@ -44,7 +44,7 @@ public class ScreenChunkTracer extends Thread {
             RayTraceInfo info = rayTracer.tracePoint(u, v);
             if ( info.getClosestObject() != null )
             {
-                Material material = info.getClosestObject().getMaterial();
+//                Material material = info.getClosestObject().getMaterial();
 //                Rgb illumination = rayTracer.calculateIllumination( info ).applyIntensity( material.colorStrength );
 //                Rgb reflection = rayTracer.calculateReflection( info ).applyIntensity( material.reflectivity );
 //                Rgb refraction = rayTracer.calculateRefraction( info ).applyIntensity( material.transparency );

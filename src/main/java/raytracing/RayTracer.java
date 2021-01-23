@@ -156,6 +156,11 @@ public class RayTracer {
         return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay, closestNormal);
     }
 
+//    public Rgb computeLight(RayTraceInfo info)
+//    {
+//
+//    }
+
     public Rgb calcLight(RayTraceInfo info)
     {
         return this.calcLight( info, this.RECURSION_DEPTH );
@@ -183,12 +188,18 @@ public class RayTracer {
 //            normal = info.getClosestObject().getTransformation().multiply( normal ).normalise();
 
         // Calculate the transformed normal
-        Matrix transformation = info.getClosestObject().getTransformation();
-        Matrix invTransformation = info.getClosestObject().getInverseCache();
-        Point stdPoint = invTransformation.multiply( info.getHitLocation() );
-        Point stdEndPoint = stdPoint.add( info.getNormal() ).toPoint();
-        Point endPoint = transformation.multiply( stdEndPoint );
-        Direction normal = endPoint.subtract( info.getHitLocation() ).toDirection();
+//        Matrix transformation = info.getClosestObject().getTransformation();
+//        Matrix invTransformation = info.getClosestObject().getInverseCache();
+//
+//        Point stdPoint = invTransformation.multiply( info.getHitLocation() );
+//        Point stdEndPoint = stdPoint.add( info.getNormal() ).toPoint();
+//
+//        Point endPoint = transformation.multiply( stdEndPoint );
+//        Direction normal = endPoint.subtract( info.getHitLocation() ).toDirection();
+
+        Matrix inverseTranspose = info.getClosestObject().getInverseCache().transpose();
+        Direction normal = inverseTranspose.removeTranslation().multiply( info.getNormal() );
+
 
         depth--;
 
