@@ -35,7 +35,7 @@ public class RayTracer {
     public final boolean DISABLE_SHADOWS = false;
 
     public static final double EPSILON = 0.000001;   // Bias to prevent surface acne when calculating light
-    private final int RECURSION_DEPTH = 10;          // Maximum recursion depth for reflection and refraction
+    private final int RECURSION_DEPTH = 1;          // Maximum recursion depth for reflection and refraction
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
     private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
 
@@ -184,8 +184,8 @@ public class RayTracer {
         color.applyIntensity( hitObject.getMaterial().colorStrength );
 
         // Calculate the transformed normal
-//        Direction transformedNormal = info.getClosestObject().getTransformation().multiply( info.getNormal() ).normalise();
-        Direction transformedNormal = info.getNormal().normalise();
+        Direction transformedNormal = hitObject.getTransformation().multiply( info.getNormal() ).normalise();
+//        Direction transformedNormal = info.getNormal().normalise();
 
         depth--;
 
@@ -200,7 +200,7 @@ public class RayTracer {
             Direction scalarNormal = transformedNormal.multiply( product ).toDirection();
             Direction reflectedDirection = hitDirection.subtract( scalarNormal ).toDirection();
 
-            Ray reflectedRay = new Ray(info.getHitLocation(), reflectedDirection.normalise());
+            Ray reflectedRay = new Ray(info.getHitLocation(), reflectedDirection);
             RayTraceInfo reflectedHitInfo = this.tracePoint( reflectedRay, EPSILON);
 
             color.addRgb( this.calcLight( reflectedHitInfo, depth ) ).applyIntensity( reflectivity );

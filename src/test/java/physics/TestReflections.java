@@ -1,3 +1,5 @@
+package physics;
+
 import maths.vector.Direction;
 import org.junit.Test;
 
