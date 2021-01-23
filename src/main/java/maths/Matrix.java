@@ -169,6 +169,22 @@ public class Matrix {
 
 
     /**
+     * Get the transpose of this matrix
+     * Does not alter this object!
+     *
+     * @return the result of transposing this matrix
+     */
+    public Matrix transpose()
+    {
+        double[][] newMatrix = new double[this.matrix[0].length][this.matrix.length];
+        for (int i = 0; i < this.matrix.length; i++)
+            for (int j = 0; j < this.matrix[0].length; j++)
+                newMatrix[j][i] = this.matrix[i][j];
+        return new Matrix( newMatrix );
+    }
+
+
+    /**
      * Multiplies this matrix with a vector and returns the result
      * Does not modify this object
      *
