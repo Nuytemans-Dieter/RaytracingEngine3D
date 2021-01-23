@@ -1,8 +1,13 @@
 import graphics.DrawLib;
 import graphics.Rgb;
+import objects.LightEmitter;
 import objects.Material;
+import objects.Object3D;
+import objects.lighting.GlobalIllumination;
 import raytracing.RayTraceInfo;
 import raytracing.RayTracer;
+
+import java.util.List;
 
 public class ScreenChunkTracer extends Thread {
 
@@ -18,14 +23,14 @@ public class ScreenChunkTracer extends Thread {
     private final int chunkU;
     private final int chunkV;
 
-    public ScreenChunkTracer(int startU, int stopU, int startV, int stopV, RayTracer rayTracer, DrawLib drawLib, long startTime, int chunkU, int chunkV)
+    public ScreenChunkTracer(int startU, int stopU, int startV, int stopV, List<Object3D> objects, List<LightEmitter> lights, GlobalIllumination globalIllumination, DrawLib drawLib, long startTime, int chunkU, int chunkV)
     {
         this.startU = startU;
         this.stopU = stopU;
         this.startV = startV;
         this.stopV = stopV;
 
-        this.rayTracer = rayTracer;
+        this.rayTracer = new RayTracer(objects, lights, globalIllumination);
         this.drawLib = drawLib;
 
         this.startTime = startTime;
@@ -58,14 +63,9 @@ public class ScreenChunkTracer extends Thread {
                 color.addRgb( rayTracer.getVoidColor() );
             }
 
-            // Compute the hit point and the normal vector in this point
-//            Point hitPoint = ray.getPoint(closestT);
-
             // Update the color in this pixel
             drawLib.drawPoint(u, v, color);
         }
-
-//        System.out.println("(" + startU + ", " + stopU + "), (" + startV + ", " + stopV + ")");
 
         // Make sure all pixels are effectively drawn to the screen
         drawLib.forceUpdate();

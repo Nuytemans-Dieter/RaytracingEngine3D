@@ -32,7 +32,7 @@ public class RayTracer {
     private final ScreenInfo screenInfo;
     private final double camDistance;
 
-    public final boolean DISABLE_SHADOWS = true;
+    public final boolean DISABLE_SHADOWS = false;
 
     public static final double EPSILON = 0.000001;   // Bias to prevent surface acne when calculating light
     private final int RECURSION_DEPTH = 10;          // Maximum recursion depth for reflection and refraction
@@ -156,50 +156,36 @@ public class RayTracer {
         return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay, closestNormal);
     }
 
-//    public Rgb computeLight(RayTraceInfo info)
-//    {
-//
-//    }
-
     public Rgb calcLight(RayTraceInfo info)
     {
         return this.calcLight( info, this.RECURSION_DEPTH );
     }
 
-    private Rgb calcLight(RayTraceInfo info, int depth)
+    public Rgb calcLight(RayTraceInfo info, int depth)
     {
+        assert depth >= 0;
+
         Rgb color = new Rgb(0, 0, 0);
 
         Object3D hitObject = info.getClosestObject();
 
+        // If no object is hit, return color of the void
         if (hitObject == null)
             return this.voidColor.clone();
 
+        // Add the illumination (global, diffuse and specular)
         color.addRgb( this.calculateIllumination( info ) );
 
-        if (depth == 0)
+        // Limit recursion depth
+        if (depth <= 0)
             return color;
 
+        // Apply material properties to illumination when reflection/refraction has to take place
         color.applyIntensity( hitObject.getMaterial().colorStrength );
 
-
         // Calculate the transformed normal
-//            Vector normal = info.getNormal();
-//            normal = info.getClosestObject().getTransformation().multiply( normal ).normalise();
-
-        // Calculate the transformed normal
-//        Matrix transformation = info.getClosestObject().getTransformation();
-//        Matrix invTransformation = info.getClosestObject().getInverseCache();
-//
-//        Point stdPoint = invTransformation.multiply( info.getHitLocation() );
-//        Point stdEndPoint = stdPoint.add( info.getNormal() ).toPoint();
-//
-//        Point endPoint = transformation.multiply( stdEndPoint );
-//        Direction normal = endPoint.subtract( info.getHitLocation() ).toDirection();
-
-        Matrix inverseTranspose = info.getClosestObject().getInverseCache();
-        Direction normal = inverseTranspose.multiply( info.getNormal() );
-
+//        Direction transformedNormal = info.getClosestObject().getTransformation().multiply( info.getNormal() ).normalise();
+        Direction transformedNormal = info.getNormal().normalise();
 
         depth--;
 
@@ -209,13 +195,12 @@ public class RayTracer {
 
             // Reflection calculations
 
-            Ray ray = info.getHitRay();
-            Vector direction = ray.getDirection();
+            Direction hitDirection = info.getHitRay().getDirection();
+            double product = hitDirection.dotProduct( transformedNormal ) * 2;
+            Direction scalarNormal = transformedNormal.multiply( product ).toDirection();
+            Direction reflectedDirection = hitDirection.subtract( scalarNormal ).toDirection();
 
-            double product = direction.dotProduct( normal );
-            Direction reflectedDirection = direction.subtract( normal.multiply( 2 * product ) ).toDirection();
-
-            Ray reflectedRay = new Ray(info.getHitLocation(), reflectedDirection);
+            Ray reflectedRay = new Ray(info.getHitLocation(), reflectedDirection.normalise());
             RayTraceInfo reflectedHitInfo = this.tracePoint( reflectedRay, EPSILON);
 
             color.addRgb( this.calcLight( reflectedHitInfo, depth ) ).applyIntensity( reflectivity );
@@ -235,10 +220,10 @@ public class RayTracer {
             Ray ray = info.getHitRay();
             Direction direction = ray.getDirection();
 
-            double cosTheta2 = Math.sqrt( 1 - Math.pow( c3[0], 2 ) * (1 - Math.pow( normal.dotProduct( direction ), 2) ));
+            double cosTheta2 = Math.sqrt( 1 - Math.pow( c3[0], 2 ) * (1 - Math.pow( transformedNormal.dotProduct( direction ), 2) ));
 
             Vector dirComponent = direction.multiply( c3[0] );
-            Vector normComponent = normal.elementWiseProduct( direction ).multiply( c3[0] ).subtract( cosTheta2 ).elementWiseProduct( normal );
+            Vector normComponent = transformedNormal.elementWiseProduct( direction ).multiply( c3[0] ).subtract( cosTheta2 ).elementWiseProduct( transformedNormal );
             Direction refractedDirection = dirComponent.add( normComponent ).toDirection();
 
             Ray refracted = new Ray(
@@ -327,9 +312,9 @@ public class RayTracer {
 
         // Add global illumination
         illumination.addRgb(
-            Math.max(globalIllumination.getColor().r() * hitMaterial.ambientR, 0),
-            Math.max(globalIllumination.getColor().g() * hitMaterial.ambientB, 0),
-            Math.max(globalIllumination.getColor().b() * hitMaterial.ambientB, 0)
+            Math.max(globalIllumination.getColor().r(), 0),
+            Math.max(globalIllumination.getColor().g(), 0),
+            Math.max(globalIllumination.getColor().b(), 0)
         );
 
         Rgb color = info.getClosestObject().getColor();

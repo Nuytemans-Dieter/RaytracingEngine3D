@@ -81,7 +81,7 @@ public class RayTracingEngine3D {
 
         for (int u = 0; u < numChunksU; u++)
         for (int v = 0; v < numChunksV; v++)
-            new ScreenChunkTracer(u * uWidth, (u + 1) * uWidth, v * vWidth, (v+1) * vWidth, rayTracer, drawLib, start, u, v).start();
+            new ScreenChunkTracer(u * uWidth, (u + 1) * uWidth, v * vWidth, (v+1) * vWidth, objects, lights, new GlobalIllumination(0.4), drawLib, start, u, v).start();
 
         // Make sure all pixels are effectively drawn to the screen
         drawLib.forceUpdate();
