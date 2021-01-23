@@ -197,8 +197,8 @@ public class RayTracer {
 //        Point endPoint = transformation.multiply( stdEndPoint );
 //        Direction normal = endPoint.subtract( info.getHitLocation() ).toDirection();
 
-        Matrix inverseTranspose = info.getClosestObject().getInverseCache().transpose();
-        Direction normal = inverseTranspose.removeTranslation().multiply( info.getNormal() );
+        Matrix inverseTranspose = info.getClosestObject().getInverseCache();
+        Direction normal = inverseTranspose.multiply( info.getNormal() );
 
 
         depth--;
@@ -271,7 +271,7 @@ public class RayTracer {
 
         if (info.getHitLocation() != null)
         {
-            Direction normal = info.getClosestObject().getTransformation().multiply( info.getNormal() ).normalise();
+            Direction normal = info.getClosestObject().getTransformation().removeTranslation().multiply( info.getNormal() ).normalise();
 
             for (LightEmitter light : lights)
             {

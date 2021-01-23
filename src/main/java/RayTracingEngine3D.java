@@ -31,8 +31,8 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-        Object3D sphere = new Sphere().setMaterial( new Gold() );
-        sphere.addTransformations( matrixFactory.getTranslation(22, 0, 2) );
+        Object3D sphere = new Sphere().setMaterial( new Mirror() );
+        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
 //        sphere.addTransformations(
 //                matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI),
 //                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI),
@@ -42,16 +42,16 @@ public class RayTracingEngine3D {
 
         Object3D sphere2 = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
         sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
-        sphere2.addTransformations( matrixFactory.getTranslation(2, 0, -2) );
+        sphere2.addTransformations( matrixFactory.getTranslation(-2, 0, 2) );
         objects.add(sphere2);
 
 //        Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
 //        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
 //        objects.add( sphere3 );
 
-//        Object3D room = new Cube().setMaterial( new Lambertian( Rgb.Color.RED ) );
-//        room.addTransformations( matrixFactory.getScaling(20, 20, 20) );
-//        objects.add( room );
+        Object3D room = new Cube().setMaterial( new Lambertian( Rgb.Color.RED ) );
+        room.addTransformations( matrixFactory.getScaling(20, 20, 20) );
+        objects.add( room );
 
         final List<LightEmitter> lights = new ArrayList<>();
         lights.add( new LightSource( new Point(0, 0, -5), 5.0, new Rgb(1,1,1) ) );
