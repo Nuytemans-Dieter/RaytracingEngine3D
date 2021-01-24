@@ -12,7 +12,7 @@ public class Aluminium extends Material {
             0.8f,
             0.2f,
             0.9f,
-            0.1f,
+            0.2f,
             new float[] {42.42f, 47.98f, 47.98f},
             0.0f
         );
