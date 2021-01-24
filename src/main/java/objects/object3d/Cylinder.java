@@ -16,6 +16,7 @@ public class Cylinder extends Object3D {
 
         Point origin = ray.getOrigin();
         Direction direction = ray.getDirection();
+        Direction inDir = direction.multiply( -1 ).toDirection();
 
         // Check collision with the cylinder walls (All points on X²+Z²=1 and |Y|<=1)
 
@@ -27,10 +28,14 @@ public class Cylinder extends Object3D {
         double t1 = (- B + sqrt ) / (2 * A);
         double t2 = (- B - sqrt ) / (2 * A);
 
+        boolean mayEnter = sqrt != 0;
+
+        // TODO implement isEntering
+
         if (t1 >= epsilon && isYInRange(ray, t1))
-            hitInfo.addHit( t1, new Direction( ray.getPoint( t1 ).modify(1, 0) ));
+            hitInfo.addHit( t1, new Direction( ray.getPoint( t1 ).modify(1, 0) ), false);
         if (t2 >= epsilon && isYInRange(ray, t2))
-            hitInfo.addHit( t2, new Direction( ray.getPoint( t2 ).modify(1, 0) ));
+            hitInfo.addHit( t2, new Direction( ray.getPoint( t2 ).modify(1, 0) ), false);
 
 
         // Check collision with the cylinder surfaces (All points on |Y|=1, X²+Z²<1)
@@ -39,9 +44,9 @@ public class Cylinder extends Object3D {
         double t4 = (-1 - origin.getY()) / direction.getY();
 
         if (t3 >= epsilon && areXAndZInRange(ray, t3))    // Y = 1
-            hitInfo.addHit( t3, new Direction(0, 1, 0) );
+            hitInfo.addHit( t3, new Direction(0, 1, 0), false );
         if (t4 >= epsilon && areXAndZInRange(ray, t4))    // Y = -1
-            hitInfo.addHit( t4, new Direction(0, -1, 0) );
+            hitInfo.addHit( t4, new Direction(0, -1, 0), false );
 
         return hitInfo;
     }

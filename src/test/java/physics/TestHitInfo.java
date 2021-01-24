@@ -20,8 +20,15 @@ public class TestHitInfo {
             put(20d, new Direction(3, 3, 3));
         }};
 
+        Map<Double, Boolean> entering = new HashMap<Double, Boolean>() {{
+            put(12d, true);
+            put(30d, false);
+            put(1d, true);
+            put(20d, false);
+        }};
+
         HitInfo hitInfo = new HitInfo(
-            map
+            map, entering
         );
 
         assert hitInfo.getLowestT() == 1;
@@ -38,28 +45,28 @@ public class TestHitInfo {
     public void testAddHit()
     {
         HitInfo hitInfo = new HitInfo();
-        hitInfo.addHit( 12d, new Direction(0, 0, 0) );
-        hitInfo.addHit( 30d, new Direction(1, 1, 1) );
-        hitInfo.addHit( 1d, new Direction(2, 2, 2) );
-        hitInfo.addHit( 20d, new Direction(3, 3, 3) );
+        hitInfo.addHit( 12d, new Direction(0, 0, 0), true );
+        hitInfo.addHit( 30d, new Direction(1, 1, 1), true );
+        hitInfo.addHit( 1d, new Direction(2, 2, 2), true );
+        hitInfo.addHit( 20d, new Direction(3, 3, 3), true );
 
         assert hitInfo.getLowestT() == 1;
         assert hitInfo.getLowestTNormal().equals( new Direction(2, 2, 2) );
 
         hitInfo = new HitInfo();
-        hitInfo.addHit( 1d, new Direction(2, 2, 2) );
-        hitInfo.addHit( 12d, new Direction(0, 0, 0) );
-        hitInfo.addHit( 30d, new Direction(1, 1, 1) );
-        hitInfo.addHit( 20d, new Direction(3, 3, 3) );
+        hitInfo.addHit( 1d, new Direction(2, 2, 2), true );
+        hitInfo.addHit( 12d, new Direction(0, 0, 0), true );
+        hitInfo.addHit( 30d, new Direction(1, 1, 1), true );
+        hitInfo.addHit( 20d, new Direction(3, 3, 3), true );
 
         assert hitInfo.getLowestT() == 1;
         assert hitInfo.getLowestTNormal().equals( new Direction(2, 2, 2) );
 
         hitInfo = new HitInfo();
-        hitInfo.addHit( 12d, new Direction(0, 0, 0) );
-        hitInfo.addHit( 30d, new Direction(1, 1, 1) );
-        hitInfo.addHit( 20d, new Direction(3, 3, 3) );
-        hitInfo.addHit( 1d, new Direction(2, 2, 2) );
+        hitInfo.addHit( 12d, new Direction(0, 0, 0), true );
+        hitInfo.addHit( 30d, new Direction(1, 1, 1), true );
+        hitInfo.addHit( 20d, new Direction(3, 3, 3), true );
+        hitInfo.addHit( 1d, new Direction(2, 2, 2), true );
 
         assert hitInfo.getLowestT() == 1;
         assert hitInfo.getLowestTNormal().equals( new Direction(2, 2, 2) );

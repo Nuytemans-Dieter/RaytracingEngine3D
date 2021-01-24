@@ -43,10 +43,18 @@ public class TestSphere {
         assert info.getLowestTNormal().equals( expectedNormal );
 
         ray = new Ray(10, 5, 3, -9.5, -5, -3.5);
-        assert sphere.calcHitInfo(ray).getLowestT() == 0.9566324623167374;
+        HitInfo hitInfo = sphere.calcHitInfo(ray);
+        assert hitInfo.getLowestT() == 0.9566324623167374;
+        assert hitInfo.isLowestEntering();
         assert ray.getPoint( sphere.calcHitInfo( ray ).getLowestT() ).getX() == 0.9119916079909949;
         assert ray.getPoint( sphere.calcHitInfo( ray ).getLowestT() ).getY() == 0.21683768841631323;
         assert ray.getPoint( sphere.calcHitInfo( ray ).getLowestT() ).getZ() == -0.34821361810858065;
+
+        camLoc = new Point(0,0,0);
+        direction = new Direction(-1, -1, -1);
+        ray = new Ray(camLoc, direction);
+        hitInfo = sphere.calcHitInfo( ray );
+        assert !hitInfo.isLowestEntering();
     }
 
 }

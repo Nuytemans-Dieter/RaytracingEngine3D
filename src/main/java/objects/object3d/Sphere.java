@@ -25,14 +25,29 @@ public class Sphere extends Object3D {
             return hitInfo;
         }
 
+        boolean mayEnter = D != 0;
+
         D = Math.sqrt(D);
         double t1 = (-B + D) / A;
         double t2 = (-B - D) / A;
 
+        Point p1 = ray.getPoint( t1 );
+        Point p2 = ray.getPoint( t2 );
+
+        Direction n1 = new Direction( p1 );
+        Direction n2 = new Direction( p2 );
+
+        Direction transposedN1 = this.getInverseCache().transpose().multiply( n1 );
+        Direction transposedN2 = this.getInverseCache().transpose().multiply( n2 );
+
+        Direction inDir = ray.getDirection().multiply( -1 ).toDirection();
+        boolean doesEnter1 = inDir.dotProduct( transposedN1 ) >= 0;
+        boolean doesEnter2 = inDir.dotProduct( transposedN2 ) >= 0;
+
         if (t1 >= epsilon)
-            hitInfo.addHit(t1, new Direction( ray.getPoint( t1 )) );
+            hitInfo.addHit(t1, n1, mayEnter && doesEnter1);
         if (t2 >= epsilon)
-            hitInfo.addHit(t2, new Direction( ray.getPoint( t2 )) );
+            hitInfo.addHit(t2, n2, mayEnter && doesEnter2);
 
         return hitInfo;
     }
