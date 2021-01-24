@@ -49,7 +49,7 @@ public class RayTracingEngine3D {
 //        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
 //        objects.add( sphere3 );
 
-        Object3D room = new Cube().setMaterial( new Lambertian( Rgb.Color.RED ) );
+        Object3D room = new Cube().setMaterial( new Aluminium() );
         room.addTransformations( matrixFactory.getTranslation(0, -3.5, 0) );
         room.addTransformations( matrixFactory.getScaling(5, 5, 8) );
         objects.add( room );
