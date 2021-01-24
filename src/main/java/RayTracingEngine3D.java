@@ -32,7 +32,7 @@ public class RayTracingEngine3D {
         final List<Object3D> objects = new ArrayList<>();
 
         Object3D sphere = new Sphere().setMaterial( new Mirror() );
-        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
+//        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
         sphere.addTransformations(
                 matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI),
                 matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI),
@@ -40,21 +40,23 @@ public class RayTracingEngine3D {
         );
         objects.add( sphere );
 
-        Object3D sphere2 = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
-        sphere2.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
-        sphere2.addTransformations( matrixFactory.getTranslation(-2, 0, 2) );
-        objects.add(sphere2);
+        Object3D cylinder = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
+        cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
+        cylinder.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
+        objects.add(cylinder);
 
 //        Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
 //        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
 //        objects.add( sphere3 );
 
         Object3D room = new Cube().setMaterial( new Lambertian( Rgb.Color.RED ) );
+        room.addTransformations( matrixFactory.getTranslation(0, -3.5, 0) );
         room.addTransformations( matrixFactory.getScaling(5, 5, 8) );
         objects.add( room );
 
         final List<LightEmitter> lights = new ArrayList<>();
-        lights.add( new LightSource( new Point(0, 0, -5), 5.0, new Rgb(1,1,1) ) );
+//        lights.add( new LightSource( new Point(0, 0, 5), 5.0, new Rgb(1,1,1) ) );
+        lights.add( new LightSource( new Point(-2, -2, 2), 5.0, new Rgb(1,1,1) ) );
 //        lights.add( new GlobalIllumination(0.6) );
 
         RayTracer rayTracer = new RayTracer(objects, lights, new GlobalIllumination(1.0));

@@ -256,7 +256,7 @@ public class RayTracer {
 
         if (info.getHitLocation() != null)
         {
-            Direction normal = info.getClosestObject().getTransformation().removeTranslation().multiply( info.getNormal() ).normalise();
+            Direction normal = info.getClosestObject().getTransformation().multiply( info.getNormal() ).normalise();
 
             for (LightEmitter light : lights)
             {
