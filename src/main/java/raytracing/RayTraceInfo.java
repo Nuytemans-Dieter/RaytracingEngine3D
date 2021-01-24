@@ -12,14 +12,16 @@ public class RayTraceInfo {
     private final Object3D closestObject;
     private final Ray hitRay;
     private final Direction normal;
+    private final Boolean isEntering;
 
-    public RayTraceInfo(Point hitLocation, Double closestT, Object3D closestObject, Ray hitRay, Direction closestTNormal)
+    public RayTraceInfo(Point hitLocation, Double closestT, Object3D closestObject, Ray hitRay, Direction closestTNormal, Boolean isEntering)
     {
         this.hitLocation = hitLocation;
         this.closestT = closestT;
         this.closestObject = closestObject;
         this.hitRay = hitRay;
         this.normal = closestTNormal;
+        this.isEntering = isEntering;
     }
 
     public Point getHitLocation()
@@ -44,7 +46,12 @@ public class RayTraceInfo {
 
     public Ray getHitRay()
     {
-        return hitRay;
+        return this.hitRay;
+    }
+
+    public Boolean getIsEntering()
+    {
+        return this.isEntering;
     }
 
 }

@@ -127,6 +127,7 @@ public class RayTracer {
         Object3D closestObject = null;
         Ray hitRay = null;
         Direction closestNormal = null;
+        Boolean isEntering = null;
 
         // Find all intersections
         for (Object3D object : objects)
@@ -150,10 +151,11 @@ public class RayTracer {
                 closestObject = object;
                 hitRay = new Ray(origin, direction);
                 closestNormal = info.getLowestTNormal();
+                isEntering = info.isLowestEntering();
             }
         }
 
-        return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay, closestNormal);
+        return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay, closestNormal, isEntering);
     }
 
 
@@ -271,6 +273,7 @@ public class RayTracer {
 //            float c1 = previous != null ? previous.getMaterial().getLightSpeed()[0] : 1f;
             float c2 = hitObject.getMaterial().getLightSpeed()[0];
 //            float c3 = c2 / c1;
+//            float c3 = info.getIsEntering() ? 0.9997f/c2 : c2/0.9997f;
             float c3 = c2;
 
             // Refraction calculations
