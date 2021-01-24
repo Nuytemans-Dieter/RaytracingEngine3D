@@ -35,7 +35,7 @@ public class RayTracer {
     public final boolean DISABLE_SHADOWS = false;
 
     public static final double EPSILON = 0.000001;   // Bias to prevent surface acne when calculating light
-    private final int RECURSION_DEPTH = 10;          // Maximum recursion depth for reflection and refraction
+    private final int RECURSION_DEPTH = 2;           // Maximum recursion depth for reflection and refraction
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
     private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
 
@@ -268,8 +268,12 @@ public class RayTracer {
                 RayTraceInfo hit = this.tracePoint( lightRay, EPSILON);
                 double lightClosestT = hit.getClosestT() != null ? hit.getClosestT() : 1;
 
+                // Handle transparent objects
+                double lightEffectivity = lightClosestT < 1 ? hit.getClosestObject().getMaterial().transparency : 1;
+                if (this.DISABLE_SHADOWS) lightEffectivity = 1;
+
                 // Add the illumination from this light if there is no colliding object on this line, or when the object is located behind the light
-                if (lightClosestT >= 1 || this.DISABLE_SHADOWS)
+                if (lightEffectivity > 0)
                 {
 
                     // Calculate diffusion
@@ -283,9 +287,9 @@ public class RayTracer {
                     // Only light up if the hit point is facing the light
                     if (intensity > 0)
                         illumination.addRgb(
-                                (float) Math.max(hitMaterial.diffusivityR * intensity * light.getColor().r(), 0),
-                                (float) Math.max(hitMaterial.diffusivityG * intensity * light.getColor().g(), 0),
-                                (float) Math.max(hitMaterial.diffusivityB * intensity * light.getColor().b(), 0)
+                                (float) Math.max(hitMaterial.diffusivityR * intensity * light.getColor().r() * lightEffectivity, 0),
+                                (float) Math.max(hitMaterial.diffusivityG * intensity * light.getColor().g() * lightEffectivity, 0),
+                                (float) Math.max(hitMaterial.diffusivityB * intensity * light.getColor().b() * lightEffectivity, 0)
                         );
 
                     // Calculate the specular component
@@ -300,9 +304,9 @@ public class RayTracer {
                     {
                         double phong = Math.pow(spec, hitMaterial.roughness);
                         illumination.addRgb(
-                                (float) Math.max(hitMaterial.specularR * phong * light.getColor().r(), 0),
-                                (float) Math.max(hitMaterial.specularG * phong * light.getColor().g(), 0),
-                                (float) Math.max(hitMaterial.specularB * phong * light.getColor().b(), 0)
+                                (float) Math.max(hitMaterial.specularR * phong * light.getColor().r() * lightEffectivity, 0),
+                                (float) Math.max(hitMaterial.specularG * phong * light.getColor().g() * lightEffectivity, 0),
+                                (float) Math.max(hitMaterial.specularB * phong * light.getColor().b() * lightEffectivity, 0)
                         );
                     }
                 }
