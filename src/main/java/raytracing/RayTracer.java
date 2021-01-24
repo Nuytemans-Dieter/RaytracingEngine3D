@@ -235,6 +235,9 @@ public class RayTracer {
 //        Point endPoint = hitObject.getTransformation().multiply( simpleEndpoint );
 //        Direction realNormal = new Direction( endPoint.subtract( startPoint ) );
 
+        if (transformedNormal.dotProduct( info.getHitRay().getDirection() ) < 0)
+            transformedNormal = transformedNormal.multiply( -1 ).toDirection();
+
         depth--;
 
         final float reflectivity = hitObject.getMaterial().reflectivity;
@@ -259,11 +262,10 @@ public class RayTracer {
         {
 
             // Get the last entered object
-            Ray reversedRay = new Ray(
-                info.getHitLocation(),
-                info.getHitRay().getDirection().multiply(-1).toDirection()
-            );
-
+//            Ray reversedRay = new Ray(
+//                info.getHitLocation(),
+//                info.getHitRay().getDirection().multiply(-1).toDirection()
+//            );
 //            Object3D previous = this.getFirstExitedObject( reversedRay );
 
 //            float c1 = previous != null ? previous.getMaterial().getLightSpeed()[0] : 1f;
@@ -280,7 +282,7 @@ public class RayTracer {
             double factor = c3 * normDotDir - cosTheta2;
 
             Vector dirComponent = direction.multiply(c3);
-            Vector refractedDirection = dirComponent.add(transformedNormal.multiply(factor));
+            Vector refractedDirection = dirComponent.add(transformedNormal.multiply(-factor));
 
             Ray refracted = new Ray(
                     info.getHitLocation(),

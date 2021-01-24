@@ -13,7 +13,7 @@ public class Glass extends Material {
             0.2f,
             0.0f,
             0.1f,
-            new float[] {1.5f, 1.5f, 1.5f},
+            new float[] {0.5f, 0.5f, 0.5f},
             0.8f
         );
     }
