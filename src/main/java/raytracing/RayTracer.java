@@ -184,8 +184,8 @@ public class RayTracer {
         color.applyIntensity( hitObject.getMaterial().colorStrength );
 
         // Calculate the transformed normal
-        Direction transformedNormal = hitObject.getTransformation().multiply( info.getNormal() ).normalise();
-//        Direction transformedNormal = info.getNormal().normalise();
+//        Direction transformedNormal = hitObject.getInverseCache().transpose().multiply( info.getNormal()).normalise();
+        Direction transformedNormal = hitObject.getTransformation().multiply( info.getNormal()).normalise();
 
         depth--;
 
@@ -211,8 +211,8 @@ public class RayTracer {
         {
 
             // TODO get previous object's refractive indices
-            float[] c2 = new float[]{100, 100, 100};
             float[] c1 = hitObject.getMaterial().getLightSpeed();
+            float[] c2 = new float[]{100, 100, 100};
             float[] c3 = new float[] { c2[0]/c1[0], c2[1]/c1[1], c2[2]/c1[2] };
 
             // Refraction calculations
