@@ -13,7 +13,7 @@ public class Transparent extends Material {
             0.95f,
             0,
             0.00f,
-            new float[]{100,100,100},
+            new float[]{1,1,1},
             1f);
     }
 

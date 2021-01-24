@@ -156,6 +156,48 @@ public class RayTracer {
         return new RayTraceInfo(hitLocation, closestT, closestObject, hitRay, closestNormal);
     }
 
+
+    /**
+     * Get the first object that a given ray will exit
+     * Automatically considers an epsilon value that acts as a bias to prevent surface acne
+     *
+     * @param ray the traced ray
+     * @return The first object that this ray will exit (or the last object that an inverse ray enters)
+     */
+    public Object3D getFirstExitedObject(Ray ray)
+    {
+        Point origin = ray.getOrigin();
+        Direction direction = ray.getDirection();
+
+        // Find the closest hit
+        Double closestT = null;
+        Object3D closestObject = null;
+
+        // Find all intersections
+        for (Object3D object : objects)
+        {
+
+            // Calculate specific ray for this object
+            Matrix inverseTransform = object.getInverseCache();
+            final Ray transformedRay = new Ray(
+                    inverseTransform.multiply( origin ),
+                    inverseTransform.multiply( direction )
+            );
+
+            // Calculate collisions
+            HitInfo info = object.calcHitInfo( transformedRay, RayTracer.EPSILON );
+            Double t = info.getLowestT();
+            if ((t != null && t >= RayTracer.EPSILON) && (closestT == null || t <= closestT) && !info.isLowestEntering())
+            {
+                // Use the transformation of the object to place this hitpoint at the right location
+                closestT = t;
+                closestObject = object;
+            }
+        }
+
+        return closestObject;
+    }
+
     public Rgb calcLight(RayTraceInfo info)
     {
         return this.calcLight( info, this.RECURSION_DEPTH );
@@ -210,9 +252,16 @@ public class RayTracer {
         if (transparency > this.REFRACTION_THRESHOLD)
         {
 
-            // TODO get previous object's refractive indices
+            // Get the last entered object
+            Ray reversedRay = new Ray(
+                info.getHitLocation(),
+                info.getHitRay().getDirection().multiply(-1).toDirection()
+            );
+
+            Object3D previous = this.getFirstExitedObject( reversedRay );
+
             float[] c1 = hitObject.getMaterial().getLightSpeed();
-            float[] c2 = new float[]{100, 100, 100};
+            float[] c2 = previous != null ? previous.getMaterial().getLightSpeed() : new float[]{1, 1, 1};
             float[] c3 = new float[] { c2[0]/c1[0], c2[1]/c1[1], c2[2]/c1[2] };
 
             // Refraction calculations
