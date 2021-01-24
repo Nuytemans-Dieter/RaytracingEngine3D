@@ -34,8 +34,8 @@ public class RayTracer {
 
     public final boolean DISABLE_SHADOWS = false;
 
-    public static final double EPSILON = 0.000001;   // Bias to prevent surface acne when calculating light
-    private final int RECURSION_DEPTH = 2;           // Maximum recursion depth for reflection and refraction
+    public static final double EPSILON = 0.00000001; // Bias to prevent surface acne when calculating light
+    private final int RECURSION_DEPTH = 5;           // Maximum recursion depth for reflection and refraction
     private final double REFLECTION_THRESHOLD = 0;   // The minimum amount of reflectivity of a material before it is allowed to reflect
     private final double REFRACTION_THRESHOLD = 0;   // The minimum amount of transparency of a material before it is allowed to reflect
 
@@ -225,7 +225,7 @@ public class RayTracer {
         // Apply material properties to illumination when reflection/refraction has to take place
         color.applyIntensity( hitObject.getMaterial().colorStrength );
 
-        // Calculate the transformed normal
+        // Calculate the transformed normal: the inverse transposed matrix does not suffer from non-uniform scaling
         Direction transformedNormal = hitObject.getInverseCache().transpose().multiply( info.getNormal()).normalise();
 //        Direction transformedNormal = hitObject.getTransformation().multiply( info.getNormal()).normalise();
 
@@ -269,15 +269,18 @@ public class RayTracer {
             Ray ray = info.getHitRay();
             Direction direction = ray.getDirection();
 
-            double cosTheta2 = Math.sqrt( 1 - Math.pow( c3[0], 2 ) * (1 - Math.pow( transformedNormal.dotProduct( direction ), 2) ));
+            double mDotDir = transformedNormal.dotProduct( direction );
+            double cosTheta2 = Math.sqrt( 1 - Math.pow( c3[0], 2 ) * (1 - Math.pow(mDotDir, 2) ));
+            double factor = c3[0] * mDotDir - cosTheta2;
 
             Vector dirComponent = direction.multiply( c3[0] );
-            Vector normComponent = transformedNormal.elementWiseProduct( direction ).multiply( c3[0] ).subtract( cosTheta2 ).elementWiseProduct( transformedNormal );
-            Direction refractedDirection = dirComponent.add( normComponent ).toDirection();
+            Vector normComponent = transformedNormal.multiply( factor );
+            Vector refractedDirection = transformedNormal.add( dirComponent );
+            refractedDirection = normComponent.add( refractedDirection.multiply(-1) );
 
             Ray refracted = new Ray(
                 info.getHitLocation(),
-                refractedDirection
+                refractedDirection.toDirection()
             );
 
             RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);

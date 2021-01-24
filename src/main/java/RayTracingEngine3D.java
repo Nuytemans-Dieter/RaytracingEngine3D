@@ -46,7 +46,7 @@ public class RayTracingEngine3D {
         objects.add(cylinder);
 
         Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
-        sphere3.addTransformations( matrixFactory.getTranslation(-2, 0, -2) );
+        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
         objects.add( sphere3 );
 
         Object3D room = new Cube().setMaterial( new Lambertian() );
