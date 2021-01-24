@@ -184,8 +184,8 @@ public class RayTracer {
         color.applyIntensity( hitObject.getMaterial().colorStrength );
 
         // Calculate the transformed normal
-//        Direction transformedNormal = hitObject.getInverseCache().transpose().multiply( info.getNormal()).normalise();
-        Direction transformedNormal = hitObject.getTransformation().multiply( info.getNormal()).normalise();
+        Direction transformedNormal = hitObject.getInverseCache().transpose().multiply( info.getNormal()).normalise();
+//        Direction transformedNormal = hitObject.getTransformation().multiply( info.getNormal()).normalise();
 
         depth--;
 

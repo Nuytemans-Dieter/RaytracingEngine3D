@@ -31,7 +31,7 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-        Object3D sphere = new Sphere().setMaterial( new Mirror() );
+        Object3D sphere = new Sphere().setMaterial( new Gold() );
 //        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
         sphere.addTransformations(
                 matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI/2),
@@ -49,7 +49,7 @@ public class RayTracingEngine3D {
         sphere3.addTransformations( matrixFactory.getTranslation(-2, 0, -2) );
         objects.add( sphere3 );
 
-        Object3D room = new Cube().setMaterial( new Aluminium() );
+        Object3D room = new Cube().setMaterial( new Lambertian() );
         room.addTransformations( matrixFactory.getTranslation(0, -3.5, 0) );
         room.addTransformations( matrixFactory.getScaling(5, 5, 8) );
         objects.add( room );
