@@ -41,13 +41,13 @@ public class RayTracingEngine3D {
         cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
         objects.add(cylinder);
 
-//        Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
-//        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
-//        objects.add( sphere3 );
+        Object3D sphere3 = new Sphere().setMaterial( new Glass() );
+        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
+        objects.add( sphere3 );
 
-        Object3D plane = new Plane().setMaterial( new Glass() );
-        plane.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
-        objects.add( plane );
+//        Object3D plane = new Plane().setMaterial( new Glass() );
+//        plane.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
+//        objects.add( plane );
 
         Object3D room = new Cube().setMaterial( new Lambertian() );
         room.addTransformations( matrixFactory.getTranslation(0, -3.5, 0) );
