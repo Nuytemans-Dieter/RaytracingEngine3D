@@ -1,6 +1,7 @@
 import objects.materials.*;
 import objects.object3d.Cube;
 import objects.object3d.Cylinder;
+import objects.object3d.Plane;
 import raytracing.RayTraceInfo;
 import datacontainers.ScreenInfo;
 import graphics.DrawLib;
@@ -31,23 +32,21 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-//        Object3D sphere = new Sphere().setMaterial( new Gold() );
-////        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
-//        sphere.addTransformations(
-//                matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI/2),
-//                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI),
-//                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI)
-//        );
-//        objects.add( sphere );
+        Object3D sphere = new Sphere().setMaterial( new Mirror() );
+        sphere.addTransformations( matrixFactory.getTranslation(-2, 0, 4) );
+        objects.add( sphere );
 
         Object3D cylinder = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
         cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
         cylinder.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
         objects.add(cylinder);
 
-        Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
-        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
-        objects.add( sphere3 );
+//        Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
+//        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
+//        objects.add( sphere3 );
+
+        Object3D plane = new Plane().setMaterial( new Lambertian( Rgb.Color.RED ) );
+        objects.add( plane );
 
         Object3D room = new Cube().setMaterial( new Lambertian() );
         room.addTransformations( matrixFactory.getTranslation(0, -3.5, 0) );
