@@ -23,6 +23,18 @@ public class TestFactory {
                 }
         );
         assert (mat.equals(expected));
+
+        mat = fact.getTranslation(2, 0, 4);
+        expected = new Matrix(
+            new double[][]
+                {
+                    {1, 0, 0, 2},
+                    {0, 1, 0, 0},
+                    {0, 0, 1, 4},
+                    {0, 0, 0, 1}
+                }
+        );
+        assert (mat.equals(expected));
     }
 
     @Test

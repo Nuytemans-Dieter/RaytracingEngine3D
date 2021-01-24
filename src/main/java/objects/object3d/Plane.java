@@ -20,7 +20,6 @@ public class Plane extends Object3D {
 
         Point origin = ray.getOrigin();
         Direction direction = ray.getDirection();
-        Direction inDir = direction.multiply( -1 ).toDirection();
 
         // The t for which z=0
         t = -origin.getZ() / direction.getZ();

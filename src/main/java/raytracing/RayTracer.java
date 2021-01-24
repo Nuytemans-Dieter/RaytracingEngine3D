@@ -229,6 +229,12 @@ public class RayTracer {
         Direction transformedNormal = hitObject.getInverseCache().transpose().multiply( info.getNormal()).normalise();
 //        Direction transformedNormal = hitObject.getTransformation().multiply( info.getNormal()).normalise();
 
+//        Point startPoint = info.getHitLocation();
+//        Point simpleStartpoint = hitObject.getInverseCache().multiply( startPoint );
+//        Point simpleEndpoint = simpleStartpoint.add( info.getNormal() ).toPoint();
+//        Point endPoint = hitObject.getTransformation().multiply( simpleEndpoint );
+//        Direction realNormal = new Direction( endPoint.subtract( startPoint ) );
+
         depth--;
 
         final float reflectivity = hitObject.getMaterial().reflectivity;
@@ -258,7 +264,7 @@ public class RayTracer {
                 info.getHitRay().getDirection().multiply(-1).toDirection()
             );
 
-            Object3D previous = this.getFirstExitedObject( reversedRay );
+//            Object3D previous = this.getFirstExitedObject( reversedRay );
 
 //            float c1 = previous != null ? previous.getMaterial().getLightSpeed()[0] : 1f;
             float c2 = hitObject.getMaterial().getLightSpeed()[0];
@@ -273,20 +279,21 @@ public class RayTracer {
             double cosTheta2 = Math.sqrt( 1 - Math.pow( c3, 2 ) * (1 - Math.pow(normDotDir, 2) ));
             double factor = c3 * normDotDir - cosTheta2;
 
-            Vector dirComponent = direction.multiply( c3 );
-            Vector refractedDirection = dirComponent.add( transformedNormal.multiply(factor) );
+            Vector dirComponent = direction.multiply(c3);
+            Vector refractedDirection = dirComponent.add(transformedNormal.multiply(factor));
 
             Ray refracted = new Ray(
-                info.getHitLocation(),
-                refractedDirection.toDirection()
+                    info.getHitLocation(),
+                    refractedDirection.toDirection()
             );
+
 //            Ray refracted = new Ray(
 //                info.getHitLocation(),
-//                direction
+//                direction.toDirection()
 //            );
 
             RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);
-            color.addRgb( this.calcLight( refractedHitInfo, depth ) ).applyIntensity( transparency );
+            color.addRgb(this.calcLight(refractedHitInfo, depth)).applyIntensity(transparency);
         }
 
         return color;

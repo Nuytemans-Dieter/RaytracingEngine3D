@@ -37,8 +37,8 @@ public class RayTracingEngine3D {
         objects.add( sphere );
 
         Object3D cylinder = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
+        cylinder.addTransformations( matrixFactory.getTranslation(2, 0, -2) );
         cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
-        cylinder.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
         objects.add(cylinder);
 
         Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
@@ -49,7 +49,7 @@ public class RayTracingEngine3D {
 //        plane.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
 //        objects.add( plane );
 
-        Object3D room = new Cube().setMaterial( new Aluminium() );
+        Object3D room = new Cube().setMaterial( new Lambertian() );
         room.addTransformations( matrixFactory.getTranslation(0, -3.5, 0) );
         room.addTransformations( matrixFactory.getScaling(5, 5, 8) );
         objects.add( room );
