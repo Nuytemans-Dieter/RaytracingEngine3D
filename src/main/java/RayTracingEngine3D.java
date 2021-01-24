@@ -41,14 +41,15 @@ public class RayTracingEngine3D {
         cylinder.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
         objects.add(cylinder);
 
-//        Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
-//        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
-//        objects.add( sphere3 );
+        Object3D sphere3 = new Sphere().setMaterial( new Transparent() );
+        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
+        objects.add( sphere3 );
 
-        Object3D plane = new Plane().setMaterial( new Lambertian( Rgb.Color.RED ) );
-        objects.add( plane );
+//        Object3D plane = new Plane().setMaterial( new Transparent() );
+//        plane.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
+//        objects.add( plane );
 
-        Object3D room = new Cube().setMaterial( new Lambertian() );
+        Object3D room = new Cube().setMaterial( new Aluminium() );
         room.addTransformations( matrixFactory.getTranslation(0, -3.5, 0) );
         room.addTransformations( matrixFactory.getScaling(5, 5, 8) );
         objects.add( room );
