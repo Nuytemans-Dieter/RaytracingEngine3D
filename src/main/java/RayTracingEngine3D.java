@@ -31,14 +31,14 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-        Object3D sphere = new Sphere().setMaterial( new Gold() );
-//        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
-        sphere.addTransformations(
-                matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI/2),
-                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI),
-                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI)
-        );
-        objects.add( sphere );
+//        Object3D sphere = new Sphere().setMaterial( new Gold() );
+////        sphere.addTransformations( matrixFactory.getTranslation(2, 0, 2) );
+//        sphere.addTransformations(
+//                matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI/2),
+//                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Y, Math.PI),
+//                matrixFactory.getRotation(ITransMatFactory.RotationAxis.Z, Math.PI)
+//        );
+//        objects.add( sphere );
 
         Object3D cylinder = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
         cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
