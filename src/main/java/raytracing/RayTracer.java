@@ -160,6 +160,43 @@ public class RayTracer {
 
 
     /**
+     * Calculate the occlusion of all objects that are in the way
+     *
+     * @param ray the ray that should be traced for occlusion calculations
+     * @return RayTraceInfo that contains: the hit location, value of t at hit location and the closest object
+     */
+    public double calcOcclusion( Ray ray )
+    {
+        Point origin = ray.getOrigin();
+        Direction direction = ray.getDirection();
+
+        double occlusion = 0;
+
+        // Find all intersections
+        for (Object3D object : objects)
+        {
+
+            // Calculate specific ray for this object
+            Matrix inverseTransform = object.getInverseCache();
+            final Ray transformedRay = new Ray(
+                    inverseTransform.multiply( origin ),
+                    inverseTransform.multiply( direction )
+            );
+
+            // Calculate collisions
+            HitInfo info = object.calcHitInfo( transformedRay, RayTracer.EPSILON );
+            Double t = info.getLowestT();
+            if ((t != null && t >= RayTracer.EPSILON) && t < 1)
+            {
+                occlusion += 1 - object.getMaterial().reflectivity;
+            }
+        }
+
+        return Math.min( occlusion, 1d );
+    }
+
+
+    /**
      * Get the first object that a given ray will exit
      * Automatically considers an epsilon value that acts as a bias to prevent surface acne
      *
@@ -335,11 +372,9 @@ public class RayTracer {
                 final Ray lightRay = new Ray(info.getHitLocation(), dir);
 
                 // Get hitpoints on the line between the hitpoint and the light location
-                RayTraceInfo hit = this.tracePoint( lightRay, EPSILON);
-                double lightClosestT = hit.getClosestT() != null ? hit.getClosestT() : 1;
+                double occlusion = this.calcOcclusion( lightRay );
+                double lightEffectivity = 1 - occlusion;
 
-                // Handle transparent objects
-                double lightEffectivity = lightClosestT < 1 ? hit.getClosestObject().getMaterial().transparency : 1;
                 if (this.DISABLE_SHADOWS) lightEffectivity = 1;
 
                 // Add the illumination from this light if there is no colliding object on this line, or when the object is located behind the light
