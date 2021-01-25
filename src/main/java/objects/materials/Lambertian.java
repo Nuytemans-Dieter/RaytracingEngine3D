@@ -9,11 +9,11 @@ import objects.textures.ImageTexture;
 
 public class Lambertian extends Material {
 
-    public Lambertian(Rgb.Color color)
+    public Lambertian(Rgb color)
     {
         super
         (
-            Rgb.fromColor( color ),
+            color,
             0.5f,
             0.2f,
             2,
@@ -21,6 +21,11 @@ public class Lambertian extends Material {
             1,
             0.0f
         );
+    }
+
+    public Lambertian(Rgb.Color color)
+    {
+        this( Rgb.fromColor( color ) );
     }
 
     public Lambertian(Texture texture)

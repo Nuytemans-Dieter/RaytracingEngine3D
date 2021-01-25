@@ -9,6 +9,10 @@ public class Material {
     private final Rgb color;
     private Texture texture;
 
+    public float emissiveR;
+    public float emissiveG;
+    public float emissiveB;
+
     public final float ambientR;
     public final float ambientG;
     public final float ambientB;
@@ -47,6 +51,10 @@ public class Material {
     {
         this.color = color;
 
+        this.emissiveR = 0;
+        this.emissiveG = 0;
+        this.emissiveB = 0;
+
         this.diffusivityR = diffusivityR;
         this.diffusivityG = diffusivityG;
         this.diffusivityB = diffusivityB;
@@ -65,6 +73,15 @@ public class Material {
         this.reflectivity = reflectivity;
         this.transparency = transparency;
         this.colorStrength = Math.max( 1 - reflectivity - transparency, 0 );
+    }
+
+    public Material setEmissive(float r, float g, float b)
+    {
+        this.emissiveR = r;
+        this.emissiveG = g;
+        this.emissiveB = b;
+
+        return this;
     }
 
     public void setTexture(Texture newTexture)

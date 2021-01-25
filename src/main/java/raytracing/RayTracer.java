@@ -384,6 +384,13 @@ public class RayTracer {
             }
         }
 
+        // Add emissive part
+        illumination.addRgb(
+            hitMaterial.emissiveR,
+            hitMaterial.emissiveG,
+            hitMaterial.emissiveB
+        );
+
         // Add global illumination
         illumination.addRgb(
             Math.max(globalIllumination.getColor().r(), 0),
