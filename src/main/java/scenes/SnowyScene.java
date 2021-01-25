@@ -18,6 +18,7 @@ import objects.object3d.Sphere;
 import java.util.List;
 
 public class SnowyScene implements Scene {
+
     @Override
     public List<Object3D> getObjects() {
 

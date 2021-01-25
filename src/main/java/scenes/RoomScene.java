@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoomScene implements Scene {
+
     @Override
     public List<Object3D> getObjects() {
 
