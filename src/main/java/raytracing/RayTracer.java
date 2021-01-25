@@ -188,7 +188,7 @@ public class RayTracer {
             Double t = info.getLowestT();
             if ((t != null && t >= RayTracer.EPSILON) && t < 1)
             {
-                occlusion += 1 - object.getMaterial().reflectivity;
+                occlusion += 1 - object.getMaterial().transparency;
             }
         }
 
