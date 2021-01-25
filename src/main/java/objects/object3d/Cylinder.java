@@ -6,6 +6,7 @@ import maths.vector.Direction;
 import maths.vector.Point;
 import objects.Object3D;
 import objects.Ray;
+import raytracing.RayTracer;
 
 public class Cylinder extends Object3D {
 
@@ -73,12 +74,37 @@ public class Cylinder extends Object3D {
 
     @Override
     public double getU(Point location) {
-        return 0;
+
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+
+        // If the point belongs on the rounded part of the cylinder
+        if (Math.abs( y ) <= 1- RayTracer.EPSILON)
+        {
+
+            double theta = Math.asin(z / ((z * z) + (x * x)));
+
+            // Handle negative angles
+            if (theta < 0)
+                theta = 1 + theta;
+
+            // Prevent out of bounds indices
+            theta = theta % 1;
+
+            return theta;
+        }
+        else return (x + 1) / 2;
     }
 
     @Override
     public double getV(Point location) {
-        return 0;
+
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+
+        return Math.abs( z ) >= 1- RayTracer.EPSILON ? (z + 1) / 2 : (y + 1) / 2;
     }
 
 
