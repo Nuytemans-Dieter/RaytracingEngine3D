@@ -3,6 +3,7 @@ package objects.materials;
 
 import graphics.Rgb;
 import objects.Material;
+import objects.textures.SineTexture;
 
 public class Lambertian extends Material {
 
@@ -18,6 +19,7 @@ public class Lambertian extends Material {
             1,
             0.0f
         );
+        setTexture( new SineTexture() );
     }
 
     public Lambertian()

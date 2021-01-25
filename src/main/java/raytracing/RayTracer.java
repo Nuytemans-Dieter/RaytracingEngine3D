@@ -391,7 +391,7 @@ public class RayTracer {
             Math.max(globalIllumination.getColor().b(), 0)
         );
 
-        Rgb color = info.getClosestObject().getColor();
+        Rgb color = info.getClosestObject().getColor( info.getClosestObject().getInverseCache().multiply( info.getHitLocation() ) );
         color.applyIntensity( illumination );
         return color;
     }

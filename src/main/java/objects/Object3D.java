@@ -65,9 +65,9 @@ public abstract class Object3D {
      *
      * @return copy of the rgb object
      */
-    public Rgb getColor()
+    public Rgb getColor(Point location)
     {
-        return material.getColor().clone();
+        return material.getColor( location ).clone();
     }
 
     /**

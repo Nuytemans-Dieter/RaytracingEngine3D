@@ -1,10 +1,12 @@
 package objects;
 
 import graphics.Rgb;
+import maths.vector.Point;
 
 public class Material {
 
     private final Rgb color;
+    private Texture texture;
 
     public final float ambientR;
     public final float ambientG;
@@ -64,28 +66,18 @@ public class Material {
         this.colorStrength = Math.max( 1 - reflectivity - transparency, 0 );
     }
 
+    public void setTexture(Texture newTexture)
+    {
+        this.texture = newTexture;
+    }
+
     public double getLightSpeed()
     {
         return lightSpeed;
     }
 
-    public Rgb getColor()
+    public Rgb getColor(Point location)
     {
-        return this.color.clone();
-    }
-
-    public float r()
-    {
-        return this.color.r();
-    }
-
-    public float g()
-    {
-        return this.color.g();
-    }
-
-    public float b()
-    {
-        return this.color.b();
+        return this.texture != null ? this.texture.getColor( location.getX(), location.getY(), location.getZ() ) : this.color.clone();
     }
 }
