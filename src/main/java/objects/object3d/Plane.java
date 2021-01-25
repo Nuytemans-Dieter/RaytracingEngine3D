@@ -40,11 +40,11 @@ public class Plane extends Object3D {
 
     @Override
     public double getU(Point location) {
-        return 0;
+        return ( location.getX() + 1 ) / 2;
     }
 
     @Override
     public double getV(Point location) {
-        return 0;
+        return ( location.getY() + 1 ) / 2;
     }
 }
