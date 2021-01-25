@@ -42,9 +42,9 @@ public class RayTracingEngine3D {
         cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
         objects.add(cylinder);
 
-        Object3D sphere3 = new Sphere().setMaterial( new Lambertian(new ImageTexture("checker.png")) );
-        sphere3.addTransformations( matrixFactory.getTranslation(0, 0, 4) );
-        sphere3.addTransformations( matrixFactory.getRotation( ITransMatFactory.RotationAxis.Y, Math.PI / 4 ) );
+        Object3D sphere3 = new Cube().setMaterial( new Lambertian(new ImageTexture("selfie.png")) );
+        sphere3.addTransformations( matrixFactory.getTranslation(0, 0, 2) );
+        sphere3.addTransformations( matrixFactory.getRotation( ITransMatFactory.RotationAxis.Y, -Math.PI / 2 ) );
         objects.add( sphere3 );
 
 //        Object3D plane = new Plane().setMaterial( new Glass() );

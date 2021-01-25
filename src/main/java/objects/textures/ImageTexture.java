@@ -56,7 +56,7 @@ public class ImageTexture implements Texture {
         if (image == null)
             return Rgb.fromColor( Rgb.Color.WHITE );
 
-        Color c = new Color(this.image.getRGB( (int) (x * image.getWidth()), (int) (y * image.getHeight())));
+        Color c = new Color(this.image.getRGB( (int) (x * (image.getWidth()-1)), (int) (y * (image.getHeight()-1))));
         return new Rgb( (float) c.getRed()/255, (float) c.getGreen()/255, (float) c.getBlue()/255 );
     }
 }

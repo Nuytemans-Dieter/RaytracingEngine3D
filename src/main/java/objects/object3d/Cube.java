@@ -103,11 +103,43 @@ public class Cube extends Object3D {
 
     @Override
     public double getU(Point location) {
+
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+
+        if (Math.abs( x ) > 0.99) {
+            return (z + 1) / 2;
+        }
+        else if (Math.abs( y ) > 0.99)
+        {
+            return (x + 1) / 2;
+        }
+        else if (Math.abs( z ) > 0.99)
+        {
+            return (x + 1) / 2;
+        }
         return 0;
     }
 
     @Override
     public double getV(Point location) {
+
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+
+        if (Math.abs( x ) > 0.99) {
+            return (y + 1) / 2;
+        }
+        else if (Math.abs( y ) > 0.99)
+        {
+            return (z + 1) / 2;
+        }
+        else if (Math.abs( z ) > 0.99)
+        {
+            return (y + 1) / 2;
+        }
         return 0;
     }
 }
