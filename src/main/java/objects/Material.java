@@ -84,6 +84,6 @@ public class Material {
 
     public Rgb getColor(Point location)
     {
-        return this.texture != null ? this.texture.getColor( location.getX(), location.getY(), location.getZ() ) : this.color.clone();
+        return this.texture == null ? this.color.clone() : this.texture.getColor( location.getX(), location.getY(), location.getZ() );
     }
 }

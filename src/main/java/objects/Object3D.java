@@ -70,7 +70,7 @@ public abstract class Object3D {
         // If image texture: transform to UV, otherwise use default calculation
         if (this.material.hasImageTexture())
         {
-            return material.getColor( new Point( this.getU( location ), this.getV( location ), 0 ) ).clone();
+             return material.getColor( new Point( this.getU( location ), this.getV( location ), 0 ) ).clone();
         }
         else return material.getColor( location ).clone();
     }
