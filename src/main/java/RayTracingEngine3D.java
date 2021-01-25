@@ -42,7 +42,7 @@ public class RayTracingEngine3D {
         objects.add(cylinder);
 
         Object3D sphere3 = new Sphere().setMaterial( new Glass() );
-        sphere3.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
+        sphere3.addTransformations( matrixFactory.getTranslation(0, 0, 4) );
         objects.add( sphere3 );
 
 //        Object3D plane = new Plane().setMaterial( new Glass() );

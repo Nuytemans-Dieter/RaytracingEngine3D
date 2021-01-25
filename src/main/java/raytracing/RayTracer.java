@@ -237,7 +237,7 @@ public class RayTracer {
 //        Point endPoint = hitObject.getTransformation().multiply( simpleEndpoint );
 //        Direction realNormal = new Direction( endPoint.subtract( startPoint ) );
 
-        if (transformedNormal.dotProduct( info.getHitRay().getDirection() ) < 0)
+        if (transformedNormal.normalise().dotProduct( info.getHitRay().getDirection().normalise() ) < 0)
             transformedNormal = transformedNormal.multiply( -1 ).toDirection();
 
         depth--;
@@ -271,34 +271,39 @@ public class RayTracer {
 //            Object3D previous = this.getFirstExitedObject( reversedRay );
 
 //            float c1 = previous != null ? previous.getMaterial().getLightSpeed()[0] : 1f;
-            float c2 = hitObject.getMaterial().getLightSpeed()[0];
+            double c2 = hitObject.getMaterial().getLightSpeed()[0];
 //            float c3 = c2 / c1;
-//            float c3 = info.getIsEntering() ? 0.9997f/c2 : c2/0.9997f;
-            float c3 = c2;
+//            double c3 = info.getIsEntering() ? c2/0.9997f : 0.9997f/c2;
+            float c3 = 1;
+//            double c3 = info.getIsEntering() ? 0.55/0.9997 : 0.9997f/0.55;
 
             // Refraction calculations
 
-            Direction direction = info.getHitRay().getDirection();
-
+            Direction direction = info.getHitRay().getDirection().normalise();
             double normDotDir = transformedNormal.dotProduct( direction );
             double cosTheta2 = Math.sqrt( 1 - Math.pow( c3, 2 ) * (1 - Math.pow(normDotDir, 2) ));
             double factor = c3 * normDotDir - cosTheta2;
 
-            Vector dirComponent = direction.multiply(c3);
-            Vector refractedDirection = dirComponent.add(transformedNormal.multiply(-factor));
+//            if (cosTheta2 > 0.01)
+//            {
 
-            Ray refracted = new Ray(
-                    info.getHitLocation(),
-                    refractedDirection.toDirection()
-            );
+                Vector dirComponent = direction.multiply(c3);
+                Vector normComponent = transformedNormal.multiply( -factor );
+                Vector refractedDirection = dirComponent.add(normComponent);
+
+                Ray refracted = new Ray(
+                        info.getHitLocation(),
+                        refractedDirection.toDirection()
+                );
 
 //            Ray refracted = new Ray(
 //                info.getHitLocation(),
 //                direction.toDirection()
 //            );
 
-            RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);
-            color.addRgb(this.calcLight(refractedHitInfo, depth)).applyIntensity(transparency);
+                RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);
+                color.addRgb(this.calcLight(refractedHitInfo, depth)).applyIntensity(transparency);
+//            }
         }
 
         return color;
