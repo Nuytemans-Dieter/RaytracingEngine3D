@@ -8,7 +8,7 @@ public class Aluminium extends Material {
     public Aluminium()
     {
         super(
-            new Rgb(0.86f, 0.86f, 0.86f),
+            new Rgb(0.93f, 0.93f, 0.93f),
             0.8f,
             0.2f,
             0.9f,
@@ -16,6 +16,7 @@ public class Aluminium extends Material {
             1,
             0.0f
         );
+        setEmissive( 0.3f, 0.3f, 0.3f );
     }
 
 }
