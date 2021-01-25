@@ -3,9 +3,8 @@ package objects.materials;
 
 import graphics.Rgb;
 import objects.Material;
-import objects.textures.Checkerboard;
-import objects.textures.Circles;
-import objects.textures.SineTexture;
+import objects.textures.CircleTexture;
+import objects.textures.ImageTexture;
 
 public class Lambertian extends Material {
 
@@ -21,7 +20,7 @@ public class Lambertian extends Material {
             1,
             0.0f
         );
-        setTexture( new Circles() );
+        setTexture( new ImageTexture() );
     }
 
     public Lambertian()

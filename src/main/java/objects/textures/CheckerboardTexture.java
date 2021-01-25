@@ -3,16 +3,16 @@ package objects.textures;
 import graphics.Rgb;
 import objects.Texture;
 
-public class Checkerboard implements Texture {
+public class CheckerboardTexture implements Texture {
 
     private final double squareSize;
 
-    public Checkerboard()
+    public CheckerboardTexture()
     {
         this(0.4);
     }
 
-    public Checkerboard( double squareSize )
+    public CheckerboardTexture(double squareSize )
     {
         this.squareSize = squareSize;
     }

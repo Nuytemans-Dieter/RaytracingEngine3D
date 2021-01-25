@@ -1,19 +1,18 @@
 package objects.textures;
 
 import graphics.Rgb;
-import objects.Material;
 import objects.Texture;
 
-public class Circles implements Texture {
+public class CircleTexture implements Texture {
 
     private final double SIZE;
 
-    public Circles()
+    public CircleTexture()
     {
         this(0.4);
     }
 
-    public Circles(double size)
+    public CircleTexture(double size)
     {
         this.SIZE = size;
     }
