@@ -67,7 +67,12 @@ public abstract class Object3D {
      */
     public Rgb getColor(Point location)
     {
-        return material.getColor( location ).clone();
+        // If image texture: transform to UV, otherwise use default calculation
+        if (this.material.hasImageTexture())
+        {
+            return material.getColor( new Point( this.getU( location ), this.getV( location ), 0 ) ).clone();
+        }
+        else return material.getColor( location ).clone();
     }
 
     /**
@@ -124,4 +129,8 @@ public abstract class Object3D {
      * @return Returns null if the point is not enclosed, returns the squared distance to origin otherwise
      */
     public abstract Double enclosedDistance(Point location);
+
+
+    public abstract double getU(Point location);
+    public abstract double getV(Point location);
 }

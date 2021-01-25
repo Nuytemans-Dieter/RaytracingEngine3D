@@ -60,4 +60,16 @@ public class Sphere extends Object3D {
         double distance = simplifiedLocation.getNorm();
         return distance <= 1 ? distance : null;
     }
+
+    @Override
+    public double getU(Point location) {
+        double angle = Math.atan2( -location.getZ(), location.getX() );
+        return ( angle + Math.PI ) / ( 2 * Math.PI );
+    }
+
+    @Override
+    public double getV(Point location) {
+        double angle = Math.acos( -location.getY() );
+        return angle / Math.PI;
+    }
 }

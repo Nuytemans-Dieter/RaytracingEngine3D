@@ -71,6 +71,16 @@ public class Cylinder extends Object3D {
             return null;
     }
 
+    @Override
+    public double getU(Point location) {
+        return 0;
+    }
+
+    @Override
+    public double getV(Point location) {
+        return 0;
+    }
+
 
     private boolean isYInRange(Ray ray, double t)
     {

@@ -2,6 +2,7 @@ import objects.materials.*;
 import objects.object3d.Cube;
 import objects.object3d.Cylinder;
 import objects.object3d.Plane;
+import objects.textures.ImageTexture;
 import raytracing.RayTraceInfo;
 import datacontainers.ScreenInfo;
 import graphics.DrawLib;
@@ -41,10 +42,10 @@ public class RayTracingEngine3D {
         cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
         objects.add(cylinder);
 
-//        Object3D sphere3 = new Sphere().setMaterial( new Glass() );
-//        sphere3.addTransformations( matrixFactory.getTranslation(0, 0, 4) );
-//        sphere3.addTransformations( matrixFactory.getRotation( ITransMatFactory.RotationAxis.Y, Math.PI / 4 ) );
-//        objects.add( sphere3 );
+        Object3D sphere3 = new Sphere().setMaterial( new Lambertian(new ImageTexture("checker.png")) );
+        sphere3.addTransformations( matrixFactory.getTranslation(0, 0, 4) );
+        sphere3.addTransformations( matrixFactory.getRotation( ITransMatFactory.RotationAxis.Y, Math.PI / 4 ) );
+        objects.add( sphere3 );
 
 //        Object3D plane = new Plane().setMaterial( new Glass() );
 //        plane.addTransformations( matrixFactory.getTranslation(2, 0, 4) );

@@ -37,4 +37,14 @@ public class Plane extends Object3D {
     public Double enclosedDistance(Point location) {
         return null;
     }
+
+    @Override
+    public double getU(Point location) {
+        return 0;
+    }
+
+    @Override
+    public double getV(Point location) {
+        return 0;
+    }
 }

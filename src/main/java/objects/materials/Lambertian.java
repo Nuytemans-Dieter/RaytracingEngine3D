@@ -3,6 +3,7 @@ package objects.materials;
 
 import graphics.Rgb;
 import objects.Material;
+import objects.Texture;
 import objects.textures.CircleTexture;
 import objects.textures.ImageTexture;
 
@@ -20,7 +21,12 @@ public class Lambertian extends Material {
             1,
             0.0f
         );
-        setTexture( new ImageTexture() );
+    }
+
+    public Lambertian(Texture texture)
+    {
+        this(Rgb.Color.WHITE);
+        this.setTexture( texture );
     }
 
     public Lambertian()

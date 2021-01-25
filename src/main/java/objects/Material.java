@@ -2,6 +2,7 @@ package objects;
 
 import graphics.Rgb;
 import maths.vector.Point;
+import objects.textures.ImageTexture;
 
 public class Material {
 
@@ -69,6 +70,11 @@ public class Material {
     public void setTexture(Texture newTexture)
     {
         this.texture = newTexture;
+    }
+
+    public boolean hasImageTexture()
+    {
+        return this.texture != null && this.texture instanceof ImageTexture;
     }
 
     public double getLightSpeed()

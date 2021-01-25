@@ -100,4 +100,14 @@ public class Cube extends Object3D {
         else
             return null;
     }
+
+    @Override
+    public double getU(Point location) {
+        return 0;
+    }
+
+    @Override
+    public double getV(Point location) {
+        return 0;
+    }
 }
