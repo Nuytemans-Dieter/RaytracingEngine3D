@@ -13,7 +13,7 @@ public class Glass extends Material {
             0.2f,
             0.0f,
             0.05f,
-            0.55d,
+            0.001d,
             0.9f
         );
     }
