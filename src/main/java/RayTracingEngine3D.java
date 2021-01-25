@@ -32,19 +32,19 @@ public class RayTracingEngine3D {
         // Initialise objects
         final List<Object3D> objects = new ArrayList<>();
 
-        Object3D sphere = new Sphere().setMaterial( new Mirror() );
-        sphere.addTransformations( matrixFactory.getTranslation(-2, 0, 4) );
-        objects.add( sphere );
+//        Object3D sphere = new Sphere().setMaterial( new Mirror() );
+//        sphere.addTransformations( matrixFactory.getTranslation(-2, 0, 4) );
+//        objects.add( sphere );
 
         Object3D cylinder = new Cylinder().setMaterial( new Lambertian( Rgb.Color.GREEN ) );
         cylinder.addTransformations( matrixFactory.getTranslation(2, 0, -2) );
         cylinder.setTransformation( matrixFactory.getRotation(ITransMatFactory.RotationAxis.X, Math.PI / 6 ) );
         objects.add(cylinder);
 
-        Object3D sphere3 = new Sphere().setMaterial( new Glass() );
-        sphere3.addTransformations( matrixFactory.getTranslation(0, 0, 4) );
+//        Object3D sphere3 = new Sphere().setMaterial( new Glass() );
+//        sphere3.addTransformations( matrixFactory.getTranslation(0, 0, 4) );
 //        sphere3.addTransformations( matrixFactory.getRotation( ITransMatFactory.RotationAxis.Y, Math.PI / 4 ) );
-        objects.add( sphere3 );
+//        objects.add( sphere3 );
 
 //        Object3D plane = new Plane().setMaterial( new Glass() );
 //        plane.addTransformations( matrixFactory.getTranslation(2, 0, 4) );
