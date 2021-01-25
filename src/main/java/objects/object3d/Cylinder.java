@@ -104,7 +104,7 @@ public class Cylinder extends Object3D {
         double y = location.getY();
         double z = location.getZ();
 
-        return Math.abs( z ) >= 1- RayTracer.EPSILON ? (z + 1) / 2 : (y + 1) / 2;
+        return Math.abs( z ) <= 1 - RayTracer.EPSILON ? (y + 1) / 2 : (z + 1) / 2;
     }
 
 
