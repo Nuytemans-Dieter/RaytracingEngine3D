@@ -19,7 +19,7 @@ public class Snow extends Material {
         );
 
 //        this.setEmissive(0.3f, 0.3f, 0.3f);
-        this.setTexture( new ImageTexture( useTextureOne ? "snow3.jpg" : "snow2.jpg" ));
+        this.setTexture( new ImageTexture( useTextureOne ? "snow3.jpg" : "snow.jpg" ));
 
     }
 

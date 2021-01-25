@@ -57,19 +57,19 @@ public class SnowyScene implements Scene {
 
         Object3D leftEye = new Sphere().setMaterial( new Aluminium() );
         leftEye.addTransformations(
-                fact.getTranslation(-3.5, -2.8, 1.6),
+                fact.getTranslation(-3.6, -2.8, 1.6),
                 fact.getScaling(0.1, 0.1, 0.1)
         );
         objects.add( leftEye );
 
         Object3D rightEye = new Sphere().setMaterial( new Aluminium() );
         rightEye.addTransformations(
-                fact.getTranslation(-3, -2.75, 1.6),
+                fact.getTranslation(-2.9, -2.75, 1.6),
                 fact.getScaling(0.1, 0.1, 0.1)
         );
         objects.add( rightEye );
 
-        Object3D nose = new Cylinder().setMaterial( new Aluminium() );
+        Object3D nose = new Cylinder().setMaterial( new Lambertian( Rgb.fromColor( Rgb.Color.RED ) ) );
         nose.addTransformations(
                 fact.getTranslation(-3.5, -2.65, 1.2),
                 fact.getRotation( ITransMatFactory.RotationAxis.X, Math.PI / 2 ),
