@@ -15,7 +15,7 @@ public class Mirror extends Material {
             0.6f,
             128,
             0.95f,
-            new float[]{1, 1, 1},
+            1,
             0.0f
         );
     }

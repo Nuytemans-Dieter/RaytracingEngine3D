@@ -19,7 +19,7 @@ public class Material {
     public final float specularB;
     public final float roughness;
 
-    private final float[] lightSpeed;
+    private final double lightSpeed;
 
     public final float reflectivity;
     public final float transparency;
@@ -32,15 +32,15 @@ public class Material {
 
     public Material(Rgb color, float diffusivity, float specularValue, float roughness)
     {
-        this(color, diffusivity, diffusivity, diffusivity, specularValue, specularValue, specularValue, roughness, 0.0f, new float[]{50f, 50f, 50f}, 0.0f);
+        this(color, diffusivity, diffusivity, diffusivity, specularValue, specularValue, specularValue, roughness, 0.0f, 1, 0.0f);
     }
 
-    public Material(Rgb color, float diffusivity, float specular, float roughness, float reflectivity, float[] lightSpeed, float transparency)
+    public Material(Rgb color, float diffusivity, float specular, float roughness, float reflectivity, double lightSpeed, float transparency)
     {
         this(color, diffusivity, diffusivity, diffusivity, specular, specular, specular, roughness, reflectivity, lightSpeed, transparency);
     }
 
-    public Material(Rgb color, float diffusivityR, float diffusivityG, float diffusivityB, float specularR, float specularG, float specularB, float roughness, float reflectivity, float[] lightSpeed, float transparency)
+    public Material(Rgb color, float diffusivityR, float diffusivityG, float diffusivityB, float specularR, float specularG, float specularB, float roughness, float reflectivity, double lightSpeed, float transparency)
     {
         this.color = color;
 
@@ -57,7 +57,6 @@ public class Material {
         this.ambientG = Math.max(1 - specularG - diffusivityG, 0);
         this.ambientB = Math.max(1 - specularB - diffusivityB, 0);
 
-        assert (lightSpeed.length == 3);
         this.lightSpeed = lightSpeed;
 
         this.reflectivity = reflectivity;
@@ -65,12 +64,9 @@ public class Material {
         this.colorStrength = Math.max( 1 - reflectivity - transparency, 0 );
     }
 
-    public float[] getLightSpeed()
+    public double getLightSpeed()
     {
-        return new float[]
-        {
-            lightSpeed[0], lightSpeed[1], lightSpeed[2]
-        };
+        return lightSpeed;
     }
 
     public Rgb getColor()

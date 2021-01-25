@@ -15,7 +15,7 @@ public class Lambertian extends Material {
             0.2f,
             2,
             0.0f,
-            new float[]{1, 1, 1},
+            1,
             0.0f
         );
     }

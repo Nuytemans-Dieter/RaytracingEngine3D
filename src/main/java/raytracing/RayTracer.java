@@ -271,11 +271,10 @@ public class RayTracer {
 //            Object3D previous = this.getFirstExitedObject( reversedRay );
 
 //            float c1 = previous != null ? previous.getMaterial().getLightSpeed()[0] : 1f;
-            double c2 = hitObject.getMaterial().getLightSpeed()[0];
+            double c2 = hitObject.getMaterial().getLightSpeed();
 //            float c3 = c2 / c1;
-//            double c3 = info.getIsEntering() ? c2/0.9997f : 0.9997f/c2;
-            float c3 = 1;
-//            double c3 = info.getIsEntering() ? 0.55/0.9997 : 0.9997f/0.55;
+            double c3 = info.getIsEntering() ? c2 : 1/c2;
+//            float c3 = 1;
 
             // Refraction calculations
 
@@ -284,8 +283,8 @@ public class RayTracer {
             double cosTheta2 = Math.sqrt( 1 - Math.pow( c3, 2 ) * (1 - Math.pow(normDotDir, 2) ));
             double factor = c3 * normDotDir - cosTheta2;
 
-//            if (cosTheta2 > 0.01)
-//            {
+            if (cosTheta2 > 0.01)
+            {
 
                 Vector dirComponent = direction.multiply(c3);
                 Vector normComponent = transformedNormal.multiply( -factor );
@@ -303,7 +302,7 @@ public class RayTracer {
 
                 RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);
                 color.addRgb(this.calcLight(refractedHitInfo, depth)).applyIntensity(transparency);
-//            }
+            }
         }
 
         return color;

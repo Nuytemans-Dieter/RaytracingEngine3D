@@ -13,7 +13,7 @@ public class Gold extends Material {
             0.5f,
             64,
             0.1f,
-            new float[] {42.42f, 47.98f, 47.98f},
+            0.42,
             0.0f
         );
     }
