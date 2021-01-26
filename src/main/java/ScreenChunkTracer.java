@@ -62,7 +62,7 @@ public class ScreenChunkTracer extends Thread {
         drawLib.forceUpdate();
         long end = System.currentTimeMillis();
         long delta = end - this.startTime;
-        System.out.println("Calculation time: " + delta + "ms for chunk (" + chunkU + ", " + chunkV + ")");
+//        System.out.println("Calculation time: " + delta + "ms for chunk (" + chunkU + ", " + chunkV + ")");
     }
 
 }

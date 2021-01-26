@@ -32,6 +32,10 @@ public class EmptyRoom implements Scene {
         sphere2.addTransformations( fact.getTranslation(0, 0, -2) );
         objects.add( sphere2 );
 
+        Object3D sphere3 = new Sphere().setMaterial( new Mirror() );
+        sphere3.addTransformations( fact.getTranslation(2, 0, -2) );
+        objects.add( sphere3 );
+
         return objects;
     }
 

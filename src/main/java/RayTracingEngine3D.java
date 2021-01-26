@@ -19,7 +19,7 @@ public class RayTracingEngine3D {
 
     public static void main (String[] args) {
 
-        Scene scene = new EmptyRoom();
+        Scene scene = new MinecraftScene();
         final List<Object3D> objects = scene.getObjects();
         final List<LightEmitter> lights = scene.getLights();
 
@@ -32,9 +32,6 @@ public class RayTracingEngine3D {
 
         // Update all inverse matrices
         objects.forEach(Object3D::updateInverse);
-
-        // Start timing the ray tracing
-        long start = System.currentTimeMillis();
 
         int numChunksU = 4;
         int numChunksV = 4;
@@ -51,6 +48,8 @@ public class RayTracingEngine3D {
 
         while(true)
         {
+
+            long start = System.currentTimeMillis();
 
             Map<Input.Action, Double> map = input.getCurrentInput();
             for (Map.Entry<Input.Action, Double> entry : map.entrySet())
@@ -99,9 +98,13 @@ public class RayTracingEngine3D {
                 }
             }
 
+            long end = System.currentTimeMillis();
+            long passed = end - start;
+
             // Make sure all pixels are effectively drawn to the screen
             drawLib.forceUpdate();
             try {
+                System.out.print("'\rfps: " + (double) 1000 / passed + " (" + passed + " ms)");
                 Thread.sleep( 50 );
             } catch (InterruptedException e) {
                 e.printStackTrace();
