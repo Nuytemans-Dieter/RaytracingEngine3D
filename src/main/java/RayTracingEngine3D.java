@@ -16,7 +16,7 @@ public class RayTracingEngine3D {
 
     public static void main (String[] args) {
 
-        Scene scene = new SnowyScene();
+        Scene scene = new BasicScene();
         final List<Object3D> objects = scene.getObjects();
         final List<LightEmitter> lights = scene.getLights();
 
