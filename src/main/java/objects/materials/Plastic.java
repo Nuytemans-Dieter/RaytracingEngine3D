@@ -10,9 +10,9 @@ public class Plastic extends Material {
         super
         (
             color,
-            0.5f,
             0.8f,
-            32,
+            0.8f,
+            64,
             0.0f,
             1,
             0.0f

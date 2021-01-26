@@ -31,7 +31,7 @@ public class BasicScene implements Scene {
         sphere.addTransformations( fact.getTranslation( -3, 0.5, 0 ) );
         objects.add( sphere );
 
-        Object3D cube = new Cube().setMaterial( new Gold() );
+        Object3D cube = new Cube().setMaterial( new Aluminium() );
         cube.addTransformations( fact.getTranslation( 0, 0.5, 0 ) );
         cube.addTransformations( fact.getRotation( ITransMatFactory.RotationAxis.Y, Math.PI / 4 ) );
         objects.add( cube );
