@@ -45,9 +45,17 @@ public class SnowyScene implements Scene {
         );
         objects.add( sky );
 
+        // Build a house
         Object3D house = new Cube().setMaterial( new Lambertian().setTexture( new ImageTexture( "house.jpg" )) );
-        house.addTransformations( fact.getTranslation( 5, 1, -2 ) );
+        house.addTransformations( fact.getTranslation( 5, 1-2, -6 ) );
+        house.addTransformations( fact.getScaling( 3, 3, 3 ) );
         objects.add( house );
+
+        // Build a tree
+        Object3D tree = new Cylinder().setMaterial( new Lambertian().setTexture( new ImageTexture( "bark.jpg" ) ) );
+        tree.addTransformations( fact.getTranslation(3, 0, 3) );
+        tree.addTransformations( fact.getScaling( 0.15, 3, 0.15 ) );
+        objects.add( tree );
 
         // Build the snow man
         float scale = 0.6f;
