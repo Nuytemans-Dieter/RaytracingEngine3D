@@ -7,10 +7,7 @@ import maths.vector.Point;
 import objects.LightEmitter;
 import objects.Object3D;
 import objects.lighting.LightSource;
-import objects.materials.Aluminium;
-import objects.materials.Lambertian;
-import objects.materials.Mirror;
-import objects.materials.Snow;
+import objects.materials.*;
 import objects.object3d.Cube;
 import objects.object3d.Cylinder;
 import objects.object3d.Plane;
@@ -41,9 +38,15 @@ public class SnowyScene implements Scene {
         Object3D sky = new Plane().setMaterial( new Mirror() );
         sky.addTransformations(
                 fact.getTranslation(0, 0, -15),
-                fact.getScaling(30, 30, 1)
+                fact.getRotation( ITransMatFactory.RotationAxis.Y, Math.PI/8 ),
+                fact.getScaling(35, 35, 1)
         );
         objects.add( sky );
+
+        // Create ball of ice
+        Object3D sphere = new Sphere().setMaterial( new Ice() );
+        sphere.addTransformations( fact.getTranslation( 0, 1, 0 ) );
+        objects.add( sphere );
 
         // Build a house
         Object3D house = new Cube().setMaterial( new Lambertian().setTexture( new ImageTexture( "house.jpg" )) );
