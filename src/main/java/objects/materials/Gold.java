@@ -8,7 +8,7 @@ public class Gold extends Material {
     public Gold()
     {
         super(
-            new Rgb(0.85f, 0.65f, 0.1f),
+            new Rgb(0.45f, 0.35f, 0.1f),
             2.5f,
             0.5f,
             64,
