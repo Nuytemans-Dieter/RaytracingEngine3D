@@ -33,7 +33,7 @@ public class CircleTexture implements Texture {
         }
         else
         {
-            color = Rgb.fromColor( Rgb.Color.GREEN );
+            color = new Rgb(0.8f, 0.8f, 0.8f);
         }
         return color;
     }

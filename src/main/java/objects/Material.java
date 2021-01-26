@@ -84,9 +84,10 @@ public class Material {
         return this;
     }
 
-    public void setTexture(Texture newTexture)
+    public Material setTexture(Texture newTexture)
     {
         this.texture = newTexture;
+        return this;
     }
 
     public boolean hasImageTexture()
