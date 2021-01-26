@@ -293,7 +293,8 @@ public class RayTracer {
             Ray reflectedRay = new Ray(info.getHitLocation(), reflectedDirection);
             RayTraceInfo reflectedHitInfo = this.tracePoint( reflectedRay, EPSILON);
 
-            color.addRgb( this.calcLight( reflectedHitInfo, depth ) ).applyIntensity( reflectivity );
+            Rgb reflectedColor = this.calcLight( reflectedHitInfo, depth ).applyIntensity( reflectivity );
+            color.addRgb( reflectedColor );
         }
 
         final float transparency = hitObject.getMaterial().transparency;
@@ -338,7 +339,8 @@ public class RayTracer {
 //            );
 
                 RayTraceInfo refractedHitInfo = this.tracePoint(refracted, EPSILON);
-                color.addRgb(this.calcLight(refractedHitInfo, depth)).applyIntensity(transparency);
+                Rgb refractedColor = this.calcLight(refractedHitInfo, depth).applyIntensity(transparency);
+                color.addRgb(refractedColor);
             }
         }
 
