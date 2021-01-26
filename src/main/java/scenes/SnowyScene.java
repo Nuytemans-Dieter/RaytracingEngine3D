@@ -11,9 +11,11 @@ import objects.materials.Aluminium;
 import objects.materials.Lambertian;
 import objects.materials.Mirror;
 import objects.materials.Snow;
+import objects.object3d.Cube;
 import objects.object3d.Cylinder;
 import objects.object3d.Plane;
 import objects.object3d.Sphere;
+import objects.textures.ImageTexture;
 
 import java.util.List;
 
@@ -36,12 +38,16 @@ public class SnowyScene implements Scene {
         }
 
         // Build the sky
-        Object3D sky = new Plane().setMaterial( new Mirror());
+        Object3D sky = new Plane().setMaterial( new Mirror() );
         sky.addTransformations(
                 fact.getTranslation(0, 0, -15),
                 fact.getScaling(30, 30, 1)
         );
         objects.add( sky );
+
+        Object3D house = new Cube().setMaterial( new Lambertian().setTexture( new ImageTexture( "house.jpg" )) );
+        house.addTransformations( fact.getTranslation( 5, 1, -2 ) );
+        objects.add( house );
 
         // Build the snow man
         float scale = 0.6f;
@@ -58,14 +64,14 @@ public class SnowyScene implements Scene {
 
         Object3D leftEye = new Sphere().setMaterial( new Aluminium() );
         leftEye.addTransformations(
-                fact.getTranslation(-3.6, -2.8, 1.6),
+                fact.getTranslation(-3.75, -2.95, 1.4),
                 fact.getScaling(0.1, 0.1, 0.1)
         );
         objects.add( leftEye );
 
         Object3D rightEye = new Sphere().setMaterial( new Aluminium() );
         rightEye.addTransformations(
-                fact.getTranslation(-2.9, -2.75, 1.6),
+                fact.getTranslation(-3.2, -2.95, 1.2),
                 fact.getScaling(0.1, 0.1, 0.1)
         );
         objects.add( rightEye );
@@ -84,7 +90,7 @@ public class SnowyScene implements Scene {
 
     @Override
     public List<LightEmitter> getLights() {
-        lights.add( new LightSource(new Point(4, -2, 0), 2.0, Rgb.fromColor( Rgb.Color.WHITE )));
+        lights.add( new LightSource(new Point(4, -2, 2), 2.0, Rgb.fromColor( Rgb.Color.WHITE )));
         return lights;
     }
 }
