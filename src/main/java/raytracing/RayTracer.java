@@ -84,8 +84,9 @@ public class RayTracer {
      * @param v the row's index of this pixel
      * @return RayTraceInfo that contains: the hit location, value of t at hit location and the closest object
      */
-    public RayTraceInfo tracePoint(int u, int v)
+    public RayTraceInfo tracePoint(int u, int v, Matrix transformation)
     {
+        Point start = transformation.multiply( eyeLocation );
         // Calculate current pixel offset
                             // Offset of the current pixel                      Offset used to center screen
         final double ux = (screenInfo.W * u) / screenInfo.getScreenSize().width  - screenInfo.W_half;
@@ -95,7 +96,7 @@ public class RayTracer {
         Direction defaultDirection = new Direction(-ux, -uy, -camDistance)/*.add( this.viewDirection ).toDirection()*/;
         defaultDirection = this.transformation.multiply( defaultDirection );
 
-        return this.tracePoint( new Ray( eyeLocation, defaultDirection ) );
+        return this.tracePoint( new Ray( start, defaultDirection ) );
     }
 
     /**
