@@ -9,14 +9,13 @@ import objects.Object3D;
 import raytracing.RayTracer;
 import scenes.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RayTracingEngine3D {
 
     public static void main (String[] args) {
 
-        Scene scene = new BasicScene();
+        Scene scene = new RefractiveSphereScene();
         final List<Object3D> objects = scene.getObjects();
         final List<LightEmitter> lights = scene.getLights();
 
