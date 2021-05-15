@@ -1,5 +1,5 @@
 # RaytracingEngine3D
-A 3D ray tracing engine, written from scratch. No fancy drawing tools are used, images are drawn pixel by pixel.
+A 3D ray tracing engine, written from scratch for a Computer Graphics course at the University of Antwerp. No fancy drawing tools are used, images are drawn pixel by pixel.
 
 **Features**
 - Different objects
